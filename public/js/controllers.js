@@ -83,7 +83,7 @@ angular.module('starter.controllers', [])
                 district: $scope.submitdata.district, 
                 tole: $scope.submitdata.tole, 
                 title: $scope.submitdata.title, 
-                description: $scope.contactname+" "+$scope.contactnumber+" "+$scope.submitdata.description
+                description: "Contact Name: "$scope.submitdata.contactname+"<br> Contact Number: "+$scope.submitdata.contactnumber+" <br>Description</br>"+$scope.submitdata.description
               };
     var error = false;
     if(!data.supplytype){

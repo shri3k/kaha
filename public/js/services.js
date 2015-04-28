@@ -32,7 +32,7 @@ angular.module('starter.services', [])
         type: function(data, type) {
           var filtered = [];
           angular.forEach(data, function(item) {
-            if (type.toUpperCase() == item.type.toUpperCase()) {
+            if (type == item.type) {
               filtered.push(item);
             }
           });
@@ -73,7 +73,9 @@ angular.module('starter.services', [])
           var filtered = [];
           angular.forEach(data, function(item) {
             if (item.location.district.toUpperCase() == district.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
-              filtered.push(item.location.tole);
+              if (filtered.indexOf(item.location.tole) == -1){
+				filtered.push(item.location.tole);
+              }
             }
           });
           return filtered;

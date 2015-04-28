@@ -1,0 +1,42 @@
+<ion-view view-title="Submit a Supply/Resource">
+  <ion-content>
+    <ion-list>
+    <label class="item item-input item-select">
+        <div class="input-label">
+          Supply Type
+        </div>
+        <select ng-model="submitdata.supplytype">
+          <option ng-repeat="supply in supplytypes">{{supply}}</option>
+        </select>
+     </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          District
+        </div>
+        <select ng-model="submitdata.district">
+          <option ng-repeat="district in districts">{{district}}</option>
+        </select>
+     </label>
+      <label class="item item-input" >
+        <div class="input-label">
+          Tole Name
+        </div>
+        <input type="text" name="tole" ng-model="submitdata.tole" placeholder="Enter your tole name"/> 
+     </label>
+     <label class="item item-input" >
+        <div class="input-label">
+          Title
+        </div>
+        <input type="text" name="title" ng-model="submitdata.title" placeholder="Enter title"/> 
+     </label>
+
+     <label class="item item-input" >
+        <div class="input-label">
+          Description
+        </div>
+        <input type="text" name="description" ng-model="submitdata.description" placeholder="Enter description"/> 
+     </label>
+     <button class="button button-block button-light" ng-click="submit()">Submit</button>
+    </ion-list>
+  </ion-content>
+</ion-view>

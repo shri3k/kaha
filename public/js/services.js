@@ -8,13 +8,13 @@ angular.module('starter.services', [])
 				$http.get(url).success(function(data){
 					if(data){
 						def.resolve({success:true, content:data})
-						localStorage.settItem("data", JSON.stringify(data));
+						localStorage.setItem("kahacodata", JSON.stringify(data));
 					}
             	}).error(function(data, status, headers, config) {
                     def.resolve({success:false, message:"No data found"})
             	});
 			}else{
-				var data = JSON.parse(localStorage.getItem("data"));
+				var data = JSON.parse(localStorage.getItem("kahacodata"));
 				def.resolve({success:true, content: data})
 			}			
             return def.promise;

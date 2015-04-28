@@ -8,6 +8,7 @@ angular.module('starter.services', [])
 				$http.get(url).success(function(data){
 					if(data){
 						def.resolve({success:true, content:data})
+						localStorage.settItem("data", JSON.stringify(data));
 					}
             	}).error(function(data, status, headers, config) {
                     def.resolve({success:false, message:"No data found"})

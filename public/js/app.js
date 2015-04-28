@@ -108,5 +108,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
                         '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close"></i>' +
                       '</div>'
         };
-    });
+    })
+    .filter('search', function($filter) {
+        return function(items, searchText){
+            if (!searchText || searchText.length === 0) {
+                return items;
+            }
 
+            var searchTokens= searchText.split(' ');
+
+            searchTokens.forEach(function(term) {
+                if (term && term.length) {
+                    items = $filter('filter')(items, term);
+                }
+            });
+
+            return items
+        };
+    });

@@ -1,18 +1,24 @@
 <ion-view view-title="{{item.description.title}}">
+  <ion-nav-buttons side="right">
+    <button class="button-light" ng-click="editItem()">Edit Item</button>
+  </ion-nav-buttons>
   <ion-content>
     <div class="card">
 	  <div class="item item-divider  item-text-wrap">
-	    {{selectedItem.description.title}}
-
-		      <span class="item-note" ng-class="selectedItem.active?'active':''">
-	            {{selectedItem.active?"available":"not available"}}
-	          </span> 
+		<span class="item-note" ng-class="selectedItem.active?'active':''">
+	        <small>{{selectedItem.active?"available":"not available"}}</small>
+	    </span> 
+	    <h3>{{selectedItem.description.title}}</h3>
+	    <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
 	  </div>
 	  <div class="item item-text-wrap">
-	    {{selectedItem.description.detail}}
+	    <p>{{selectedItem.description.detail}}</p>
+	    
 	  </div>
-	  <div class="item item-divider item-text-wrap">
-	   {{selectedItem.location.tole}}, {{selectedItem.location.district}}
+	  <div class="item">
+	   	<button class="button  button-block button-success" ng-click="markAsHelpful()">It's helpful</button>
+	   	<button class="button  button-block button-danger" ng-click="markAsUnavailable()">It's not helpful</button>
+	   	<button class="button  button-block button-warning" ng-click="requestRemove()">Submit a request to remove</button>
 	  </div>
 	</div>
   </ion-content>

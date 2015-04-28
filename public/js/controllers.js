@@ -67,23 +67,69 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('ItemCtrl', function($scope, $stateParams, $rootScope) {
-  
+.controller('ItemCtrl', function($scope, $stateParams, $rootScope, api) {
+  $scope.markAsUnavailable = function(){
+    api.markAsUnavailable();
+  }
+  $scope.requestRemove = function(){
+    api.requestRemove();
+  }
+  $scope.editItem = function(){
+    window.location = "#/app/edit";
+  }
 })
 .controller('AboutCtrl', function($scope, $stateParams, $rootScope) {
   
 })
-
+.controller('EditCtrl', function($scope, api, $rootScope){
+    console.log($rootScope.selectedItem)
+    $scope.districts = api.districts.sort();
+    $scope.supplytypes = api.supplytypes.sort();
+    $scope.submit = function(){
+     
+      var error = false;
+      if(!$rootScope.selectedItem.type){
+        error = true;
+      }
+      else if(!$rootScope.selectedItem.location.district){
+        error = true;
+      }
+      else if(!$rootScope.selectedItem.location.tole){
+        error =true;
+      }
+      else if(!$rootScope.selectedItem.description.title){
+        error = true;
+      }
+      else if(!$rootScope.selectedItem.description.detail){
+        error = true;
+      }
+      else if(!$rootScope.selectedItem.description.contactname){
+        error = true;
+      }
+      else if(!$rootScope.selectedItem.description.contactnumber){
+        error = true;
+      }
+      if(!error){
+        api.submit($rootScope.selectedItem).then(function(data){
+          alert("submitted")
+        });
+      }
+      else{
+        alert("All fields are required")
+      }
+    }
+})
 .controller('SubmitCtrl', function($scope, api){
   $scope.submitdata = {};
   $scope.districts = api.districts.sort();
-  $scope.supplytypes = api.supplytypes;
+  $scope.supplytypes = api.supplytypes.sort();
   $scope.submit = function(){
-    var data = {supplytype: $scope.submitdata.supplytype, 
-                district: $scope.submitdata.district, 
-                tole: $scope.submitdata.tole, 
-                title: $scope.submitdata.title, 
-                description: "Contact Name: "+$scope.submitdata.contactname+"<br> Contact Number: "+$scope.submitdata.contactnumber+" <br>Description</br>"+$scope.submitdata.description
+    var data = {
+                  supplytype: $scope.submitdata.supplytype, 
+                  district: $scope.submitdata.district, 
+                  tole: $scope.submitdata.tole, 
+                  title: $scope.submitdata.title, 
+                  description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
               };
     var error = false;
     if(!data.supplytype){

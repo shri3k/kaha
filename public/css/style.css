@@ -39,3 +39,19 @@
 .search-wrapper-light input, .search-wrapper-light input::-webkit-input-placeholder {
     color: #ffffff;
 }
+
+.button-success {
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+.button-warning {
+  color: #fff;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+}
+.button-danger {
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}

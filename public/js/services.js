@@ -1,169 +1,107 @@
 angular.module('starter.services', [])
-.factory("api", function($q, $http){
-	return{
-		data:function(refresh){
-			var url = "/api";
-			var def = $q.defer();
-			if(refresh){
-				$http.get(url).success(function(data){
-					if(data){
-						def.resolve({success:true, content:data})
-						localStorage.setItem("kahacodata", JSON.stringify(data));
-					}
-            	}).error(function(data, status, headers, config) {
-                    def.resolve({success:false, message:"No data found"})
-            	});
-			}else{
-				var data = JSON.parse(localStorage.getItem("kahacodata"));
-				def.resolve({success:true, content: data})
-			}			
-            return def.promise;
-		},
-		filter:{
-			type:function(data, type){
-				var filtered = [];
-				angular.forEach(data, function(item) {
-			      if(type.toUpperCase() == item.type.toUpperCase()) {
-			        filtered.push(item);
-			      }
-			    });
-			    return filtered;
-			}, 
-			location:{
-				district:function(data, type, name){
-					var filtered = [];
-					angular.forEach(data, function(item) {
-					  if(item.location.district.toUpperCase() == name.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()){
-					  	filtered.push(item);
-					  }
-				    });
-				    return filtered;
-				},
-				tole:function(data, type, name){
-					var filtered = [];
-					angular.forEach(data, function(item) {
-					  if(item.location.tole.toUpperCase() == name.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()){
-					  	filtered.push(item);
-					  }
-				    });
-				    return filtered;
-				}
-			}
-		},
-		location:{
-			districts:function(data, type){
-				var filtered = [];
-				angular.forEach(data, function(item) {
-				  if(filtered.indexOf(item.location.district)==-1 && item.type.toUpperCase() == type.toUpperCase()){
-				  	filtered.push(item.location.district);
-				  }
-			    });
-			    return filtered;
-			},
-			tole:function(data, type, district){
-				var filtered = [];
-				angular.forEach(data, function(item) {
-				  if(item.location.district.toUpperCase() == district.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()){
-			      		filtered.push(item.location.tole);
-				  }
-			    });
-			    return filtered;
-			}
-		},
-		submit:function(data){
-			var def = $q.defer();
-                $.ajax({
-                    url: "",
-                    type: 'POST',
-                    data:data,
-                    dataType: 'text',
-                    success: function (d) {
-                        
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown){
-                      def.resolve({success:false, message:"This is shame. We couldn't connect to our server."});
-                    }
-            	});
-            return def.promise;
-		},
-		districts:[
-			"Bhaktapur"     
-			,"Dhading" 
-			,"Kathmandu" 
-			,"Kavrepalanchok"
-			,"Lalitpur"
-			,"Nuwakot" 
-			,"Rasuwa"
-			,"Sindhupalchok" 
-			,"Banke" 
-			,"Bardiya" 
-			,"Dailekh" 
-			,"Jajarkot" 
-			,"Surkhet"
-			,"Baglung" 
-			,"Mustang" 
-			,"Myagdi" 
-			,"Parbat" 
-			,"Gorkha" 
-			,"Kaski" 
-			,"Lamjung" 
-			,"Manang" 
-			,"Syangja" 
-			,"Tanahu"
-			,"Dhanusa" 
-			,"Dholkha" 
-			,"Mahottari" 
-			,"Ramechhap" 
-			,"Sarlahi"  
-			,"Sindhuli" 
-			,"Dolpa"
-			,"Humla" 
-			,"Jumla" 
-			,"Kalikot" 
-			,"Mugu" 
-			,"Bhojpur" 
-			,"Dhankuta" 
-			,"Morang" 
-			,"Sankhuwasabha" 
-			,"Sunsari" 
-			,"Terhathum" 
-			,"Arghakhanchi" 
-			,"Gulmi" 
-			,"Kapilvastu" 
-			,"Nawalparasi" 
-			,"Palpa" 
-			,"Rupandehi" 
-			,"Baitadi" 
-			,"Dadeldhura" 
-			,"Darchula" 
-			,"Kanchanpur" 
-			,"Ilam" 
-			,"Jhapa" 
-			,"Panchthar" 
-			,"Taplejung" 
-			,"Bara" 
-			,"Chitwan" 
-			,"Makwanpur" 
-			,"Parsa" 
-			,"Rautahat" 
-			,"Dang Deokhuri" 
-			,"Pyuthan" 
-			,"Rolpa" 
-			,"Rukum" 
-			,"Salyan" 
-			,"Khotang" 
-			,"Okhaldhunga" 
-			,"Saptari" 
-			,"Siraha" 
-			,"Solukhumbu" 
-			,"Udayapur" 
-			,"Achham" 
-			,"Bajhang" 
-			,"Bajura" 
-			,"Doti" 
-			,"Kailali" 
-		]
-	},
-	supplytype:['food','water','shelter','blood','medical supplies','medical services', 'other contacts']
+  .factory("api", function($q, $http) {
+    return {
+      data: function(refresh) {
+        var url = "/api";
+        var def = $q.defer();
+        if (refresh) {
+          $http.get(url).success(function(data) {
+            if (data) {
+              def.resolve({
+                success: true,
+                content: data
+              });
+              localStorage.setItem("kahacodata", JSON.stringify(data));
+            }
+          }).error(function(data, status, headers, config) {
+            def.resolve({
+              success: false,
+              message: "No data found"
+            });
+          });
+        } else {
+          var data = JSON.parse(localStorage.getItem("kahacodata"));
+          def.resolve({
+            success: true,
+            content: data
+          });
+        }
+        return def.promise;
+      },
+      filter: {
+        type: function(data, type) {
+          var filtered = [];
+          angular.forEach(data, function(item) {
+            if (type.toUpperCase() == item.type.toUpperCase()) {
+              filtered.push(item);
+            }
+          });
+          return filtered;
+        },
+        location: {
+          district: function(data, type, name) {
+            var filtered = [];
+            angular.forEach(data, function(item) {
+              if (item.location.district.toUpperCase() == name.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
+                filtered.push(item);
+              }
+            });
+            return filtered;
+          },
+          tole: function(data, type, name) {
+            var filtered = [];
+            angular.forEach(data, function(item) {
+              if (item.location.tole.toUpperCase() == name.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
+                filtered.push(item);
+              }
+            });
+            return filtered;
+          }
+        }
+      },
+      location: {
+        districts: function(data, type) {
+          var filtered = [];
+          angular.forEach(data, function(item) {
+            if (filtered.indexOf(item.location.district) == -1 && item.type.toUpperCase() == type.toUpperCase()) {
+              filtered.push(item.location.district);
+            }
+          });
+          return filtered;
+        },
+        tole: function(data, type, district) {
+          var filtered = [];
+          angular.forEach(data, function(item) {
+            if (item.location.district.toUpperCase() == district.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
+              filtered.push(item.location.tole);
+            }
+          });
+          return filtered;
+        }
+      },
+      submit: function(data) {
+        var def = $q.defer();
+        $.ajax({
+          url: "",
+          type: 'POST',
+          data: data,
+          dataType: 'text',
+          success: function(d) {
 
-});
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            def.resolve({
+              success: false,
+              message: "This is shame. We couldn't connect to our server."
+            });
+          }
+        });
+        return def.promise;
+      },
+      districts: [
+        "Bhaktapur", "Dhading", "Kathmandu", "Kavrepalanchok", "Lalitpur", "Nuwakot", "Rasuwa", "Sindhupalchok", "Banke", "Bardiya", "Dailekh", "Jajarkot", "Surkhet", "Baglung", "Mustang", "Myagdi", "Parbat", "Gorkha", "Kaski", "Lamjung", "Manang", "Syangja", "Tanahu", "Dhanusa", "Dholkha", "Mahottari", "Ramechhap", "Sarlahi", "Sindhuli", "Dolpa", "Humla", "Jumla", "Kalikot", "Mugu", "Bhojpur", "Dhankuta", "Morang", "Sankhuwasabha", "Sunsari", "Terhathum", "Arghakhanchi", "Gulmi", "Kapilvastu", "Nawalparasi", "Palpa", "Rupandehi", "Baitadi", "Dadeldhura", "Darchula", "Kanchanpur", "Ilam", "Jhapa", "Panchthar", "Taplejung", "Bara", "Chitwan", "Makwanpur", "Parsa", "Rautahat", "Dang Deokhuri", "Pyuthan", "Rolpa", "Rukum", "Salyan", "Khotang", "Okhaldhunga", "Saptari", "Siraha", "Solukhumbu", "Udayapur", "Achham", "Bajhang", "Bajura", "Doti", "Kailali"
+      ],
+      supplytype: ['food', 'water', 'shelter', 'blood', 'medical supplies', 'medical services', 'other contacts']
+    };
+
+  });

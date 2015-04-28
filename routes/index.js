@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var redis = require('redis');
-var md5 = require('object-hash');
+var sha1 = require('object-hash');
 var conf = require('./conf');
 var db = redis.createClient(10191, "pub-redis-10191.us-east-1-4.2.ec2.garantiadata.com");
-db.on('connect', function(){});
+db.on('connect', function() {});
 db.auth(conf.auth, function() {
   console.log('Connected to the db');
 });
@@ -43,15 +43,40 @@ router.post('/api', function(req, res, next) {
   //   },
   //   "active": "true",
   // };
+  var okResult = [];
+
+  function entry(obj, isLastItem) {
+    var uuid = sha1(obj);
+    obj.uuid = uuid;
+    db.set(uuid, JSON.stringify(obj), function(err, reply) {
+      if (err) {
+        okResult.push("fail");
+      }
+      okResult.push("ok");
+      if (isLastItem) {
+        res.send(okResult);
+      }
+    });
+  }
   var data = req.body;
-  var uuid = md5(data);
-  data.uuid = uuid;
-  db.set(uuid, JSON.stringify(data), function(err, reply) {
-    res.status(200).send('ok');
-  });
+  var isLastItem = false;
+  console.log(data);
+  if (Array.isArray(data)) {
+    data.forEach(function(item, index) {
+      if (data.length === index + 1) {
+        isLastItem = true;
+      }
+      entry(item, isLastItem);
+    });
+  } else {
+    entry(item, isLastItem);
+  }
 });
 
 router.get('/api/:id', function(req, res, next) {
-  var uuid = req.params.id || md5(req.body);
+  var uuid = req.params.id || sha1(req.body);
+  db.get(uuid, function(err, reply) {
+    res.send(JSON.parse(reply));
+  });
 });
 module.exports = router;

@@ -76,7 +76,7 @@ angular.module('starter.controllers', [])
 .controller('SubmitCtrl', function($scope, api){
   $scope.submitdata = {};
   $scope.districts = api.districts.sort();
-  $scope.supplytypes = api.supplytypes.sort();
+  $scope.supplytypes = api.supplytypes;
   var data = {supplytype: $scope.submitdata.supplytype, 
               district: $scope.submitdata.district, 
               tole: $scope.submitdata.tole, 

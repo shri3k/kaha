@@ -81,27 +81,13 @@ angular.module('starter.services', [])
       },
       submit: function(data) {
         var def = $q.defer();
-        $.ajax({
-          url: "",
-          type: 'POST',
-          data: data,
-          dataType: 'text',
-          success: function(d) {
-
-          },
-          error: function(XMLHttpRequest, textStatus, errorThrown) {
-            def.resolve({
-              success: false,
-              message: "This is shame. We couldn't connect to our server."
-            });
-          }
-        });
+        
         return def.promise;
       },
       districts: [
         "Bhaktapur", "Dhading", "Kathmandu", "Kavrepalanchok", "Lalitpur", "Nuwakot", "Rasuwa", "Sindhupalchok", "Banke", "Bardiya", "Dailekh", "Jajarkot", "Surkhet", "Baglung", "Mustang", "Myagdi", "Parbat", "Gorkha", "Kaski", "Lamjung", "Manang", "Syangja", "Tanahu", "Dhanusa", "Dholkha", "Mahottari", "Ramechhap", "Sarlahi", "Sindhuli", "Dolpa", "Humla", "Jumla", "Kalikot", "Mugu", "Bhojpur", "Dhankuta", "Morang", "Sankhuwasabha", "Sunsari", "Terhathum", "Arghakhanchi", "Gulmi", "Kapilvastu", "Nawalparasi", "Palpa", "Rupandehi", "Baitadi", "Dadeldhura", "Darchula", "Kanchanpur", "Ilam", "Jhapa", "Panchthar", "Taplejung", "Bara", "Chitwan", "Makwanpur", "Parsa", "Rautahat", "Dang Deokhuri", "Pyuthan", "Rolpa", "Rukum", "Salyan", "Khotang", "Okhaldhunga", "Saptari", "Siraha", "Solukhumbu", "Udayapur", "Achham", "Bajhang", "Bajura", "Doti", "Kailali"
       ],
-      supplytype: ['food', 'water', 'shelter', 'blood', 'medical supplies', 'medical services', 'other contacts']
+      supplytypes: ['food', 'water', 'shelter', 'blood', 'medical supplies', 'medical services', 'other contacts']
     };
 
   });

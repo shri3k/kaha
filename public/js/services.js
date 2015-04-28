@@ -110,6 +110,12 @@ angular.module('starter.services', [])
       isFirstTime:function(){
         return localStorage.getItem("kahacodata")?false:true;
       },
+      requestRemove:function(){
+      	alert("Submited removal request");
+      },
+      markAsUnavailable:function(){
+      	alert("Marked as unavailable");
+      },
       districts: [
         "Bhaktapur", "Dhading", "Kathmandu", "Kavrepalanchok", "Lalitpur", "Nuwakot", "Rasuwa", "Sindhupalchok", "Banke", "Bardiya", "Dailekh", "Jajarkot", "Surkhet", "Baglung", "Mustang", "Myagdi", "Parbat", "Gorkha", "Kaski", "Lamjung", "Manang", "Syangja", "Tanahu", "Dhanusa", "Dholkha", "Mahottari", "Ramechhap", "Sarlahi", "Sindhuli", "Dolpa", "Humla", "Jumla", "Kalikot", "Mugu", "Bhojpur", "Dhankuta", "Morang", "Sankhuwasabha", "Sunsari", "Terhathum", "Arghakhanchi", "Gulmi", "Kapilvastu", "Nawalparasi", "Palpa", "Rupandehi", "Baitadi", "Dadeldhura", "Darchula", "Kanchanpur", "Ilam", "Jhapa", "Panchthar", "Taplejung", "Bara", "Chitwan", "Makwanpur", "Parsa", "Rautahat", "Dang Deokhuri", "Pyuthan", "Rolpa", "Rukum", "Salyan", "Khotang", "Okhaldhunga", "Saptari", "Siraha", "Solukhumbu", "Udayapur", "Achham", "Bajhang", "Bajura", "Doti", "Kailali"
       ],

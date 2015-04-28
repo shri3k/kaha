@@ -1,5 +1,4 @@
-<ion-view>
-  <ion-nav-title>{{name | ucfirst }}</ion-nav-title>
+<ion-view view-title="{{name}}">
   <ion-content>
     <ion-refresher
     pulling-text="Pull to refresh..."
@@ -10,10 +9,11 @@
               <ion-search placeholder="Type to search" filter="search"></ion-search>
           </div>
 
-            <div class="item" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
+            <div class="item" ng-repeat="item in items | filter:search.value" ng-click="loadItem(item)">
               <h2>{{item.description.title}}</h2>
               <p>
                   {{item.location.district}} , {{item.location.tole}}
+
                   <span class="item-note"  ng-class="item.active?'active':''">
                     {{item.active?"available":"not available"}}
                   </span>

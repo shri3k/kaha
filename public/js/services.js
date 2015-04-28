@@ -2,7 +2,7 @@ angular.module('starter.services', [])
 .factory("api", function($q, $http){
 	return{
 		data:function(refresh){
-			var url = "";
+			var url = "/api";
 			var def = $q.defer();
 			if(refresh){
 				$http.get(url).success(function(data){

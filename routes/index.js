@@ -60,7 +60,6 @@ router.post('/api', function(req, res, next) {
   }
   var data = req.body;
   var isLastItem = false;
-  console.log(data);
   if (Array.isArray(data)) {
     data.forEach(function(item, index) {
       if (data.length === index + 1) {
@@ -69,7 +68,7 @@ router.post('/api', function(req, res, next) {
       entry(item, isLastItem);
     });
   } else {
-    entry(item, isLastItem);
+    entry(data, true);
   }
 });
 

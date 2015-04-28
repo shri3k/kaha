@@ -81,7 +81,13 @@ angular.module('starter.services', [])
       },
       submit: function(data) {
         var def = $q.defer();
-        
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api', true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onload = function() {
+          console.log(this.responseText);
+        };
+        xhr.send(JSON.stringify(data));
         return def.promise;
       },
       districts: [

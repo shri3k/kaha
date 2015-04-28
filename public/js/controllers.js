@@ -148,50 +148,42 @@ angular.module('starter.controllers', [])
     }
 })
 .controller('SubmitCtrl', function($scope, api) {
-  $scope.submitdata = {};
-  $scope.districts = api.districts.sort();
-  $scope.supplytypes = api.supplytypes.sort();
-  $scope.submit = function(){
-      var data = {
-          supplytype: $scope.submitdata.supplytype, 
-          district: $scope.submitdata.district, 
-          tole: $scope.submitdata.tole, 
-          title: $scope.submitdata.title, 
-          //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
-          description: $scope.submitdata.description
-      };
-      if ($scope.submitdata.uuid) {
-          data.uuid = $scope.submitdata.uuid;
-      }
-      var error = false;
-      if(!data.supplytype){
-          error = true;
-      }
-      else if(!data.district){
-          error = true;
-      }
-      else if(!data.tole){
-          error =true;
-      }
-      else if(!data.title){
-          error = true;
-      }
-      else if(!$scope.submitdata.description){
-          error = true;
-      }
-      else if(!$scope.submitdata.contactname){
-          error = true;
-      }
-      else if(!$scope.submitdata.contactnumber){
-          error = true;
-      }
-      if(!error) {
-          api.submit(data).then(function(data){
-              alert("submitted")
-          });
-      }
-      else{
-          alert("All fields are required")
-      }
+    var data = {
+                  supplytype: $scope.submitdata.supplytype, 
+                  district: $scope.submitdata.district, 
+                  tole: $scope.submitdata.tole, 
+                  title: $scope.submitdata.title, 
+                  description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
+              };
+    var error = false;
+    if(!data.supplytype){
+      error = true;
+    }
+    else if(!data.district){
+      error = true;
+    }
+    else if(!data.tole){
+      error =true;
+    }
+    else if(!data.title){
+      error = true;
+    }
+    else if(!$scope.submitdata.description){
+      error = true;
+    }
+    else if(!$scope.submitdata.contactname){
+      error = true;
+    }
+    else if(!$scope.submitdata.contactnumber){
+      error = true;
+    }
+    if(!error){
+      api.submit(data).then(function(data){
+        alert("submitted")
+      });
+    }
+    else{
+      alert("All fields are required")
+    }
   }
-});
+);

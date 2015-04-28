@@ -8,7 +8,7 @@ db.on('connect', function() {});
 db.auth(conf.auth, function() {
   console.log('Connected to the db');
 });
-/* GET home page. */
+//Get core home data
 router.get('/api', function(req, res, next) {
   var results = [];
   var someString = db.keys('*', function(err, reply) {
@@ -26,23 +26,12 @@ router.get('/api', function(req, res, next) {
   });
 });
 
+// Get home page
 router.get('/', function(req, res, next) {
   res.render('index');
 });
 
 router.post('/api', function(req, res, next) {
-  // var data = {
-  //   "type": "water",
-  //   "location": {
-  //     "district": "kathmandu",
-  //     "tole": "basantapur"
-  //   },
-  //   "description": {
-  //     "title": "title1",
-  //     "detail": "some details"
-  //   },
-  //   "active": "true",
-  // };
   var okResult = [];
 
   function entry(obj, isLastItem) {
@@ -72,6 +61,7 @@ router.post('/api', function(req, res, next) {
   }
 });
 
+//Edit Flags
 router.get('/api/:id', function(req, res, next) {
   var uuid = req.params.id || sha1(req.body);
   db.get(uuid, function(err, reply) {

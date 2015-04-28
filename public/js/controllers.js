@@ -25,7 +25,7 @@ angular.module('starter.controllers', [])
     $rootScope.items = api.filter.location.district($scope.dataset, $scope.name, $rootScope.selected.district);
   }
   $rootScope.updateTole = function(){
-    $rootScope.items = api.filter.location.tole($scope.dataset, $scope.name, $rootScope.selected.tole);
+    $rootScope.items = api.filter.location.tole($rootScope.items, $scope.name,  $rootScope.selected.tole);
   }
   $scope.loadItem = function(item){
     $rootScope.selectedItem = item;
@@ -82,10 +82,32 @@ angular.module('starter.controllers', [])
                 district: $scope.submitdata.district, 
                 tole: $scope.submitdata.tole, 
                 title: $scope.submitdata.title, 
-                descreption: $scope.submitdata.descreption
+                description: $scope.submitdata.description
               };
-    api.submit(data).then(function(data){
-      alert("submitted")
-    });
+    var error = false;
+    if(!data.supplytype){
+      error = true;
+    }
+    else if(!data.district){
+      error = true;
+    }
+    else if(!data.tole){
+      error =true;
+    }
+    else if(!data.title){
+      error = true;
+    }
+    else if(!data.description){
+      error = true;
+    }
+    if(!error){
+
+      api.submit(data).then(function(data){
+        alert("submitted")
+      });
+    }
+    else{
+      alert("All fields are required")
+    }
   }
 });

@@ -6,7 +6,9 @@ angular.module('starter.services', [])
 			var def = $q.defer();
 			if(refresh){
 				$http.get(url).success(function(data){
-                    def.resolve({success:true, content:JSON.parse(data)})
+					if(data){
+						def.resolve({success:true, content:JSON.parse(data)})
+					}
             	}).error(function(data, status, headers, config) {
                     def.resolve({success:false, message:"No data found"})
             	});

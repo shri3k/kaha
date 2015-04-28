@@ -71,4 +71,19 @@ angular.module('starter.controllers', [])
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope) {
   $scope.item = $rootScope.selectedItem;
+})
+
+.controller('SubmitCtrl', function($scope, api){
+  $scope.submitdata = {};
+  $scope.districts = api.districts.sort();
+  $scope.supplytypes = api.supplytypes.sort();
+  var data = {supplytype: $scope.submitdata.supplytype, 
+              district: $scope.submitdata.district, 
+              tole: $scope.submitdata.tole, 
+              title: $scope.submitdata.title, 
+              descreption: $scope.submitdata.descreption
+            };
+  api.submit(data).then(function(data){
+    alert("submitted")
+  });
 });

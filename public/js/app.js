@@ -47,6 +47,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         controller: 'ItemCtrl'
       }
     }
+  })
+  .state('app.submit', {
+    url: "/submit",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/submit.html",
+        controller: 'SubmitCtrl'
+      }
+    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/section/food');

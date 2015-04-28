@@ -1,0 +1,51 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content ng-class="$exposeAside.active?'active':''">
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button ng-hide="$exposeAside.active">
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" ng-hide="$exposeAside.active">
+        </button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left" expose-aside-when="large">
+    <ion-header-bar class="bar-stable">
+      <h1 class="title">Supplies</h1>
+    </ion-header-bar>
+    <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''">
+      <ion-list>
+        <ion-item nav-clear menu-close href="#/app/section/food">
+          Food
+        </ion-item>
+
+        <ion-item nav-clear menu-close href="#/app/section/water">
+          Water
+        </ion-item>
+
+        <ion-item nav-clear menu-close href="#/app/section/blood">
+          Blood
+        </ion-item>
+
+        <ion-item nav-clear menu-close href="#/app/section/shelter">
+          Shelter
+        </ion-item>
+
+        <ion-item nav-clear menu-close href="#/app/section/supplies">
+          Medical Kits/Supplies
+        </ion-item>
+
+        <ion-item nav-clear menu-close href="#/app/section/supplies">
+          Medical Services
+        </ion-item>
+
+        <ion-item nav-clear menu-close href="#/app/section/supplies">
+          Other Contacts
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

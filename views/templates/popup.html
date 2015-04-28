@@ -1,0 +1,17 @@
+
+  <label class="item item-input item-select">
+    <div class="input-label">
+      District
+    </div>
+    <select ng-model="selected.district" ng-change="updateDistrict()">
+      <option ng-repeat="district in districts">{{district}}</option>
+    </select>
+ </label>
+  <label class="item item-input item-select" >
+    <div class="input-label">
+      Tole Name
+    </div>
+    <select ng-model="selected.tole" ng-change="updateTole()">
+      <option ng-repeat="tole in toles">{{tole}}</option>
+    </select>
+ </label>

@@ -6,6 +6,7 @@ angular.module('starter.controllers', [])
 
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
   $rootScope.selected = {};
+  console.log($stateParams)
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.name = $stateParams.sectionid;
     $rootScope.selected.district = "";

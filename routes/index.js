@@ -2,8 +2,10 @@ var express = require('express');
 var router = express.Router();
 var redis = require('redis');
 var md5 = require('object-hash');
-var db = redis.createClient();
-db.on('connect', function() {
+var conf = require('./conf');
+var db = redis.createClient(10191, "pub-redis-10191.us-east-1-4.2.ec2.garantiadata.com");
+db.on('connect', function(){});
+db.auth(conf.auth, function() {
   console.log('Connected to the db');
 });
 /* GET home page. */

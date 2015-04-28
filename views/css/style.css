@@ -1,0 +1,25 @@
+/* Empty. Add your own CSS if you like */
+.menu-content.active {
+  -webkit-transform: none;
+  transform: none;
+  box-shadow: none;
+}
+.menu-item-wrapper{
+	border-right: 1px solid #ddd;
+}
+.item-note{
+	color:#ff0000;
+}
+.item-note.active{
+	color:#007700;
+}
+.popup-container .popup{
+	width: 300px;
+}
+.popup-head{
+	border-color: #0c63ee;
+	background-color: #387ef5;
+}
+.popup-title{
+	color: #fff!important;
+}

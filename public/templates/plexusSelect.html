@@ -1,0 +1,32 @@
+<ion-list>
+<ion-item class="item-text-wrap item" ng-click="showItems($event)">
+<a class="item-icon-right">
+    <span class="{{placeholder}}">{{text}}</span>
+    <i class="icon ion-chevron-right"></i>
+</a>
+</ion-item>
+</ion-list>
+
+
+<script type="text/ng-template" id="plexusSelectItems.html">
+    <ion-view class="select-items modal">
+    <ion-header-bar class="bar-stable" has-subheader="true">
+    <button ng-click="hideItems()" class="button icon-left ion-chevron-left button-clear button-dark"></button>
+    <h1 class="title">{{headerText}}</h1>
+    </ion-header-bar>
+    <ion-header-bar class="bar-light bar-subheader bar bar-header item-input-inset">
+    <div class="item-input-wrapper">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="search" ng-model="viewModel.search" placeholder="{{placeholderText}}">
+        <button ng-show="viewModel.search.length" ng-click="clearSearch()" class="customIcon button button-icon ion-close-circled input-button"></button>
+    </div>
+    </ion-header-bar>
+    <ion-content>
+    <div class="list">
+        <label ng-repeat="item in items | filter: { $: viewModel.search }" class="item item-text-wrap" ng-click='validateSingle(item)'>
+            {{item}}
+        </label>
+    </div>
+    </ion-content>
+    </ion-view>
+</script>

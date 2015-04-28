@@ -1,53 +1,29 @@
-<ion-view view-title="Submit a Supply/Resource">
-  <ion-content>
-    <ion-list>
-    <label class="item item-input item-select">
-        <div class="input-label">
-          Supply Type
-        </div>
-        <select ng-model="submitdata.supplytype">
-          <option ng-repeat="supply in supplytypes">{{supply}}</option>
-        </select>
-     </label>
-      <label class="item item-input item-select">
-        <div class="input-label">
-          District
-        </div>
-        <select ng-model="submitdata.district">
-          <option ng-repeat="district in districts">{{district}}</option>
-        </select>
-     </label>
-      <label class="item item-input" >
-        <div class="input-label">
-          Tole Name
-        </div>
-        <input type="text" name="tole" ng-model="submitdata.tole" placeholder="Enter your tole name"/> 
-     </label>
-     <label class="item item-input" >
-        <div class="input-label">
-          Title
-        </div>
-        <input type="text" name="title" ng-model="submitdata.title" placeholder="Enter title"/> 
-     </label>
-     <label class="item item-input" >
-        <div class="input-label">
-          Contact Name
-        </div>
-        <input type="text" name="contactname" ng-model="submitdata.contactname" placeholder="Contact Name"/> 
-     </label>
-     <label class="item item-input" >
-        <div class="input-label">
-          Contact Number
-        </div>
-        <input type="text" name="contactnumber" ng-model="submitdata.contactnumber" placeholder="Contact Number"/> 
-     </label>
-     <label class="item item-input" >
-        <div class="input-label">
-          Description
-        </div>
-       <textarea rows="5" type="text" name="description" ng-model="submitdata.description" placeholder="Enter detial description about the supply"></textarea> 
-     </label>
-     <button class="button button-block button-light" ng-click="submit()">Submit</button>
-    </ion-list>
-  </ion-content>
+<ion-view view-title="New Supply/Resource">
+<ion-content>
+<ion-list>
+
+<plexus-select items="supplytypes" header-text="Select Supply Type" text="Supply Type" text-field="supplytype" text-field2="" value-field="supplytype" ng-model="submitdata.supplytype" placeholder-text="Enter supply type">
+</plexus-select>
+
+<plexus-select items="districts" header-text="Select District" text="District" text-field="district" value-field="district" ng-model="submitdata.district" placeholder-text="Enter district">
+</plexus-select>
+
+<label class="item item-input">
+    <input type="text" name="tole" ng-model="submitdata.tole" placeholder="Enter tole name"/> 
+</label>
+<label class="item item-input">
+    <input type="text" name="title" ng-model="submitdata.title" placeholder="Enter resource title"/> 
+</label>
+<label class="item item-input">
+    <input type="text" name="contactname" ng-model="submitdata.contactname" placeholder="Enter Contact Name"/> 
+</label>
+<label class="item item-input">
+    <input type="text" name="contactnumber" ng-model="submitdata.contactnumber" placeholder="Enter Contact Number"/> 
+</label>
+<label class="item item-input">
+    <textarea rows="5" type="text" name="description" ng-model="submitdata.description" placeholder="Enter detailed description about the supply"></textarea> 
+</label>
+<button class="button button-block button-positive" ng-click="submit()">Submit</button>
+</ion-list>
+</ion-content>
 </ion-view>

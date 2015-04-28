@@ -1,25 +1,41 @@
 /* Empty. Add your own CSS if you like */
 .menu-content.active {
-  -webkit-transform: none;
-  transform: none;
-  box-shadow: none;
+    -webkit-transform: none;
+    transform: none;
+    box-shadow: none;
 }
 .menu-item-wrapper{
-	border-right: 1px solid #ddd;
+    border-right: 1px solid #ddd;
 }
 .item-note{
-	color:#ff0000;
+    color:#ff0000;
 }
 .item-note.active{
-	color:#007700;
+    color:#007700;
 }
 .popup-container .popup{
-	width: 300px;
+    width: 300px;
 }
 .popup-head{
-	border-color: #0c63ee;
-	background-color: #387ef5;
+    border-color: #0c63ee;
+    background-color: #387ef5;
 }
 .popup-title{
-	color: #fff!important;
+    color: #fff!important;
+}
+
+.bar.item-input-inset .item-input-wrapper input {
+    width: 100%;
+}
+
+.search-wrapper-light {
+    border-bottom: 2px solid rgba(255,255,255,0.5);
+    background: none;
+    border-radius: 0;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.search-wrapper-light input, .search-wrapper-light input::-webkit-input-placeholder {
+    color: #ffffff;
 }

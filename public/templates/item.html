@@ -2,17 +2,17 @@
   <ion-content>
     <div class="card">
 	  <div class="item item-divider  item-text-wrap">
-	    {{item.description.title}}
+	    {{selectedItem.description.title}}
 
-		      <span class="item-note" ng-class="item.active?'active':''">
-	            {{item.active?"available":"not available"}}
+		      <span class="item-note" ng-class="selectedItem.active?'active':''">
+	            {{selectedItem.active?"available":"not available"}}
 	          </span> 
 	  </div>
 	  <div class="item item-text-wrap">
-	    {{item.description.detail}}
+	    {{selectedItem.description.detail}}
 	  </div>
 	  <div class="item item-divider item-text-wrap">
-	   {{item.location.tole}}, {{item.location.district}}
+	   {{selectedItem.location.tole}}, {{selectedItem.location.district}}
 	  </div>
 	</div>
   </ion-content>

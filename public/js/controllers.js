@@ -70,7 +70,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope) {
-  $scope.item = $rootScope.selectedItem;
+  
 })
 
 .controller('SubmitCtrl', function($scope, api){

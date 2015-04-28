@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var redis = require('redis');
-var md5 = require('MD5');
+var md5 = require('object-hash');
 var db = redis.createClient();
 db.on('connect', function() {
   console.log('Connected to the db');
@@ -29,18 +29,19 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/api', function(req, res, next) {
-  var data = {
-    "type": "water",
-    "location": {
-      "district": "kathmandu",
-      "tole": "basantapur"
-    },
-    "description": {
-      "title": "title1",
-      "detail": "some details"
-    },
-    "active": "true",
-  };
+  // var data = {
+  //   "type": "water",
+  //   "location": {
+  //     "district": "kathmandu",
+  //     "tole": "basantapur"
+  //   },
+  //   "description": {
+  //     "title": "title1",
+  //     "detail": "some details"
+  //   },
+  //   "active": "true",
+  // };
+  var data = req.body;
   var uuid = md5(data);
   data.uuid = uuid;
   db.set(uuid, JSON.stringify(data), function(err, reply) {

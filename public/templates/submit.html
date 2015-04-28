@@ -29,12 +29,23 @@
         </div>
         <input type="text" name="title" ng-model="submitdata.title" placeholder="Enter title"/> 
      </label>
-
+     <label class="item item-input" >
+        <div class="input-label">
+          Contact Name
+        </div>
+        <input type="text" name="contactname" ng-model="submitdata.contactname" placeholder="Contact Name"/> 
+     </label>
+     <label class="item item-input" >
+        <div class="input-label">
+          Contact Number
+        </div>
+        <input type="text" name="contactnumber" ng-model="submitdata.contactnumber" placeholder="Contact Number"/> 
+     </label>
      <label class="item item-input" >
         <div class="input-label">
           Description
         </div>
-        <input type="text" name="description" ng-model="submitdata.description" placeholder="Enter contact number, name and description"/> 
+       <textarea rows="5" type="text" name="description" ng-model="submitdata.description" placeholder="Enter detial description about the supply"></textarea> 
      </label>
      <button class="button button-block button-light" ng-click="submit()">Submit</button>
     </ion-list>

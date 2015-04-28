@@ -1,12 +1,10 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, api) {
-  
 })
-
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
   $rootScope.selected = {};
-  console.log($stateParams)
+  
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.name = $stateParams.sectionid;
     $rootScope.selected.district = "";
@@ -72,6 +70,9 @@ angular.module('starter.controllers', [])
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope) {
   
 })
+.controller('AboutCtrl', function($scope, $stateParams, $rootScope) {
+  
+})
 
 .controller('SubmitCtrl', function($scope, api){
   $scope.submitdata = {};
@@ -82,7 +83,7 @@ angular.module('starter.controllers', [])
                 district: $scope.submitdata.district, 
                 tole: $scope.submitdata.tole, 
                 title: $scope.submitdata.title, 
-                description: $scope.submitdata.description
+                description: $scope.contactname+" "+$scope.contactnumber+" "+$scope.submitdata.description
               };
     var error = false;
     if(!data.supplytype){
@@ -97,11 +98,16 @@ angular.module('starter.controllers', [])
     else if(!data.title){
       error = true;
     }
-    else if(!data.description){
+    else if(!$scope.submitdata.description){
+      error = true;
+    }
+    else if(!$scope.submitdata.contactname){
+      error = true;
+    }
+    else if(!$scope.submitdata.contactnumber){
       error = true;
     }
     if(!error){
-
       api.submit(data).then(function(data){
         alert("submitted")
       });

@@ -7,7 +7,7 @@ angular.module('starter.services', [])
 			if(refresh){
 				$http.get(url).success(function(data){
 					if(data){
-						def.resolve({success:true, content:JSON.parse(data)})
+						def.resolve({success:true, content:data})
 					}
             	}).error(function(data, status, headers, config) {
                     def.resolve({success:false, message:"No data found"})

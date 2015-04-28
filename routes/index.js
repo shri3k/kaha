@@ -17,7 +17,7 @@ router.get('/api', function(req, res, next) {
         if (err) {
           return new Error('Error on retrieveing');
         }
-        results.push(reply2);
+        results.push(JSON.parse(reply2));
         if (reply.length === index + 1) {
           res.send(results);
         }

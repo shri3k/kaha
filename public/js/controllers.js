@@ -77,13 +77,15 @@ angular.module('starter.controllers', [])
   $scope.submitdata = {};
   $scope.districts = api.districts.sort();
   $scope.supplytypes = api.supplytypes;
-  var data = {supplytype: $scope.submitdata.supplytype, 
-              district: $scope.submitdata.district, 
-              tole: $scope.submitdata.tole, 
-              title: $scope.submitdata.title, 
-              descreption: $scope.submitdata.descreption
-            };
-  api.submit(data).then(function(data){
-    alert("submitted")
-  });
+  $scope.submit = function(){
+    var data = {supplytype: $scope.submitdata.supplytype, 
+                district: $scope.submitdata.district, 
+                tole: $scope.submitdata.tole, 
+                title: $scope.submitdata.title, 
+                descreption: $scope.submitdata.descreption
+              };
+    api.submit(data).then(function(data){
+      alert("submitted")
+    });
+  }
 });

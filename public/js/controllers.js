@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
   $rootScope.selected = {};
-  
+
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.name = $stateParams.sectionid;
     $rootScope.selected.district = "";
@@ -82,7 +82,7 @@ angular.module('starter.controllers', [])
   }
 })
 .controller('AboutCtrl', function($scope, $stateParams, $rootScope) {
-  
+
 })
 .controller('EditCtrl', function($scope, api, $rootScope){
    $scope.submitdata = {};
@@ -105,10 +105,10 @@ angular.module('starter.controllers', [])
     $scope.supplytypes = api.supplytypes.sort();
     $scope.submit = function(){
         var data = {
-            supplytype: $scope.submitdata.supplytype, 
-            district: $scope.submitdata.district, 
-            tole: $scope.submitdata.tole, 
-            title: $scope.submitdata.title, 
+            supplytype: $scope.submitdata.supplytype,
+            district: $scope.submitdata.district,
+            tole: $scope.submitdata.tole,
+            title: $scope.submitdata.title,
             contactname: $scope.submitdata.contactname,
             contactnumber: $scope.submitdata.contactnumber,
             //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
@@ -155,45 +155,50 @@ angular.module('starter.controllers', [])
   $scope.supplytypes = api.supplytypes.sort();
   $scope.submit = function(){
     var data = {
-                  supplytype: $scope.submitdata.supplytype, 
-                  district: $scope.submitdata.district, 
-                  tole: $scope.submitdata.tole, 
-                  title: $scope.submitdata.title, 
-                  contactname: $scope.submitdata.contactname,
-                  contactnumber: $scope.submitdata.contactnumber,
-                  description: $scope.submitdata.description
+                  type: $scope.submitdata.supplytype,
+                  location: {
+                    district: $scope.submitdata.district,
+                    tole: $scope.submitdata.tole,
+                  },
+                  description:{
+                    title: $scope.submitdata.title,
+                    detail: $scope.submitdata.description,
+                    contactname: $scope.submitdata.contactname,
+                    contactnumber: $scope.submitdata.contactnumber
+                  },
+                  active: true
                   //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
               };
     var error = false;
-    if(!data.supplytype){
+    if(!data.type){
       error = true;
     }
-    else if(!data.district){
+    else if(!data.location.district){
       error = true;
     }
-    else if(!data.tole){
+    else if(!data.location.tole){
       error =true;
     }
-    else if(!data.title){
+    else if(!data.description.title){
       error = true;
     }
-    else if(!data.description){
+    else if(!data.description.detail){
       error = true;
     }
-    else if(!data.contactname){
+    else if(!data.description.contactname){
       error = true;
     }
-    else if(!data.contactnumber){
+    else if(!data.description.contactnumber){
       error = true;
     }
     if(!error){
       api.submit(data).then(function(data){
-        alert("submitted")
+        alert("submitted");
       });
     }
     else{
-      alert("All fields are required")
+      alert("All fields are required");
     }
-  }
+  };
 }
 );

@@ -69,10 +69,13 @@ angular.module('starter.controllers', [])
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api) {
   $scope.markAsUnavailable = function(){
-    api.markAsUnavailable();
+    api.markAsUnavailable($rootScope.selectedItem);
+  }
+  $scope.markHelpfull = function(){
+    api.markHelpfull($rootScope.selectedItem);
   }
   $scope.requestRemove = function(){
-    api.requestRemove();
+    api.requestRemove($rootScope.selectedItem);
   }
   $scope.editItem = function(){
     window.location = "#/app/edit";
@@ -110,7 +113,7 @@ angular.module('starter.controllers', [])
         error = true;
       }
       if(!error){
-        api.submit($rootScope.selectedItem).then(function(data){
+        api.update($rootScope.selectedItem).then(function(data){
           alert("submitted")
         });
       }

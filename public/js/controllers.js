@@ -104,50 +104,55 @@ angular.module('starter.controllers', [])
     $scope.districts = api.districts.sort();
     $scope.supplytypes = api.supplytypes.sort();
     $scope.submit = function(){
-        var data = {
-            supplytype: $scope.submitdata.supplytype,
-            district: $scope.submitdata.district,
-            tole: $scope.submitdata.tole,
-            title: $scope.submitdata.title,
-            contactname: $scope.submitdata.contactname,
-            contactnumber: $scope.submitdata.contactnumber,
-            //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
-            description: $scope.submitdata.description
-        };
+      var data = {
+                    type: $scope.submitdata.supplytype,
+                    location: {
+                      district: $scope.submitdata.district,
+                      tole: $scope.submitdata.tole,
+                    },
+                    description:{
+                      title: $scope.submitdata.title,
+                      detail: $scope.submitdata.description,
+                      contactname: $scope.submitdata.contactname,
+                      contactnumber: $scope.submitdata.contactnumber
+                    },
+                    active: true
+                    //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
+                };
         if ($scope.submitdata.uuid) {
             data.uuid = $scope.submitdata.uuid;
         }
         var error = false;
-        if(!data.supplytype){
-            error = true;
+        if(!data.type){
+          error = true;
         }
-        else if(!data.district){
-            error = true;
+        else if(!data.location.district){
+          error = true;
         }
-        else if(!data.tole){
-            error =true;
+        else if(!data.location.tole){
+          error =true;
         }
-        else if(!data.title){
-            error = true;
+        else if(!data.description.title){
+          error = true;
         }
-        else if(!data.description){
-            error = true;
+        else if(!data.description.detail){
+          error = true;
         }
-        else if(!data.contactname){
-            error = true;
+        else if(!data.description.contactname){
+          error = true;
         }
-        else if(!data.contactnumber){
-            error = true;
+        else if(!data.description.contactnumber){
+          error = true;
         }
         if(!error) {
             api.update(data).then(function(data){
-                alert("submitted")
+                alert("submitted");
             });
         }
         else{
-            alert("All fields are required")
+            alert("All fields are required");
         }
-    }
+    };
 })
 .controller('SubmitCtrl', function($scope, api) {
   $scope.submitdata = {};

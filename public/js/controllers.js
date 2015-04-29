@@ -88,7 +88,7 @@ angular.module('starter.controllers', [])
     console.log($rootScope.selectedItem)
     $scope.districts = api.districts.sort();
     $scope.supplytypes = api.supplytypes.sort();
-    $scope.submit = function(){
+    $scope.submitChanges = function(){
      
       var error = false;
       if(!$rootScope.selectedItem.type){

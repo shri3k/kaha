@@ -109,6 +109,8 @@ angular.module('starter.controllers', [])
             district: $scope.submitdata.district, 
             tole: $scope.submitdata.tole, 
             title: $scope.submitdata.title, 
+            contactname: $scope.submitdata.contactname,
+            contactnumber: $scope.submitdata.contactnumber,
             //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
             description: $scope.submitdata.description
         };
@@ -128,17 +130,17 @@ angular.module('starter.controllers', [])
         else if(!data.title){
             error = true;
         }
-        else if(!$scope.submitdata.description){
+        else if(!data.description){
             error = true;
         }
-        else if(!$scope.submitdata.contactname){
+        else if(!data.contactname){
             error = true;
         }
-        else if(!$scope.submitdata.contactnumber){
+        else if(!data.contactnumber){
             error = true;
         }
         if(!error) {
-            api.submit($scope.selectedItem).then(function(data){
+            api.update(data).then(function(data){
                 alert("submitted")
             });
         }
@@ -153,12 +155,15 @@ angular.module('starter.controllers', [])
   $scope.supplytypes = api.supplytypes.sort();
   $scope.submit = function(){
     var data = {
-        supplytype: $scope.submitdata.supplytype, 
-        district: $scope.submitdata.district, 
-        tole: $scope.submitdata.tole, 
-        title: $scope.submitdata.title, 
-        description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
-    };
+                  supplytype: $scope.submitdata.supplytype, 
+                  district: $scope.submitdata.district, 
+                  tole: $scope.submitdata.tole, 
+                  title: $scope.submitdata.title, 
+                  contactname: $scope.submitdata.contactname,
+                  contactnumber: $scope.submitdata.contactnumber,
+                  description: $scope.submitdata.description
+                  //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
+              };
     var error = false;
     if(!data.supplytype){
       error = true;
@@ -172,17 +177,17 @@ angular.module('starter.controllers', [])
     else if(!data.title){
       error = true;
     }
-    else if(!$scope.submitdata.description){
+    else if(!data.description){
       error = true;
     }
-    else if(!$scope.submitdata.contactname){
+    else if(!data.contactname){
       error = true;
     }
-    else if(!$scope.submitdata.contactnumber){
+    else if(!data.contactnumber){
       error = true;
     }
     if(!error){
-      api.submit($scope.selectedItem).then(function(data){
+      api.submit(data).then(function(data){
         alert("submitted")
       });
     }

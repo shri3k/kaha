@@ -93,15 +93,13 @@ angular.module('starter.controllers', [])
             district: $scope.selectedItem.location.district,
             tole: $scope.selectedItem.location.tole,
             title: $scope.selectedItem.description.title,
-            contactname :$scope.selectedItem.contactname,
-            contactnumber :$scope.selectedItem.contactnumber,
+            contactname :$scope.selectedItem.description.contactname,
+            contactnumber :$scope.selectedItem.description.contactnumber,
             description :$scope.selectedItem.description.detail
         };
-        /*
            console.log('Edit ');
            console.log($scope.selectedItem)
            console.log($scope.submitdata);
-           */
     };
     $scope.districts = api.districts.sort();
     $scope.supplytypes = api.supplytypes.sort();

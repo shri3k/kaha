@@ -98,7 +98,7 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Saved data");
+            alert("Created new entry");
             window.location.href = "/";
           }
           if (this.status == 503) {
@@ -115,7 +115,7 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Saved data");
+            alert("Updated data");
             window.location.href = "/";
           }
           if (this.status == 503) {

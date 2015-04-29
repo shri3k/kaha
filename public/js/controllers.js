@@ -113,6 +113,8 @@ angular.module('starter.controllers', [])
             //$rootScope.selectedItem = api.selected.get();
             if ($scope.selectedItem) {
                 $scope.submitdata = {
+                    channel: $scope.selectedItem.channel ? $scope.selectedItem.channel : $scope.submitdata.channel,
+                    datasource: $scope.selectedItem.datasource ? $scope.selectedItem.datasource: $scope.submitdata.datasource,
                     uuid: $scope.selectedItem.uuid,
                     supplytype: $scope.selectedItem.type,
                     district: $scope.selectedItem.location.district,
@@ -124,7 +126,6 @@ angular.module('starter.controllers', [])
                 };
                 console.log('Edit ');
                 console.log($scope.selectedItem)
-                console.log($scope.submitdata);
             };
         } else {
             $scope.submitdata.supplytype = $stateParams.type;
@@ -161,6 +162,10 @@ angular.module('starter.controllers', [])
             active: true
             //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
         };
+        if ($scope.submitdata.uuid) {
+            data.uuid = $scope.submitdata.uuid;
+        }
+
         var error = false;
         if(!data.type){
             error = true;
@@ -186,9 +191,15 @@ angular.module('starter.controllers', [])
         if(!error){
             console.log('Saving Data');
             console.log(data);
-            api.submit(data).then(function(data){
-                alert("submitted");
-            });
+            if (data.uuid) {
+                api.update(data).then(function(data){
+                    alert("Successfully Updated");
+                });
+            } else {
+                api.submit(data).then(function(data){
+                    alert("Thank you. Your data is not saved.");
+                });
+            }
         }
         else{
             alert("All fields are required");

@@ -1,10 +1,12 @@
 module.exports = {
   "prod": {
-    "host": "pub-redis-10191.us-east-1-4.2.ec2.garantiadata.com",
-    "port": 10191,
+    "name": "prod",
+    "dbhost": "pub-redis-10191.us-east-1-4.2.ec2.garantiadata.com",
+    "dbport": 10191
   },
   "dev": {
-    "host": "localhost",
-    "port": 6379
+    "name": "dev",
+    "dbhost": "pub-redis-13914.us-east-1-4.2.ec2.garantiadata.com",
+    "dbport": 13914
   }
-}[process.env.NODE_ENV || "prod"];
+}[process.env.NODE_ENV || "dev"];

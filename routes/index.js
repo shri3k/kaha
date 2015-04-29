@@ -3,11 +3,13 @@ var router = express.Router();
 var redis = require('redis');
 var sha1 = require('object-hash');
 var conf = require('../config/');
-var db = redis.createClient(conf.port, conf.host);
+var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
-db.on('connect', function() {});
+db.on('connect', function() {
+  console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
+});
 db.auth(dbpass, function() {
-  console.log('Connected to the db');
+  console.log("db auth success");
 });
 //Get core home data
 router.get('/api', function(req, res, next) {
@@ -46,11 +48,11 @@ router.put('/api', function(req, res, next) {
       return err;
     }
   }
-  multi.get(data.staleuuid + ":yeshelp", stdCb);
-  multi.get(data.staleuuid + ":nohelp", stdCb);
-  multi.get(data.staleuuid + ":remove", stdCb);
-  multi.del(data.staleuuid, stdCb);
-  multi.set(uuid, JSON.stingify(data), stdCb);
+  multi.get(staleuuid + ":yeshelp", stdCb);
+  multi.get(staleuuid + ":nohelp", stdCb);
+  multi.get(staleuuid + ":remove", stdCb);
+  multi.del(staleuuid, stdCb);
+  multi.set(uuid, JSON.stringify(data), stdCb);
   multi.exec(function(err, replies) {
     if (err) {
       return new Error('failed to modify');
@@ -107,7 +109,7 @@ router.get('/api/:id', function(req, res, next) {
   var uuid = req.params.id;
   var flag = req.query.flag;
   db.incr(uuid + ":" + flag, function(err, reply) {
-    res.send(reply);
+    res.status(200).send(reply);
   });
 });
 module.exports = router;

@@ -107,8 +107,61 @@ angular.module('starter.services', [])
         xhr.send(JSON.stringify(dataTmp));
         return def.promise;
       },
+      update: function(data) {
+        var def = $q.defer();
+        var xhr = new XMLHttpRequest();
+        xhr.open('PUT', '/api', true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onload = function() {
+          if(this.status === 200){
+            alert("Saved data");
+            window.location.href = "/";
+          }
+        };
+        xhr.send(JSON.stringify(data));
+        return def.promise;
+      },
       isFirstTime:function(){
         return localStorage.getItem("kahacodata")?false:true;
+      },
+      requestRemove:function(data){
+      	var def = $q.defer();
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/api/'+data.uuid+'?flag=removal', true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onload = function() {
+          if(this.status === 200){
+            alert("Request Sent");
+          }
+        };
+        xhr.send();
+        return def.promise;
+      },
+      markAsUnavailable:function(data){
+      	var def = $q.defer();
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/api/'+data.uuid+"?flag=no", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onload = function() {
+          if(this.status === 200){
+            alert("Request Sent");
+          }
+        };
+        xhr.send();
+        return def.promise;
+      },
+      markHelpfull:function(data){
+      	var def = $q.defer();
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/api/'+data.uuid+"?flag=yes", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onload = function() {
+          if(this.status === 200){
+            alert("Request Sent");
+          }
+        };
+        xhr.send();
+        return def.promise;
       },
       districts: [
         "Bhaktapur", "Dhading", "Kathmandu", "Kavrepalanchok", "Lalitpur", "Nuwakot", "Rasuwa", "Sindhupalchok", "Banke", "Bardiya", "Dailekh", "Jajarkot", "Surkhet", "Baglung", "Mustang", "Myagdi", "Parbat", "Gorkha", "Kaski", "Lamjung", "Manang", "Syangja", "Tanahu", "Dhanusa", "Dholkha", "Mahottari", "Ramechhap", "Sarlahi", "Sindhuli", "Dolpa", "Humla", "Jumla", "Kalikot", "Mugu", "Bhojpur", "Dhankuta", "Morang", "Sankhuwasabha", "Sunsari", "Terhathum", "Arghakhanchi", "Gulmi", "Kapilvastu", "Nawalparasi", "Palpa", "Rupandehi", "Baitadi", "Dadeldhura", "Darchula", "Kanchanpur", "Ilam", "Jhapa", "Panchthar", "Taplejung", "Bara", "Chitwan", "Makwanpur", "Parsa", "Rautahat", "Dang Deokhuri", "Pyuthan", "Rolpa", "Rukum", "Salyan", "Khotang", "Okhaldhunga", "Saptari", "Siraha", "Solukhumbu", "Udayapur", "Achham", "Bajhang", "Bajura", "Doti", "Kailali"

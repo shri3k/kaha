@@ -12,8 +12,9 @@
 	    <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
 	  </div>
 	  <div class="item item-text-wrap">
-	    <p>{{selectedItem.description.detail}}</p>
-	    
+	  	<p>Contact: {{selectedItem.description.contactname}}</p>
+	  	<p>Number: {{selectedItem.description.contactnumber}}</p>
+	    <p>Description: {{selectedItem.description.detail}}</p>	    
 	  </div>
 	  <div class="item">
 	   	<button class="button  button-block button-success" ng-click="markHelpfull()">It's helpful</button>

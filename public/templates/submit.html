@@ -1,13 +1,13 @@
 <ion-view view-title="{{formTitle}}" cache-view="false">
 <ion-content>
-<div class="card list">
+<div class="card list {{submitdata.channel?submitdata.channel:'supply'}}-channel">
     <plexus-select items="supplytypes" header-text="Select Supply Type" text="Supply Type" ng-model="submitdata.supplytype" placeholder-text="Enter supply type">
     </plexus-select> 
 
     <plexus-select items="districts" header-text="Select District" text="District" ng-model="submitdata.district" placeholder-text="Enter district">
     </plexus-select>
 
-    <div class="item item-floating-label">
+    <div class="item item-input item-floating-label">
         <span class="input-label">Tole Name</span>
         <input type="text" name="tole" ng-model="submitdata.tole" placeholder="Enter tole name"/> 
     </div>
@@ -16,15 +16,18 @@
         <span class="input-label">Resource Title</span>
         <input type="text" name="title" ng-model="submitdata.title" placeholder="Enter resource title"/> 
     </div>
-    <label class="item item-input">
+    <div class="item item-input item-floating-label">
+        <span class="input-label">Contact Name</span>
         <input type="text" name="contactname" ng-model="submitdata.contactname" placeholder="Enter Contact Name"/> 
-    </label>
-    <label class="item item-input">
+    </div>
+    <div class="item item-input item-floating-label">
+        <span class="input-label">Contact Number</span>
         <input type="text" name="contactnumber" ng-model="submitdata.contactnumber" placeholder="Enter Contact Number"/> 
-    </label>
-    <label class="item item-input">
+    </div>
+    <div class="item item-input item-floating-label">
+        <span class="input-label">Detail</span>
         <textarea rows="5" type="text" name="description" ng-model="submitdata.description" placeholder="Enter detailed description about the supply"></textarea> 
-    </label>
+    </div>
     <div class="item">
         <button class="button button-block button-positive" ng-click="submit()">Submit</button>
     </div>

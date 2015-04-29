@@ -8,6 +8,11 @@ var dbpass = process.env.DBPWD || '';
 var readonly = Number(process.env.KAHA_READONLY) || 0;
 console.log('Server in read-only mode ? '  + Boolean(readonly));
 
+function stdCb(err, reply) {
+  if (err) {
+    return err;
+  }
+}
 db.on('connect', function() {
   console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
 });
@@ -50,11 +55,6 @@ router.put('/api', function(req, res, next) {
   var multi = db.multi();
   var yesHelp, noHelp, remove;
 
-  function stdCb(err, reply) {
-    if (err) {
-      return err;
-    }
-  }
   multi.get(staleuuid + ":yeshelp", stdCb);
   multi.get(staleuuid + ":nohelp", stdCb);
   multi.get(staleuuid + ":remove", stdCb);
@@ -128,6 +128,25 @@ router.get('/api/:id', function(req, res, next) {
   db.incr(uuid + ":" + flag, function(err, reply) {
     res.sendStatus(200);
     res.end();
+  });
+});
+
+router.get('/api/flags/:id', function(req, res, next) {
+  var uuid = req.params.id;
+  var multi = db.multi();
+  multi.get(uuid + ':yes', stdCb);
+  multi.get(uuid + ':no', stdCb);
+  multi.get(uuid + ':removal', stdCb);
+  multi.exec(function(err, replies) {
+    if(err){
+      return err;
+    }
+    var result = {
+      'yes': replies[0],
+      'no': replies[1],
+      'removal': replies[2]
+    };
+    res.json(result);
   });
 });
 module.exports = router;

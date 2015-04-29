@@ -109,6 +109,8 @@ angular.module('starter.controllers', [])
             district: $scope.submitdata.district, 
             tole: $scope.submitdata.tole, 
             title: $scope.submitdata.title, 
+            contactname: $scope.submitdata.contactname,
+            contactnumber: $scope.submitdata.contactnumber,
             //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
             description: $scope.submitdata.description
         };
@@ -128,13 +130,13 @@ angular.module('starter.controllers', [])
         else if(!data.title){
             error = true;
         }
-        else if(!$scope.submitdata.description){
+        else if(!data.description){
             error = true;
         }
-        else if(!$scope.submitdata.contactname){
+        else if(!data.contactname){
             error = true;
         }
-        else if(!$scope.submitdata.contactnumber){
+        else if(!data.contactnumber){
             error = true;
         }
         if(!error) {
@@ -157,7 +159,10 @@ angular.module('starter.controllers', [])
                   district: $scope.submitdata.district, 
                   tole: $scope.submitdata.tole, 
                   title: $scope.submitdata.title, 
-                  description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
+                  contactname: $scope.submitdata.contactname,
+                  contactnumber: $scope.submitdata.contactnumber,
+                  description: $scope.submitdata.description
+                  //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
               };
     var error = false;
     if(!data.supplytype){
@@ -172,13 +177,13 @@ angular.module('starter.controllers', [])
     else if(!data.title){
       error = true;
     }
-    else if(!$scope.submitdata.description){
+    else if(!data.description){
       error = true;
     }
-    else if(!$scope.submitdata.contactname){
+    else if(!data.contactname){
       error = true;
     }
-    else if(!$scope.submitdata.contactnumber){
+    else if(!data.contactnumber){
       error = true;
     }
     if(!error){

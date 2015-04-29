@@ -4,12 +4,12 @@
   </ion-nav-buttons>
   <ion-content>
     <div class="card list">
-	  <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'offer'}}-channel"">
+	  <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'supply'}}-channel"">
 		<span class="item-note" ng-class="selectedItem.active?'active':''">
 	        <small>{{selectedItem.active?"available":"not available"}}</small><br>
 	    </span> 
         <h3>
-            {{selectedItem.description.title}} - {{selectedItem.channel?selectedItem.channel:'offer'}}
+            {{selectedItem.description.title}} - {{selectedItem.channel?selectedItem.channel:'supply'}}
         </h3>
 	    <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
 	  </div>

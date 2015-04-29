@@ -14,14 +14,14 @@ on-refresh="doRefresh()">
         <ion-search placeholder="Type to search" filter="search"></ion-search>
     </div>
     <div class="item">
-    <a href="#/app/submit?type={{name}}&channel=offer" class="button button-balanced">I supply</a>
-    <a href="#/app/submit?type={{name}}&channel=request" class="button button-assertive">I need</a>
+    <a href="#/app/submit?type={{name}}&channel=supply" class="button button-balanced">I supply</a>
+    <a href="#/app/submit?type={{name}}&channel=need" class="button button-assertive">I need</a>
 </div>
     
 </div>
 
-<div class="item {{item.channel?item.channel:'offer'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
-    <h2>{{item.description.title}} - {{item.channel?item.channel:'offer'}}</h2>
+<div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
+    <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>
     <p>
     {{item.location.district}} , {{item.location.tole}}
 

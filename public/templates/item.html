@@ -8,10 +8,10 @@
 		<span class="item-note" ng-class="selectedItem.active?'active':''">
 	        <small>{{selectedItem.active?"available":"not available"}}</small><br>
 	        <span style="color:green; font-size:20px;">
-	        	<i class="icon ion-thumbsup" ></i><sub style="font-size:10px;">{{stat.yes}}</sub>
+	        	<i class="icon ion-thumbsup" ></i><sub style="font-size:10px;">{{stat.yes?stat.yes:0}}</sub>
 	        </span>
 	        <span style="color:red; font-size:20px;">
-	        	<i class="icon ion-thumbsdown" ></i><sub style="font-size:10px;">{{stat.no}}</sub>
+	        	<i class="icon ion-thumbsdown" ></i><sub style="font-size:10px;">{{stat.no?stat.no:0}}</sub>
 	        </span>
 	    </span> 
 	    <h3>{{selectedItem.description.title}}</h3>

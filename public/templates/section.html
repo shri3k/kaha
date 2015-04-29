@@ -1,25 +1,34 @@
 <ion-view>
-  <ion-nav-title>{{name | ucfirst }}</ion-nav-title>
-  <ion-content>
-    <ion-refresher
-    pulling-text="Pull to refresh..."
-    on-refresh="doRefresh()">
-  </ion-refresher>
-        <ion-list>
-          <div class="bar bar-header item-input-inset">
-              <ion-search placeholder="Type to search" filter="search"></ion-search>
-          </div>
+<ion-nav-title>
+<div class="h1 title">{{name | ucfirst }}</div>
+</ion-nav-title>
 
-            <div class="item" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
-              <h2>{{item.description.title}}</h2>
-              <p>
-                  {{item.location.district}} , {{item.location.tole}}
+<ion-content>
+<ion-refresher
+pulling-text="Pull to refresh..."
+on-refresh="doRefresh()">
+</ion-refresher>
 
-                  <span class="item-note"  ng-class="item.active?'active':''">
-                    {{item.active?"available":"not available"}}
-                  </span>
-              </p>
-            </div>
-        </ion-list>
-  </ion-content>
+<div class="item">
+    <div class="item bar-header item-input-inset">
+        <ion-search placeholder="Type to search" filter="search"></ion-search>
+    </div>
+    <div class="item">
+    <a href="#/app/submit?type={{name}}&channel=offer" class="button button-balanced">+ New Offer</a>
+    <a href="#/app/submit?type={{name}}&channel=request" class="button button-assertive">+ New Request</a>
+</div>
+    
+</div>
+
+<div class="item {{item.channel?item.channel:'offer'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
+    <h2>{{item.description.title}} - {{item.channel?item.channel:'offer'}}</h2>
+    <p>
+    {{item.location.district}} , {{item.location.tole}}
+
+    <span class="item-note"  ng-class="item.active?'active':''">
+        {{item.active?"available":"not available"}}
+    </span>
+    </p>
+</div>
+</ion-content>
 </ion-view>

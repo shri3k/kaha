@@ -1,17 +1,19 @@
-<ion-view view-title="{{item.description.title}}"  cache-view="false">
+<ion-view cache-view="false">
   <ion-nav-buttons side="right">
-    <button class="button-light" ng-click="editItem()">Edit Item</button>
+      <button class="button button-icon-left ion-edit" ng-click="editItem()"> Edit Item</button>
   </ion-nav-buttons>
   <ion-content>
-    <div class="card">
-	  <div class="item item-divider  item-text-wrap">
+    <div class="card list">
+	  <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'offer'}}-channel"">
 		<span class="item-note" ng-class="selectedItem.active?'active':''">
 	        <small>{{selectedItem.active?"available":"not available"}}</small><br>
 	    </span> 
-	    <h3>{{selectedItem.description.title}}</h3>
+        <h3>
+            {{selectedItem.description.title}} - {{selectedItem.channel?selectedItem.channel:'offer'}}
+        </h3>
 	    <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
 	  </div>
-	  <div class="item item-text-wrap">
+	  <div class="item item-text-wrap item-body">
 	  	<p>Contact: {{selectedItem.description.contactname}}</p>
 	  	<p>Number: {{selectedItem.description.contactnumber}}</p>
 	    <p>Description: {{selectedItem.description.detail}}</p>	    

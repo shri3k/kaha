@@ -49,7 +49,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
   .state('app.submit', {
-    url: "/submit",
+    url: "/submit?edit&type&district&channel&datasource",
     views: {
       'menuContent': {
         templateUrl: "templates/submit.html",

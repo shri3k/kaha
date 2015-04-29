@@ -135,7 +135,7 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Request Sent");
+            def.resolve({success:true});
           }
         };
         xhr.send();

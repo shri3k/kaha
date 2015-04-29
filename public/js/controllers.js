@@ -86,7 +86,10 @@ angular.module('starter.controllers', [])
     });
   }
   $scope.requestRemove = function(){
-    api.requestRemove($rootScope.selectedItem);
+    api.requestRemove($rootScope.selectedItem).then(function(data){
+      var startAt = $scope.stat.removal?parseInt($scope.stat.removal):0;
+      $scope.stat.removal = startAt+1;
+    });
   }
   $scope.editItem = function(){
     window.location = "#/app/edit";

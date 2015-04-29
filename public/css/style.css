@@ -55,3 +55,11 @@
   background-color: #d9534f;
   border-color: #d43f3a;
 }
+
+.request-channel {
+    background-color:#FFFAFA; 
+}
+
+.offer-channel {
+    background-color:#FCFFF0;
+}

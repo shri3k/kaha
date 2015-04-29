@@ -126,7 +126,8 @@ router.get('/api/:id', function(req, res, next) {
   var uuid = req.params.id;
   var flag = req.query.flag;
   db.incr(uuid + ":" + flag, function(err, reply) {
-    res.status(200).send(reply);
+    res.sendStatus(200);
+    res.end();
   });
 });
 module.exports = router;

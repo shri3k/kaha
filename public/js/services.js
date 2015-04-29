@@ -28,6 +28,14 @@ angular.module('starter.services', [])
         }
         return def.promise;
       },
+      selected:{
+        get:function(){
+          return JSON.parse(localStorage.getItem("kahaselected"));
+        },
+        set:function(data){
+          localStorage.setItem("kahaselected", JSON.stringify(data));
+        }
+      },
       filter: {
         type: function(data, type) {
           var filtered = [];
@@ -140,7 +148,7 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Request Sent");
+            def.resolve({success:true});
           }
         };
         xhr.send();
@@ -153,10 +161,22 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Request Sent");
+            def.resolve({success:true});
+          }
+          else{
+            def.resolve({success:false});
           }
         };
         xhr.send();
+        return def.promise;
+      },
+      stat:function(data){
+        var def = $q.defer();
+        var url = "/api/flags/"+data.uuid;
+        $http.get(url).success(function(data) {
+          console.log(data)
+              def.resolve(data);
+        });
         return def.promise;
       },
       districts: [

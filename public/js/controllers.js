@@ -27,6 +27,7 @@ angular.module('starter.controllers', [])
   }
   $scope.loadItem = function(item){
     $rootScope.selectedItem = item;
+    api.selected.set(item);
     window.location = "#/app/item";
   }
   $scope.showPopup = function() {
@@ -68,11 +69,21 @@ angular.module('starter.controllers', [])
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api) {
+  $rootScope.selectedItem = api.selected.get();
+  api.stat($rootScope.selectedItem).then(function(data){
+    $scope.stat = data;
+  });
   $scope.markAsUnavailable = function(){
-    api.markAsUnavailable($rootScope.selectedItem);
+    api.markAsUnavailable($rootScope.selectedItem).then(function(data){
+      var startAt = $scope.stat.no?parseInt($scope.stat.no):0;
+      $scope.stat.no = startAt+1;
+    });
   }
   $scope.markHelpfull = function(){
-    api.markHelpfull($rootScope.selectedItem);
+    api.markHelpfull($rootScope.selectedItem).then(function(data){
+      var startAt = $scope.stat.yes?parseInt($scope.stat.yes):0;
+      $scope.stat.yes = startAt+1;
+    });
   }
   $scope.requestRemove = function(){
     api.requestRemove($rootScope.selectedItem);
@@ -85,6 +96,7 @@ angular.module('starter.controllers', [])
 
 })
 .controller('EditCtrl', function($scope, api, $rootScope){
+  $rootScope.selectedItem = api.selected.get();
    $scope.submitdata = {};
     if ($scope.selectedItem) {
         $scope.submitdata = {

@@ -93,6 +93,9 @@ angular.module('starter.services', [])
             alert("Saved data");
             window.location.href = "/";
           }
+          if (this.status == 503) {
+              alert('We are currently not able to process your request. Please try again later');
+          }
         };
         xhr.send(JSON.stringify(data));
         return def.promise;
@@ -106,6 +109,9 @@ angular.module('starter.services', [])
           if(this.status === 200){
             alert("Saved data");
             window.location.href = "/";
+          }
+          if (this.status == 503) {
+              alert('We are currently not able to process your request. Please try again later');
           }
         };
         xhr.send(JSON.stringify(data));

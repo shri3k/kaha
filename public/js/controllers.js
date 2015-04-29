@@ -147,7 +147,7 @@ angular.module('starter.controllers', [])
         if(!error) {
             api.update(data).then(function(data){
                 alert("submitted");
-            });
+            })
         }
         else{
             alert("All fields are required");

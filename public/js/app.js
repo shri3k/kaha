@@ -70,7 +70,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     url: "/edit",
     views: {
       'menuContent': {
-        templateUrl: "templates/edit.html",
+        templateUrl: "templates/submit.html",
         controller: 'EditCtrl'
       }
     }

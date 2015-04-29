@@ -12,8 +12,6 @@ angular.module('plexusSelect', [])
                        'items': '=',
                        'text': '@',
                        'headerText': '@',
-                       'textField': '@',
-                       'valueField': '@',
                        'placeholderText':'@',
                        'callback': '&'
                    },
@@ -24,6 +22,7 @@ angular.module('plexusSelect', [])
 
                        if (!ngModel) return; // do nothing if no ng-model
                        $scope.allowEmpty = iAttrs.allowEmpty === 'false' ? false : true;
+
                        $scope.defaultText = $scope.text || '';
                        $ionicModal.fromTemplateUrl('plexusSelectItems.html', {
                            'scope': $scope
@@ -49,6 +48,8 @@ angular.module('plexusSelect', [])
                        /* Get field name and evaluate */
                        $scope.getItemName = function(field, item) {
                            if (field && item) {
+                               console.log('sss');
+                               console.log(field + ' , ' + item);
                                return $scope.$eval(field, item);
                            }
                        };
@@ -65,6 +66,12 @@ angular.module('plexusSelect', [])
                            if ($scope.defaultText === value) $scope.placeholder = 'placeholderGray';
                            else $scope.placeholder = 'placeholderBlack';
                        });
+                       var render = function(val){            
+                           var text = ngModel.$modelValue || $scope.text || '';
+                           $scope.text = text;
+                       };
+                       $scope.$watch(iAttrs['ngModel'], render);
+                       render();
                    }
                };
            }

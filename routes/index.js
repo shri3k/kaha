@@ -5,6 +5,9 @@ var sha1 = require('object-hash');
 var conf = require('../config/');
 var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
+var readonly = Number(process.env.KAHA_READONLY) || 0;
+console.log('Server in read-only mode ? '  + Boolean(readonly));
+
 db.on('connect', function() {
   console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
 });
@@ -36,6 +39,10 @@ router.get('/', function(req, res, next) {
 
 //EDIT POST
 router.put('/api', function(req, res, next) {
+    if (readonly) {
+        res.status(503).send('Service Unavailable');
+        return;
+    }
   var data = req.body;
   var staleuuid = data.uuid;
   var uuid = sha1(data);
@@ -75,6 +82,11 @@ router.put('/api', function(req, res, next) {
 
 //Add Entry
 router.post('/api', function(req, res, next) {
+    if (readonly) {
+        res.status(503).send('Service Unavailable');
+        return;
+    }
+
   var okResult = [];
 
   function entry(obj, isLastItem) {
@@ -106,6 +118,11 @@ router.post('/api', function(req, res, next) {
 
 //Edit Flags
 router.get('/api/:id', function(req, res, next) {
+  if (readonly) {
+        res.status(503).send('Service Unavailable');
+        return;
+    }
+
   var uuid = req.params.id;
   var flag = req.query.flag;
   db.incr(uuid + ":" + flag, function(err, reply) {

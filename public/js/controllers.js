@@ -109,8 +109,6 @@ angular.module('starter.controllers', [])
             district: $scope.submitdata.district, 
             tole: $scope.submitdata.tole, 
             title: $scope.submitdata.title, 
-            contactname: $scope.submitdata.contactname,
-            contactnumber: $scope.submitdata.contactnumber,
             //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
             description: $scope.submitdata.description
         };
@@ -130,17 +128,17 @@ angular.module('starter.controllers', [])
         else if(!data.title){
             error = true;
         }
-        else if(!data.description){
+        else if(!$scope.submitdata.description){
             error = true;
         }
-        else if(!data.contactname){
+        else if(!$scope.submitdata.contactname){
             error = true;
         }
-        else if(!data.contactnumber){
+        else if(!$scope.submitdata.contactnumber){
             error = true;
         }
         if(!error) {
-            api.update(data).then(function(data){
+            api.submit($scope.selectedItem).then(function(data){
                 alert("submitted")
             });
         }
@@ -155,15 +153,12 @@ angular.module('starter.controllers', [])
   $scope.supplytypes = api.supplytypes.sort();
   $scope.submit = function(){
     var data = {
-                  supplytype: $scope.submitdata.supplytype, 
-                  district: $scope.submitdata.district, 
-                  tole: $scope.submitdata.tole, 
-                  title: $scope.submitdata.title, 
-                  contactname: $scope.submitdata.contactname,
-                  contactnumber: $scope.submitdata.contactnumber,
-                  description: $scope.submitdata.description
-                  //description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
-              };
+        supplytype: $scope.submitdata.supplytype, 
+        district: $scope.submitdata.district, 
+        tole: $scope.submitdata.tole, 
+        title: $scope.submitdata.title, 
+        description: "Contact Name: "+$scope.submitdata.contactname+" Contact Number: "+$scope.submitdata.contactnumber+" Description: "+$scope.submitdata.description
+    };
     var error = false;
     if(!data.supplytype){
       error = true;
@@ -177,17 +172,17 @@ angular.module('starter.controllers', [])
     else if(!data.title){
       error = true;
     }
-    else if(!data.description){
+    else if(!$scope.submitdata.description){
       error = true;
     }
-    else if(!data.contactname){
+    else if(!$scope.submitdata.contactname){
       error = true;
     }
-    else if(!data.contactnumber){
+    else if(!$scope.submitdata.contactnumber){
       error = true;
     }
     if(!error){
-      api.submit(data).then(function(data){
+      api.submit($scope.selectedItem).then(function(data){
         alert("submitted")
       });
     }

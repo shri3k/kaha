@@ -105,12 +105,12 @@ angular.module('starter.controllers', [])
     console.log($stateParams);
     $scope.formTitle = 'New Supply/Resource';
     $scope.submitdata = {
-        channel:'offer',
+        channel:'supply',
         datasource:'kaha'
     };
     if ($stateParams) {
         if ($stateParams.edit) {
-            //$rootScope.selectedItem = api.selected.get();
+            //$scope.selectedItem = api.selected.get();
             if ($scope.selectedItem) {
                 $scope.submitdata = {
                     channel: $scope.selectedItem.channel ? $scope.selectedItem.channel : $scope.submitdata.channel,
@@ -122,7 +122,8 @@ angular.module('starter.controllers', [])
                     title: $scope.selectedItem.description.title,
                     contactname :$scope.selectedItem.description.contactname,
                     contactnumber :$scope.selectedItem.description.contactnumber,
-                    description :$scope.selectedItem.description.detail
+                    description :$scope.selectedItem.description.detail,
+                    stat: $scope.selectedItem.stat
                 };
                 console.log('Edit ');
                 console.log($scope.selectedItem)
@@ -133,7 +134,7 @@ angular.module('starter.controllers', [])
 
         if ($stateParams.channel) {
             $scope.submitdata.channel = $stateParams.channel;
-            if ($stateParams.channel == 'request') {
+            if ($stateParams.channel == 'need') {
                 $scope.formTitle = 'Request Supply/Resource';
             }
         }

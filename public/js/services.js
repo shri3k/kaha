@@ -88,25 +88,13 @@ angular.module('starter.services', [])
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/api', true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        var dataTmp = {
-          "type": data.supplytype,
-          "location": {
-            "district": data.district,
-            "tole": data.tole
-          },
-          "description": {
-            "title" : data.title,
-            "detail": data.description
-          },
-          "active" : true
-        };
         xhr.onload = function() {
           if(this.status === 200){
             alert("Saved data");
             window.location.href = "/";
           }
         };
-        xhr.send(JSON.stringify(dataTmp));
+        xhr.send(JSON.stringify(data));
         return def.promise;
       },
       update: function(data) {

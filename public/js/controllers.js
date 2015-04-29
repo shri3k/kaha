@@ -140,7 +140,7 @@ angular.module('starter.controllers', [])
             error = true;
         }
         if(!error) {
-            api.submit(data).then(function(data){
+            api.update(data).then(function(data){
                 alert("submitted")
             });
         }

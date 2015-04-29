@@ -113,7 +113,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
             },
             template: '<div class="item-input-wrapper">' +
                         '<i class="icon ion-android-search"></i>' +
-                        '<input type="search" placeholder="{{placeholder}}" ng-model="search.value">' +
+                        '<input type="search" placeholder="{{placeholder}}" ng-model="search.value" autofocus>' +
                         '<i ng-if="search.value.length > 0" ng-click="clearSearch()" class="icon ion-close"></i>' +
                       '</div>'
         };

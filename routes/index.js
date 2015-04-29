@@ -6,7 +6,7 @@ var conf = require('../config/');
 var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
 var readonly = Number(process.env.KAHA_READONLY) || 0;
-console.log('Server in read-only mode ? '  + Boolean(readonly));
+console.log('Server in read-only mode ? ' + Boolean(readonly));
 
 function stdCb(err, reply) {
   if (err) {
@@ -44,10 +44,10 @@ router.get('/', function(req, res, next) {
 
 //EDIT POST
 router.put('/api', function(req, res, next) {
-    if (readonly) {
-        res.status(503).send('Service Unavailable');
-        return;
-    }
+  if (readonly) {
+    res.status(503).send('Service Unavailable');
+    return;
+  }
   var data = req.body;
   var staleuuid = data.uuid;
   var uuid = sha1(data);
@@ -82,10 +82,10 @@ router.put('/api', function(req, res, next) {
 
 //Add Entry
 router.post('/api', function(req, res, next) {
-    if (readonly) {
-        res.status(503).send('Service Unavailable');
-        return;
-    }
+  if (readonly) {
+    res.status(503).send('Service Unavailable');
+    return;
+  }
 
   var okResult = [];
 
@@ -119,9 +119,9 @@ router.post('/api', function(req, res, next) {
 //Edit Flags
 router.get('/api/:id', function(req, res, next) {
   if (readonly) {
-        res.status(503).send('Service Unavailable');
-        return;
-    }
+    res.status(503).send('Service Unavailable');
+    return;
+  }
 
   var uuid = req.params.id;
   var flag = req.query.flag;
@@ -138,7 +138,7 @@ router.get('/api/flags/:id', function(req, res, next) {
   multi.get(uuid + ':no', stdCb);
   multi.get(uuid + ':removal', stdCb);
   multi.exec(function(err, replies) {
-    if(err){
+    if (err) {
       return err;
     }
     var result = {

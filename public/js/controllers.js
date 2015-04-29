@@ -1,6 +1,9 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, api) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicSideMenuDelegate, $timeout, api, $timeout) {
+  setTimeout(function() {
+    $ionicSideMenuDelegate.toggleLeft();
+  }, 50);
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
     $rootScope.selected = {};

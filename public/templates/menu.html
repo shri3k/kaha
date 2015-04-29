@@ -5,7 +5,7 @@
       </ion-nav-back-button>
 
       <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left" ng-hide="$exposeAside.active">
+        <button class="button button-clear" menu-toggle="left" ng-hide="$exposeAside.active">Menu
         </button>
       </ion-nav-buttons>
     </ion-nav-bar>
@@ -14,9 +14,9 @@
 
   <ion-side-menu side="left" expose-aside-when="large">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Supplies</h1>
+      <h1 class="title">Resources</h1>
     </ion-header-bar>
-    <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''">
+    <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''" >
       <ion-list>
         <ion-item nav-clear menu-close href="#/app/section/food">
           Food

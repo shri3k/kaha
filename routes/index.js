@@ -23,14 +23,18 @@ db.auth(dbpass, function() {
 router.get('/api', function(req, res, next) {
   var results = [];
   var someString = db.keys('*', function(err, reply) {
-    reply.forEach(function(id, index) {
-      db.get(id, function(err, reply2) {
-        if (err) {
-          return new Error('Error on retrieveing');
-        }
-        results.push(JSON.parse(reply2));
-        if (reply.length === index + 1) {
-          res.send(results);
+    db.keys('*:*', function(err, reply2) {
+      reply.forEach(function(id, index) {
+        if (!~reply2.indexOf(id)) {
+          db.get(id, function(err, reply3) {
+            if (err) {
+              return new Error('Error on retrieveing');
+            }
+            results.push(JSON.parse(reply3));
+            if (reply.length === index + 1) {
+              res.send(results);
+            }
+          });
         }
       });
     });

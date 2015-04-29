@@ -85,7 +85,7 @@ angular.module('starter.controllers', [])
   
 })
 .controller('EditCtrl', function($scope, api, $rootScope){
-    $scope.submitdata = {};
+   $scope.submitdata = {};
     if ($scope.selectedItem) {
         $scope.submitdata = {
             uuid: $scope.selectedItem.uuid,
@@ -150,6 +150,10 @@ angular.module('starter.controllers', [])
     }
 })
 .controller('SubmitCtrl', function($scope, api) {
+  $scope.submitdata = {};
+  $scope.districts = api.districts.sort();
+  $scope.supplytypes = api.supplytypes.sort();
+  $scope.submit = function(){
     var data = {
                   supplytype: $scope.submitdata.supplytype, 
                   district: $scope.submitdata.district, 
@@ -188,4 +192,5 @@ angular.module('starter.controllers', [])
       alert("All fields are required")
     }
   }
+}
 );

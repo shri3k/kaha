@@ -2,10 +2,11 @@ var express = require('express');
 var router = express.Router();
 var redis = require('redis');
 var sha1 = require('object-hash');
-var conf = require('./conf');
-var db = redis.createClient(10191, "pub-redis-10191.us-east-1-4.2.ec2.garantiadata.com");
+var conf = require('../config/');
+var db = redis.createClient(conf.port, conf.host);
+var dbpass = process.env.DBPWD || '';
 db.on('connect', function() {});
-db.auth(conf.auth, function() {
+db.auth(dbpass, function() {
   console.log('Connected to the db');
 });
 //Get core home data
@@ -31,6 +32,46 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
+//EDIT POST
+router.put('/api', function(req, res, next) {
+  var data = req.body;
+  var staleuuid = data.uuid;
+  var uuid = sha1(data);
+  data.uuid = uuid;
+  var multi = db.multi();
+  var yesHelp, noHelp, remove;
+
+  function stdCb(err, reply) {
+    if (err) {
+      return err;
+    }
+  }
+  multi.get(data.staleuuid + ":yeshelp", stdCb);
+  multi.get(data.staleuuid + ":nohelp", stdCb);
+  multi.get(data.staleuuid + ":remove", stdCb);
+  multi.del(data.staleuuid, stdCb);
+  multi.set(uuid, JSON.stingify(data), stdCb);
+  multi.exec(function(err, replies) {
+    if (err) {
+      return new Error('failed to modify');
+    }
+    yeshelp = replies[0];
+    nohelp = replies[1];
+    removal = replies[2];
+    var multi2 = db.multi();
+    multi2.set(uuid + ":yeshelp", yeshelp, stdCb);
+    multi2.set(uuid + ":nohelp", nohelp, stdCb);
+    multi2.set(uuid + ":removal", removal, stdCb);
+    multi2.exec(function(err, replies) {
+      if (err) {
+        return new Error("failed to set flags");
+      }
+      res.status(200).send('ok');
+    });
+  });
+});
+
+//Add Entry
 router.post('/api', function(req, res, next) {
   var okResult = [];
 
@@ -63,9 +104,10 @@ router.post('/api', function(req, res, next) {
 
 //Edit Flags
 router.get('/api/:id', function(req, res, next) {
-  var uuid = req.params.id || sha1(req.body);
-  db.get(uuid, function(err, reply) {
-    res.send(JSON.parse(reply));
+  var uuid = req.params.id;
+  var flag = req.query.flag;
+  db.incr(uuid + ":" + flag, function(err, reply) {
+    res.send(reply);
   });
 });
 module.exports = router;

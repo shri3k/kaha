@@ -63,9 +63,11 @@ angular.module('starter.services', [])
         districts: function(data, type) {
           var filtered = [];
           angular.forEach(data, function(item) {
-            if (filtered.indexOf(item.location.district) == -1 && item.type.toUpperCase() == type.toUpperCase()) {
-              filtered.push(item.location.district);
-            }
+              if (item.location) {
+                  if (filtered.indexOf(item.location.district) == -1 && item.type.toUpperCase() == type.toUpperCase()) {
+                      filtered.push(item.location.district);
+                  }
+              }
           });
           return filtered;
         },

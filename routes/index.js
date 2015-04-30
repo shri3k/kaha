@@ -54,34 +54,49 @@ router.put('/api', function(req, res, next) {
   }
   var data = req.body;
   var staleuuid = data.uuid;
-  var uuid = sha1(data);
-  data.uuid = uuid;
-  var multi = db.multi();
-  var yesHelp, noHelp, remove;
-
-  multi.get(staleuuid + ":yes", stdCb);
-  multi.get(staleuuid + ":no", stdCb);
-  multi.get(staleuuid + ":removal", stdCb);
-  multi.del(staleuuid, stdCb);
-  multi.set(uuid, JSON.stringify(data), stdCb);
-  multi.exec(function(err, replies) {
+  db.get(staleuuid, function(err, reply) {
     if (err) {
-      return new Error('failed to modify');
+      return err;
     }
-    yeshelp = replies[0];
-    nohelp = replies[1];
-    removal = replies[2];
-    var multi2 = db.multi();
-    multi2.set(uuid + ":yes", yeshelp, stdCb);
-    multi2.set(uuid + ":no", nohelp, stdCb);
-    multi2.set(uuid + ":removal", removal, stdCb);
-    multi2.exec(function(err, replies) {
+    var staledate;
+    var parseReply = JSON.parse(reply);
+    console.log("reply:", reply);
+    staledate = (typeof parseReply.date != "undefined") ? parseReply.date : '';
+    data.date = {};
+    data.date = {
+      'created': staledate,
+      'modified': (new Date()).toUTCString()
+    };
+    var uuid = sha1(data);
+    data.uuid = uuid;
+    var multi = db.multi();
+    var yesHelp, noHelp, remove;
+
+    multi.get(staleuuid + ":yes", stdCb);
+    multi.get(staleuuid + ":no", stdCb);
+    multi.get(staleuuid + ":removal", stdCb);
+    multi.del(staleuuid, stdCb);
+    multi.set(uuid, JSON.stringify(data), stdCb);
+    multi.exec(function(err, replies) {
       if (err) {
-        return new Error("failed to set flags");
+        return new Error('failed to modify');
       }
-      res.status(200).send('ok');
+      yeshelp = replies[0];
+      nohelp = replies[1];
+      removal = replies[2];
+      var multi2 = db.multi();
+      multi2.set(uuid + ":yes", yeshelp, stdCb);
+      multi2.set(uuid + ":no", nohelp, stdCb);
+      multi2.set(uuid + ":removal", removal, stdCb);
+      multi2.exec(function(err, replies) {
+        if (err) {
+          return new Error("failed to set flags");
+        }
+        res.status(200).send('ok');
+      });
     });
   });
+
 });
 
 //Add Entry
@@ -109,8 +124,11 @@ router.post('/api', function(req, res, next) {
 
   function dateEntry(obj) {
     var today = new Date();
-    if (!obj.entryDate) {
-      obj.entryDate = today.toUTCString();
+    if (!(obj.date && obj.date.created)) {
+      obj.date = {
+        'created': today.toUTCString(),
+        'modified': today.toUTCString()
+      };
     }
     return obj;
   }

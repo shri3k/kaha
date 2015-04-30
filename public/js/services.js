@@ -1,6 +1,33 @@
 angular.module('starter.services', [])
   .factory("api", function($q, $http) {
     return {
+        coordinates: function() {
+            var def = $q.defer();
+            var cached_position = localStorage.getItem('position');
+            if (cached_position === null) {
+                var options = {
+                    enableHighAccuracy: true,
+                    timeout: 3000,
+                    maximumAge: 0
+                };
+
+                function success(pos) {
+                    localStorage.setItem('position', JSON.stringify(pos));
+                    def.resolve(pos);
+                };
+
+                function error(err) {
+                    console.log('Unable to get location');
+                    def.reject(err);
+                };
+
+                navigator.geolocation.getCurrentPosition(success, error, options);
+            } else {
+                var pos = JSON.parse(cached_position);
+                def.resolve(pos);
+            }
+            return def.promise;
+        },
       data: function(refresh) {
         var url = "/api";
         var def = $q.defer();
@@ -120,10 +147,10 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
             if(this.status === 200){
-                def.resolve({status:this.status});
+                def.resolve(this.status);
             }
             else{
-                def.fail({status:this.status});
+                def.reject(this.status);
             }
         };
         xhr.send(JSON.stringify(data));
@@ -136,10 +163,10 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
             if(this.status === 200){
-                def.resolve({status:this.status});
+                def.resolve(this.status);
             }
             else {
-                def.fail({status:this.status});
+                def.reject(this.status);
             }
         };
         xhr.send(JSON.stringify(data));

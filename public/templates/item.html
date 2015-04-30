@@ -14,9 +14,10 @@
 	    <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
 	  </div>
 	  <div class="item item-text-wrap item-body">
-	  	<p>Contact: {{selectedItem.description.contactname}}</p>
-	  	<p>Number: {{selectedItem.description.contactnumber}}</p>
-	    <p>Description: {{selectedItem.description.detail}}</p>	    
+          <p><strong>Contact :</strong> {{selectedItem.description.contactname}}</p>
+          <p><strong>Number :</strong> {{selectedItem.description.contactnumber}}</p>
+          <p><strong>Description :</strong> <pre>{{selectedItem.description.detail}}</pre>
+        </p>	    
 	  </div>
 	  <div class="item text-center" ng-click="markHelpfull()" style="color:green">
 	   	It's helpful

@@ -40,7 +40,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     })
 
   .state('app.item', {
-    url: "/item",
+    url: "/item/:uuid",
     views: {
       'menuContent': {
         templateUrl: "templates/item.html",

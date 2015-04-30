@@ -19,7 +19,11 @@ angular.module('starter.controllers', [])
     navigator.geolocation.getCurrentPosition(success, error, options);
   setTimeout(function() {
     $ionicSideMenuDelegate.toggleLeft();
+    $rootScope.isSideMenuOpen = false;
   }, 100);
+  $scope.menuClicked = function() {
+    $rootScope.isSideMenuOpen= $ionicSideMenuDelegate.isOpen();
+  };
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
     $rootScope.selected = {};
@@ -87,7 +91,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('ItemCtrl', function($scope, $stateParams, $rootScope, api) {
+.controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory) {
     $rootScope.selectedItem = api.selected.get();
     api.stat($rootScope.selectedItem).then(function(data){
         $scope.stat = data;
@@ -113,12 +117,33 @@ angular.module('starter.controllers', [])
     $scope.editItem = function(){
         window.location = "#/app/submit?edit=1";
     }
+    $scope.requestDelete = function(){
+        api.requestDelete($rootScope.selectedItem).then(function(data){
+            if(data){
+                $ionicHistory.goBack();
+            }else{
+                alert("Couldn't delete");
+            }
+        });
+    }
 })
-.controller('AboutCtrl', function($scope, $stateParams, $rootScope) {
+.controller('AboutCtrl', function($scope, $stateParams, $rootScope, api) {
+    $scope.submitdata = {};
+    $scope.signin = function(){
+        api.verifyAdmin($scope.submitdata.admincode).then(function(data){
+            if(data){
+                $rootScope.isloggedin = true;
+            }else{
+                $rootScope.isloggedin = false;
+            }
+        });
+    }
+    $scope.signout = function(){
+        $scope.isloggedin = false;
+    }
 
 })
 .controller('SubmitCtrl', function($scope, api, $stateParams, $rootScope) {
-    console.log($stateParams);
     $scope.formTitle = 'New Supply/Resource';
     $scope.submitdata = {
         channel:'supply',
@@ -214,11 +239,17 @@ angular.module('starter.controllers', [])
             console.log(data);
             if (data.uuid) {
                 api.update(data).then(function(data){
-                    alert("Successfully Updated");
+                    if(data){
+                        alert("Successfully Updated");
+                        $ionicHistory.goBack();
+                    }
                 });
             } else {
                 api.submit(data).then(function(data){
-                    alert("Thank you. Your data is not saved.");
+                    if(data){
+                        alert("Successfully Updated");
+                        $window.location.reload();
+                    }
                 });
             }
         }

@@ -106,17 +106,27 @@ router.post('/api', function(req, res, next) {
       }
     });
   }
+
+  function dateEntry(obj) {
+    var today = new Date();
+    if (!obj.entryDate) {
+      obj.entryDate = today.toUTCString();
+    }
+    return obj;
+  }
+
   var data = req.body;
+  var entryDate;
   var isLastItem = false;
   if (Array.isArray(data)) {
     data.forEach(function(item, index) {
       if (data.length === index + 1) {
         isLastItem = true;
       }
-      entry(item, isLastItem);
+      entry(dateEntry(item), isLastItem);
     });
   } else {
-    entry(data, true);
+    entry(dateEntry(data), true);
   }
 });
 
@@ -135,6 +145,7 @@ router.get('/api/:id', function(req, res, next) {
   });
 });
 
+//Get Flags
 router.get('/api/flags/:id', function(req, res, next) {
   var uuid = req.params.id;
   var multi = db.multi();
@@ -152,5 +163,22 @@ router.get('/api/flags/:id', function(req, res, next) {
     };
     res.json(result);
   });
+});
+//Delete item
+router.delete('/api/:id', function(req, res, next) {
+  var uuid = req.params.id;
+  var multi = db.multi();
+  if (uuid) {
+    multi.del(uuid, stdCb);
+    multi.del(uuid + ':yes', stdCb);
+    multi.del(uuid + ':no', stdCb);
+    multi.del(uuid + ':removal', stdCb);
+    multi.exec(function(err, replies) {
+      if (err) return err;
+      return Boolean(replies[0]) ? res.sendStatus(200) : res.sendStatus(400);
+    });
+  } else {
+    res.sendStatus(400);
+  }
 });
 module.exports = router;

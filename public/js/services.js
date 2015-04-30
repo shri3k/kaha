@@ -98,10 +98,10 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Created new entry");
-            window.location.href = "/";
+            def.resolve(true);
           }
-          if (this.status == 503) {
+          else{
+              def.resolve(false);
               alert('We are currently not able to process your request. Please try again later');
           }
         };
@@ -115,10 +115,10 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Updated data");
-            window.location.href = "/";
+            def.resolve(true);
           }
-          if (this.status == 503) {
+          else {
+              def.resolve(false);
               alert('We are currently not able to process your request. Please try again later');
           }
         };
@@ -170,6 +170,22 @@ angular.module('starter.services', [])
         xhr.send();
         return def.promise;
       },
+      requestDelete:function(data){
+          var def = $q.defer();
+          var xhr = new XMLHttpRequest();
+          xhr.open('DELETE', '/api/'+data.uuid, true);
+          xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+          xhr.onload = function() {
+            if(this.status === 200){
+              def.resolve({success:true});
+            }
+            else{
+              def.resolve({success:false});
+            }
+          };
+          xhr.send();
+          return def.promise;
+      },
       stat:function(data){
         var def = $q.defer();
         var url = "/api/flags/"+data.uuid;
@@ -177,6 +193,15 @@ angular.module('starter.services', [])
           console.log(data)
               def.resolve(data);
         });
+        return def.promise;
+      },
+      verifyAdmin:function(val){
+        var def = $q.defer();
+        if(val=="c00l@dmin"){
+          def.resolve(true);
+        }else{
+          def.resolve(false);
+        }
         return def.promise;
       },
       districts: [

@@ -62,3 +62,7 @@
 .supply-channel, .supply-channel textarea {
     background-color:#FCFFF0;
 }
+
+pre {
+    font-size:14px;
+}

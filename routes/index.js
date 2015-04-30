@@ -3,6 +3,7 @@ var router = express.Router();
 var redis = require('redis');
 var sha1 = require('object-hash');
 var conf = require('../config/');
+var uuid = require('node-uuid');
 var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
 var readonly = Number(process.env.KAHA_READONLY) || 0;
@@ -53,47 +54,27 @@ router.put('/api', function(req, res, next) {
     return;
   }
   var data = req.body;
-  var staleuuid = data.uuid;
-  db.get(staleuuid, function(err, reply) {
+  var data_uuid = data.uuid;
+  db.get(data_uuid, function(err, reply) {
     if (err) {
       return err;
     }
     var staledate;
     var parseReply = JSON.parse(reply);
-    staledate = (typeof parseReply.date != "undefined") ? parseReply.date : '';
-    data.date = {};
-    data.date = {
-      'created': staledate,
-      'modified': (new Date()).toUTCString()
-    };
-    var uuid = sha1(data);
-    data.uuid = uuid;
-    var multi = db.multi();
+    staledate = (typeof parseReply.date != "undefined") ? parseReply.date : {'created':'', 'modified':''};
+    data.date = staledate;
+    data.date.modified = (new Date()).toUTCString();
+
     var yesHelp, noHelp, remove;
 
-    multi.get(staleuuid + ":yes", stdCb);
-    multi.get(staleuuid + ":no", stdCb);
-    multi.get(staleuuid + ":removal", stdCb);
-    multi.del(staleuuid, stdCb);
-    multi.set(uuid, JSON.stringify(data), stdCb);
-    multi.exec(function(err, replies) {
-      if (err) {
-        return new Error('failed to modify');
-      }
-      yeshelp = replies[0];
-      nohelp = replies[1];
-      removal = replies[2];
-      var multi2 = db.multi();
-      multi2.set(uuid + ":yes", yeshelp, stdCb);
-      multi2.set(uuid + ":no", nohelp, stdCb);
-      multi2.set(uuid + ":removal", removal, stdCb);
-      multi2.exec(function(err, replies) {
+    db.set(data_uuid, JSON.stringify(data), function(err, reply) {
         if (err) {
-          return new Error("failed to set flags");
+            res.send('fail');
+        } else {
+            res.send('ok');
         }
-        res.status(200).send('ok');
-      });
     });
+
   });
 
 });
@@ -107,18 +88,16 @@ router.post('/api', function(req, res, next) {
 
   var okResult = [];
 
-  function entry(obj, isLastItem) {
-    var uuid = sha1(obj);
-    obj.uuid = uuid;
-    db.set(uuid, JSON.stringify(obj), function(err, reply) {
-      if (err) {
-        okResult.push("fail");
-      }
-      okResult.push("ok");
-      if (isLastItem) {
-        res.send(okResult);
-      }
-    });
+  function entry(obj) {
+      var data_uuid = uuid.v4();
+      obj.uuid = data_uuid;
+      obj = dateEntry(obj);
+      db.set(data_uuid, JSON.stringify(obj), function(err, reply) {
+          if (err) {
+              okResult.push("fail");
+          }
+          okResult.push("ok");
+      });
   }
 
   function dateEntry(obj) {
@@ -133,18 +112,14 @@ router.post('/api', function(req, res, next) {
   }
 
   var data = req.body;
-  var entryDate;
-  var isLastItem = false;
   if (Array.isArray(data)) {
-    data.forEach(function(item, index) {
-      if (data.length === index + 1) {
-        isLastItem = true;
-      }
-      entry(dateEntry(item), isLastItem);
-    });
+      data.forEach(function(item, index) {
+          entry(item);
+      });
   } else {
-    entry(dateEntry(data), true);
+      entry(data);
   }
+  res.send(okResult);
 });
 
 //Edit Flags

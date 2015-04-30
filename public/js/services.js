@@ -119,13 +119,12 @@ angular.module('starter.services', [])
         xhr.open('POST', '/api', true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
-          if(this.status === 200){
-            def.resolve(true);
-          }
-          else{
-              def.resolve(false);
-              alert('We are currently not able to process your request. Please try again later');
-          }
+            if(this.status === 200){
+                def.resolve({status:this.status});
+            }
+            else{
+                def.fail({status:this.status});
+            }
         };
         xhr.send(JSON.stringify(data));
         return def.promise;
@@ -136,13 +135,12 @@ angular.module('starter.services', [])
         xhr.open('PUT', '/api', true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
-          if(this.status === 200){
-            def.resolve(true);
-          }
-          else {
-              def.resolve(false);
-              alert('We are currently not able to process your request. Please try again later');
-          }
+            if(this.status === 200){
+                def.resolve({status:this.status});
+            }
+            else {
+                def.fail({status:this.status});
+            }
         };
         xhr.send(JSON.stringify(data));
         return def.promise;

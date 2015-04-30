@@ -60,12 +60,10 @@ router.put('/api', function(req, res, next) {
     }
     var staledate;
     var parseReply = JSON.parse(reply);
-    staledate = (typeof parseReply.date != "undefined") ? parseReply.date : '';
-    data.date = {};
-    data.date = {
-      'created': staledate,
-      'modified': (new Date()).toUTCString()
-    };
+    staledate = (typeof parseReply.date != "undefined") ? parseReply.date : {'created':'', 'modified':''};
+    data.date = staledate;
+    date.date.modified = (new Date()).toUTCString();
+
     var uuid = sha1(data);
     data.uuid = uuid;
     var multi = db.multi();

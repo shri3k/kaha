@@ -60,7 +60,6 @@ router.put('/api', function(req, res, next) {
     }
     var staledate;
     var parseReply = JSON.parse(reply);
-    console.log("reply:", reply);
     staledate = (typeof parseReply.date != "undefined") ? parseReply.date : '';
     data.date = {};
     data.date = {

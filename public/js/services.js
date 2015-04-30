@@ -98,10 +98,10 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Created new entry");
-            window.location.href = "/";
+            def.resolve(true);
           }
-          if (this.status == 503) {
+          else{
+              def.resolve(false);
               alert('We are currently not able to process your request. Please try again later');
           }
         };
@@ -115,10 +115,10 @@ angular.module('starter.services', [])
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
           if(this.status === 200){
-            alert("Updated data");
-            window.location.href = "/";
+            def.resolve(true);
           }
-          if (this.status == 503) {
+          else {
+              def.resolve(false);
               alert('We are currently not able to process your request. Please try again later');
           }
         };

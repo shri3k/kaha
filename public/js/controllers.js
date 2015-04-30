@@ -101,8 +101,7 @@ angular.module('starter.controllers', [])
 .controller('AboutCtrl', function($scope, $stateParams, $rootScope) {
 
 })
-.controller('SubmitCtrl', function($scope, api, $stateParams) {
-    console.log($stateParams);
+.controller('SubmitCtrl', function($scope, api, $stateParams, $ionicHistory) {
     $scope.formTitle = 'New Supply/Resource';
     $scope.submitdata = {
         channel:'supply',
@@ -193,11 +192,17 @@ angular.module('starter.controllers', [])
             console.log(data);
             if (data.uuid) {
                 api.update(data).then(function(data){
-                    alert("Successfully Updated");
+                    if(data){
+                        alert("Successfully Updated");
+                        $ionicHistory.goBack();
+                    }
                 });
             } else {
                 api.submit(data).then(function(data){
-                    alert("Thank you. Your data is not saved.");
+                    if(data){
+                        alert("Successfully Updated");
+                        $scope.submitdata = {};
+                    }
                 });
             }
         }

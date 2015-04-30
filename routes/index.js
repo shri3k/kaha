@@ -8,6 +8,14 @@ var dbpass = process.env.DBPWD || '';
 var readonly = Number(process.env.KAHA_READONLY) || 0;
 console.log('Server in read-only mode ? ' + Boolean(readonly));
 
+function enforceReadonly(res) {
+    if (readonly) {
+        res.status(503).send('Service Unavailable');
+        return true;
+    }
+    return false;
+}
+
 function stdCb(err, reply) {
   if (err) {
     return err;
@@ -48,10 +56,9 @@ router.get('/', function(req, res, next) {
 
 //EDIT POST
 router.put('/api', function(req, res, next) {
-  if (readonly) {
-    res.status(503).send('Service Unavailable');
-    return;
-  }
+    if (enforceReadonly(res)) {
+        return;
+    }
   var data = req.body;
   var data_uuid = data.uuid;
   db.get(data_uuid, function(err, reply) {
@@ -80,10 +87,9 @@ router.put('/api', function(req, res, next) {
 
 //Add Entry
 router.post('/api', function(req, res, next) {
-  if (readonly) {
-    res.status(503).send('Service Unavailable');
-    return;
-  }
+    if (enforceReadonly(res)) {
+        return;
+    }
 
   var okResult = [];
 
@@ -123,10 +129,9 @@ router.post('/api', function(req, res, next) {
 
 //Edit Flags
 router.get('/api/:id', function(req, res, next) {
-  if (readonly) {
-    res.status(503).send('Service Unavailable');
-    return;
-  }
+    if (enforceReadonly(res)) {
+        return;
+    }
 
   var uuid = req.params.id;
   var flag = req.query.flag;
@@ -157,6 +162,10 @@ router.get('/api/flags/:id', function(req, res, next) {
 });
 //Delete item
 router.delete('/api/:id', function(req, res, next) {
+    if (enforceReadonly(res)) {
+        return;
+    }
+
   var uuid = req.params.id;
   var multi = db.multi();
   if (uuid) {

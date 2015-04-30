@@ -20,23 +20,39 @@
     </ion-header-bar>
     <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''" >
       <ion-list>
-        <ion-item nav-clear menu-close href="#/app/section/food">
+
+        <ion-item class="item-icon-left" href="#/app/section/volunteer">
+        <i class="icon ion-person-stalker"></i>
+        Volunteers
+        </ion-item>
+
+        <ion-item class="item-icon-left" href="#/app/section/food">
+        <i class="icon ion-spoon"></i>
           Food
         </ion-item>
 
-        <ion-item nav-clear menu-close href="#/app/section/water">
-          Water
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/water">
+        <i class="icon ion-waterdrop" style="color:blue;"></i>
+        Water
         </ion-item>
 
-        <ion-item nav-clear menu-close href="#/app/section/blood">
-          Blood
+        <ion-item class="item-icon-left" href="#/app/section/blood">
+        <i class="icon ion-waterdrop" style="color:red;"></i>
+        Blood
         </ion-item>
 
-        <ion-item nav-clear menu-close href="#/app/section/shelter">
+        <ion-item class="item-icon-left" href="#/app/section/shelter">
+        <i class="icon ion-home"></i>
           Shelter
         </ion-item>
 
-        <ion-item nav-clear menu-close href="#/app/section/medical supplies">
+        <ion-item class="item-icon-left" href="#/app/section/transportation">
+        <i class="icon ion-model-s"></i>
+        Transportation 
+        </ion-item>
+
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/medical supplies">
+        <i class="icon ion-medkit"></i>
           Medical Kits/Supplies
         </ion-item>
 
@@ -49,26 +65,9 @@
           Other Contacts
         </ion-item>
 
-        <ion-item nav-clear menu-close href="#/app/section/volunteer">
-        Volunteers
-        </ion-item>
-
-        <ion-item nav-clear menu-close href="#/app/section/transportation">
-        Transportation 
-        </ion-item>
-
-
-        <ion-item nav-clear menu-close href="#/app/submit">
-          Add new supply/resource
-        </ion-item>
-
-        <ion-item nav-clear menu-close href="#/app/submit?channel=need">
-          Request for supply/resource 
-        </ion-item>
-
-
-        <ion-item nav-clear menu-close href="#/app/about">
-          About
+        <ion-item class="item-icon-left" href="#/app/about">
+        <i class="icon ion-ios-information-outline"></i>
+        About
         </ion-item>
 
       </ion-list>

@@ -1,48 +1,32 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $ionicSideMenuDelegate, $timeout, api, $timeout, $rootScope) {
-    var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-    },
-    parent = $rootScope;
-
-    function success(pos) {
-        parent.coordinates = pos.coords;
+    setTimeout(function() {
+        $ionicSideMenuDelegate.toggleLeft();
+        $rootScope.isSideMenuOpen = false;
+    }, 100);
+    $scope.menuClicked = function() {
+        $rootScope.isSideMenuOpen= $ionicSideMenuDelegate.isOpen();
     };
-
-    function error(err) {
-        // no error handler yet
-    };
-
-    navigator.geolocation.getCurrentPosition(success, error, options);
-  setTimeout(function() {
-    $ionicSideMenuDelegate.toggleLeft();
-    $rootScope.isSideMenuOpen = false;
-  }, 100);
-  $scope.menuClicked = function() {
-    $rootScope.isSideMenuOpen= $ionicSideMenuDelegate.isOpen();
-  };
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
     $rootScope.selected = {};
-
     $scope.$on('$ionicView.beforeEnter', function() {
         $scope.name = $stateParams.sectionid;
-        $rootScope.selected.district = "";
-        $rootScope.selected.tole = "";
         $rootScope.toles = [];
         $rootScope.districts = [];
+
         var refresh = $scope.dataset?false:true;
-        api.data(refresh).then(function(data){
-            $scope.dataset = api.filter.type(data.content, $scope.name);
-            $rootScope.items = $scope.dataset;
-            $rootScope.districts = api.location.districts(data.content, $scope.name);
+        api.coordinates().then(function(position) {
+            $rootScope.coordinates = position.coords;
+            $rootScope.doRefresh(refresh);
+        },
+        function(err) {
+            $rootScope.doRefresh(refresh);
         });
     });
     $rootScope.updateDistrict = function(){
-        $rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
+        //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
         $rootScope.items = api.filter.location.district($scope.dataset, $scope.name, $rootScope.selected.district);
     }
     $rootScope.updateTole = function(){
@@ -53,39 +37,27 @@ angular.module('starter.controllers', [])
         api.selected.set(item);
         window.location = "#/app/item/"+item.uuid;
     }
-    $scope.showPopup = function() {
-        $scope.data = {}
-
-        // An elaborate, custom popup
-        var myPopup = $ionicPopup.show({
-            templateUrl: "templates/popup.html",
-            title: 'Add Filter',
-            scope: $rootScope,
-            buttons: [
-                {
-                text: '<b>Clear Filter</b>',
-                type: 'button-assertive',
-                onTap: function(e) {
-                    $rootScope.items = $scope.dataset;
-                    $rootScope.selected.district = "";
-                    $rootScope.selected.tole = "";
-                }
-            },
-            { text: 'Close' }
-            ]
-        });
-    };
-    $scope.doRefresh = function(){
-        api.data(true).then(function(data){
+    $rootScope.doRefresh = function(refresh){
+        if (typeof refresh != 'undefined') {
+            refresh = true;
+        }
+        api.data(refresh).then(function(data){
+            console.log($scope.name);
+            console.log($rootScope);
             $scope.dataset = api.filter.type(data.content, $scope.name);
             $rootScope.items = $scope.dataset;
             $rootScope.districts = api.location.districts(data.content, $scope.name);
             $scope.$broadcast('scroll.refreshComplete');
-            if($rootScope.selected.district){
-                $rootScope.updateDistrict();
-            }
-            if($rootScope.selected.tole){
-                $rootScope.updateTole();
+            if ($rootScope.coordinates) {
+                // Guess the district based on coordinates above and set it
+                //$rootScope.selected.district = 'kathmandu';
+
+                if($rootScope.selected.district){
+                    $rootScope.updateDistrict();
+                }
+                if($rootScope.selected.tole){
+                    $rootScope.updateTole();
+                }
             }
         });
     }

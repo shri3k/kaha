@@ -1,4 +1,11 @@
 /* Empty. Add your own CSS if you like */
+.scroll {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
 .menu-content.active {
     -webkit-transform: none;
     transform: none;

@@ -1,6 +1,22 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicSideMenuDelegate, $timeout, api, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicSideMenuDelegate, $timeout, api, $timeout, $rootScope) {
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    },
+    parent = $rootScope;
+
+    function success(pos) {
+        parent.coordinates = pos.coords;
+    };
+
+    function error(err) {
+        // no error handler yet
+    };
+
+    navigator.geolocation.getCurrentPosition(success, error, options);
   setTimeout(function() {
     $ionicSideMenuDelegate.toggleLeft();
   }, 100);
@@ -101,7 +117,7 @@ angular.module('starter.controllers', [])
 .controller('AboutCtrl', function($scope, $stateParams, $rootScope) {
 
 })
-.controller('SubmitCtrl', function($scope, api, $stateParams) {
+.controller('SubmitCtrl', function($scope, api, $stateParams, $rootScope) {
     console.log($stateParams);
     $scope.formTitle = 'New Supply/Resource';
     $scope.submitdata = {
@@ -165,7 +181,12 @@ angular.module('starter.controllers', [])
         if ($scope.submitdata.uuid) {
             data.uuid = $scope.submitdata.uuid;
         }
-
+        if ($rootScope.coordinates) {
+            data.coordinates = {
+                longitude : $rootScope.coordinates.longitude,
+                latitude : $rootScope.coordinates.latitude
+            }
+        }
         var error = false;
         if(!data.type){
             error = true;

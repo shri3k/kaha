@@ -252,19 +252,31 @@ angular.module('starter.controllers', [])
             console.log('Saving Data');
             console.log(data);
             if (data.uuid) {
-                api.update(data).then(function(data){
-                    if(data){
+                api.update(data).then(
+                    function(status){
                         alert("Successfully Updated");
                         $ionicHistory.goBack();
+                    },
+                    function(status) {
+                        console.log('Failed to save');
+                        console.log(status);
+                        alert("We are currently not able to process your request. Please try again later");
                     }
-                });
+                );
             } else {
-                api.submit(data).then(function(data){
-                    if(data){
-                        alert("Successfully Updated");
+                api.submit(data).then(
+                    function(status){
+                    if(status){
+                        alert("Successfully Created");
                         $window.location.reload();
                     }
-                });
+                    },
+                    function(status) {
+                        console.log('Failed to save');
+                        console.log(status);
+                        alert("We are currently not able to process your request. Please try again later");
+                    }
+                );
             }
         }
         else{

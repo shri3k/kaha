@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var redis = require('redis');
-var sha1 = require('object-hash');
 var conf = require('../config/');
 var uuid = require('node-uuid');
 var db = redis.createClient(conf.dbport, conf.dbhost);

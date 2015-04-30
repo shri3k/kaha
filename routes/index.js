@@ -59,9 +59,9 @@ router.put('/api', function(req, res, next) {
   var multi = db.multi();
   var yesHelp, noHelp, remove;
 
-  multi.get(staleuuid + ":yeshelp", stdCb);
-  multi.get(staleuuid + ":nohelp", stdCb);
-  multi.get(staleuuid + ":remove", stdCb);
+  multi.get(staleuuid + ":yes", stdCb);
+  multi.get(staleuuid + ":no", stdCb);
+  multi.get(staleuuid + ":removal", stdCb);
   multi.del(staleuuid, stdCb);
   multi.set(uuid, JSON.stringify(data), stdCb);
   multi.exec(function(err, replies) {
@@ -72,8 +72,8 @@ router.put('/api', function(req, res, next) {
     nohelp = replies[1];
     removal = replies[2];
     var multi2 = db.multi();
-    multi2.set(uuid + ":yeshelp", yeshelp, stdCb);
-    multi2.set(uuid + ":nohelp", nohelp, stdCb);
+    multi2.set(uuid + ":yes", yeshelp, stdCb);
+    multi2.set(uuid + ":no", nohelp, stdCb);
     multi2.set(uuid + ":removal", removal, stdCb);
     multi2.exec(function(err, replies) {
       if (err) {

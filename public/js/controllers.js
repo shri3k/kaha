@@ -51,7 +51,7 @@ angular.module('starter.controllers', [])
     $scope.loadItem = function(item){
         $rootScope.selectedItem = item;
         api.selected.set(item);
-        window.location = "#/app/item";
+        window.location = "#/app/item/"+item.uuid;
     }
     $scope.showPopup = function() {
         $scope.data = {}
@@ -91,11 +91,25 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory) {
+.controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
     $rootScope.selectedItem = api.selected.get();
-    api.stat($rootScope.selectedItem).then(function(data){
-        $scope.stat = data;
-    });
+    if(!$rootScope.selectedItem){
+      api.getItem($stateParams.uuid).then(function(data){
+        if(data.success){
+          $rootScope.selectedItem = data.content;
+          api.stat($rootScope.selectedItem).then(function(data){
+              $scope.stat = data;
+          });
+        }else{
+          alert("no data found");
+          window.location = "/";
+        }
+      })
+    }else{
+      api.stat($rootScope.selectedItem).then(function(data){
+          $scope.stat = data;
+      });
+    }
     $scope.markAsUnavailable = function(){
         api.markAsUnavailable($rootScope.selectedItem).then(function(data){
             var startAt = $scope.stat.no?parseInt($scope.stat.no):0;

@@ -122,8 +122,7 @@ angular.module('starter.controllers', [])
                     title: $scope.selectedItem.description.title,
                     contactname :$scope.selectedItem.description.contactname,
                     contactnumber :$scope.selectedItem.description.contactnumber,
-                    description :$scope.selectedItem.description.detail,
-                    stat: $scope.selectedItem.stat
+                    description :$scope.selectedItem.description.detail
                 };
                 console.log('Edit ');
                 console.log($scope.selectedItem)

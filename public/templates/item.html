@@ -4,7 +4,7 @@
   </ion-nav-buttons>
   <ion-content>
     <div class="card list">
-	  <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'supply'}}-channel"">
+	  <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'supply'}}-channel">
 		<span class="item-note" ng-class="selectedItem.active?'active':''">
 	        <small>{{selectedItem.active?"available":"not available"}}</small><br>
 	    </span> 
@@ -30,6 +30,9 @@
 	  <div class="item text-center" ng-click="requestRemove()" style="color:#f0ad4e">
 	   	Submit a request to remove
 	   	<span class="item-note" style="color:#f0ad4e">{{stat.removal?stat.removal:0}}</span>
+	  </div>
+	  <div class="item text-center" ng-click="requestDelete()" style="color:#ff0000; font-weight:bold;" ng-show="isloggedin">
+	   	Delete this item
 	  </div>
 	</div>
   </ion-content>

@@ -6,5 +6,12 @@
     	If you are providing or know someone who is providing any help or supplies please use Add a supply/resource to add it.<br>
     	Please be as descriptive as possible.
     </p>
+    <div style="padding:10px" ng-hide="isloggedin">
+	    <input type="text" ng-model="submitdata.admincode" placeholder="enter your admin code"/>
+	    <button class="button-light" ng-click="signin()"> I am admin</button>
+	</div>
+	<div style="padding:10px" ng-show="isloggedin">
+	    <button class="button-light" ng-click="signout()"> Logout</button>
+	</div>
   </ion-content>
 </ion-view>

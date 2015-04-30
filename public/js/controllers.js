@@ -75,7 +75,7 @@ angular.module('starter.controllers', [])
     }
 })
 
-.controller('ItemCtrl', function($scope, $stateParams, $rootScope, api) {
+.controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory) {
     $rootScope.selectedItem = api.selected.get();
     api.stat($rootScope.selectedItem).then(function(data){
         $scope.stat = data;
@@ -101,8 +101,30 @@ angular.module('starter.controllers', [])
     $scope.editItem = function(){
         window.location = "#/app/submit?edit=1";
     }
+    $scope.requestDelete = function(){
+        api.requestDelete($rootScope.selectedItem).then(function(data){
+            if(data){
+                $ionicHistory.goBack();
+            }else{
+                alert("Couldn't delete");
+            }
+        });
+    }
 })
-.controller('AboutCtrl', function($scope, $stateParams, $rootScope) {
+.controller('AboutCtrl', function($scope, $stateParams, $rootScope, api) {
+    $scope.submitdata = {};
+    $scope.signin = function(){
+        api.verifyAdmin($scope.submitdata.admincode).then(function(data){
+            if(data){
+                $rootScope.isloggedin = true;
+            }else{
+                $rootScope.isloggedin = false;
+            }
+        });
+    }
+    $scope.signout = function(){
+        $scope.isloggedin = false;
+    }
 
 })
 .controller('SubmitCtrl', function($scope, api, $stateParams, $ionicHistory, $window) {

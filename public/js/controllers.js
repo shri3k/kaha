@@ -143,7 +143,7 @@ angular.module('starter.controllers', [])
     }
 
 })
-.controller('SubmitCtrl', function($scope, api, $stateParams, $rootScope, $ionicHistroy, $window) {
+.controller('SubmitCtrl', function($scope, api, $stateParams, $rootScope, $ionicHistory, $window) {
     $scope.formTitle = 'New Supply/Resource';
     $scope.submitdata = {
         channel:'supply',

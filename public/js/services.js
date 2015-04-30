@@ -28,6 +28,28 @@ angular.module('starter.services', [])
         }
         return def.promise;
       },
+      getItem:function(uuid){
+        var url = "/api";
+        var def = $q.defer();
+        $http.get(url).success(function(data) {
+            if (data) {
+              localStorage.setItem("kahacodata", JSON.stringify(data));
+              for(var i in data){
+                if(data[i].uuid == uuid){
+                  def.resolve({success: true, content: data[i]});
+                  break;
+                }
+              }
+              def.resolve({success: false, message:"no data found"});
+            }
+        }).error(function(data, status, headers, config) {
+            def.resolve({
+              success: false,
+              message: "No data found"
+            });
+        });
+        return def.promise;
+      },
       selected:{
         get:function(){
           return JSON.parse(localStorage.getItem("kahaselected"));
@@ -190,7 +212,6 @@ angular.module('starter.services', [])
         var def = $q.defer();
         var url = "/api/flags/"+data.uuid;
         $http.get(url).success(function(data) {
-          console.log(data)
               def.resolve(data);
         });
         return def.promise;

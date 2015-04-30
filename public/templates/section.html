@@ -8,8 +8,8 @@
 pulling-text="Pull to refresh..."
 on-refresh="doRefresh()">
 </ion-refresher>
-
-<div class="" style="text-align:center">
+<div class="list">
+<div class="searchbar" style="text-align:center">
     <div class="bar bar-header item-input-inset">
         <ion-search placeholder="Type to search" filter="search"></ion-search>
     </div>
@@ -28,6 +28,7 @@ on-refresh="doRefresh()">
         {{item.active?"available":"not available"}}
     </span>
     </p>
+</div>
 </div>
 </ion-content>
 </ion-view>

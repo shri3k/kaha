@@ -1,8 +1,11 @@
 <ion-view cache-view="false">
+    <ion-nav-title>
+    <div class="h1 title">{{selectedItem.type|ucfirst}}</div>
+    </ion-nav-title>
   <ion-nav-buttons side="right">
       <button class="button button-icon-left ion-edit" ng-click="editItem()"> Edit Item</button>
   </ion-nav-buttons>
-  <ion-content>
+  <ion-content data-tap-disabled="true">
     <div class="card list">
 	  <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'supply'}}-channel">
 		<span class="item-note" ng-class="selectedItem.active?'active':''">

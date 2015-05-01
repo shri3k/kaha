@@ -42,8 +42,6 @@ angular.module('starter.controllers', [])
             refresh = true;
         }
         api.data(refresh).then(function(data){
-            console.log($scope.name);
-            console.log($rootScope);
             $scope.dataset = api.filter.type(data.content, $scope.name);
             $rootScope.items = $scope.dataset;
             $rootScope.districts = api.location.districts(data.content, $scope.name);

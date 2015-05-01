@@ -32,10 +32,10 @@ on-refresh="doRefresh()">
     <p>
     {{item.location.district}} , {{item.location.tole}}
 
-    <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel == 'supply'">
+    <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'need'">
         {{item.active?"available":"not available"}}
     </span>
-    <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'supply'">
+    <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel == 'need'">
         {{item.active?"needed":"not needed"}}
     </span>
 

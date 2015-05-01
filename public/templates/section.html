@@ -1,4 +1,10 @@
 <ion-view>
+
+
+    <div style="position:fixed; right:0px; bottom:10px; z-index:999">
+        <a href="#/app/submit?type={{name}}&channel=supply" class="button button-balanced" style="width:110px;"><i class="icon ion-android-add-circle"></i> I supply</a><br>
+        <a href="#/app/submit?type={{name}}&channel=need" class="button button-assertive" style="width:110px; margin-top:4px;"><i class="icon ion-android-add-circle"></i> I need</a>
+    </div>
 <ion-nav-title>
 <div class="h1 title">{{name | ucfirst }}</div>
 </ion-nav-title>
@@ -13,10 +19,6 @@ on-refresh="doRefresh()">
     <div class="bar bar-header item-input-inset">
         <ion-search placeholder="Type to search" filter="search"></ion-search>
     </div>
-    <p>
-    <a href="#/app/submit?type={{name}}&channel=supply" class="button button-balanced">I supply</a>
-    <a href="#/app/submit?type={{name}}&channel=need" class="button button-assertive">I need</a>
-    </p>
 </div>
 
 <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">

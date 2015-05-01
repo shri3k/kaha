@@ -1,42 +1,60 @@
 <ion-view cache-view="false">
-    <ion-nav-title>
-    <div class="h1 title">{{selectedItem.type|ucfirst}}</div>
-    </ion-nav-title>
-  <ion-nav-buttons side="right">
-      <button class="button button-icon-left ion-edit" ng-click="editItem()"> Edit Item</button>
-  </ion-nav-buttons>
-  <ion-content data-tap-disabled="true">
-    <div class="card list">
-	  <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'supply'}}-channel">
-		<span class="item-note" ng-class="selectedItem.active?'active':''">
-	        <small>{{selectedItem.active?"available":"not available"}}</small><br>
-	    </span> 
+<ion-nav-title>
+<div class="h1 title">{{selectedItem.type|ucfirst}}</div>
+</ion-nav-title>
+<ion-nav-buttons side="right">
+<button class="button button-icon-left ion-edit" ng-click="editItem()"> Edit Item</button>
+</ion-nav-buttons>
+<ion-content data-tap-disabled="true">
+<div class="card list">
+    <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'supply'}}-channel">
+        <span class="item-note" ng-class="selectedItem.active?'active':''">
+            <small>{{selectedItem.active?"available":"not available"}}</small><br>
+        </span> 
         <h3>
             {{selectedItem.description.title}} - {{selectedItem.channel?selectedItem.channel:'supply'}}
         </h3>
-	    <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
-	  </div>
-	  <div class="item item-text-wrap item-body">
-          <p><strong>Contact :</strong> {{selectedItem.description.contactname}}</p>
-          <p><strong>Number :</strong> {{selectedItem.description.contactnumber}}</p>
-          <p><strong>Description :</strong> <pre>{{selectedItem.description.detail}}</pre>
+        <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
+    </div>
+    <div class="item item-text-wrap item-body">
+        <p><strong>Contact :</strong> {{selectedItem.description.contactname}}</p>
+        <p><strong>Number :</strong> {{selectedItem.description.contactnumber}}</p>
+        <p><strong>Description :</strong> <pre>{{selectedItem.description.detail}}</pre>
         </p>	    
-	  </div>
-	  <div class="item text-center" ng-click="markHelpfull()" style="color:green">
-          I got help from here
-          <span class="item-note" style="color:green">{{stat.yes?stat.yes:0}}</span>
-	  </div>
-	  <div class="item text-center" ng-click="markAsUnavailable()" style="color:red">
-          No longer available
-          <span class="item-note" style="color:red">{{stat.no?stat.no:0}}</span>
-	  </div>
-	  <div class="item text-center" ng-click="requestRemove()" style="color:#f0ad4e">
-	   	Submit a request to remove
-	   	<span class="item-note" style="color:#f0ad4e">{{stat.removal?stat.removal:0}}</span>
-	  </div>
-	  <div class="item text-center" ng-click="requestDelete()" style="color:#ff0000; font-weight:bold;" ng-show="isloggedin">
-	   	Delete this item
-	  </div>
-	</div>
-  </ion-content>
+    </div>
+    
+    <div class="item" ng-if="selectedItem.channel !== 'need'">
+        <div class="item text-center" ng-click="incrStat('no_connection')" style="color:red">
+            Could not connect
+            <span class="item-note" style="color:green">{{stat.no_connection?stat.no_connection:0}}</span>
+        </div>
+
+        <div class="item text-center" ng-click="incrStat('yes')" style="color:green">
+            I got help from here
+            <span class="item-note" style="color:green">{{stat.yes?stat.yes:0}}</span>
+        </div>
+        <div class="item text-center" ng-click="incrStat('no')" style="color:red">
+            No longer available
+            <span class="item-note" style="color:red">{{stat.no?stat.no:0}}</span>
+        </div>
+    </div>
+    <div class="item" ng-if="selectedItem.channel == 'need'">
+        <div class="item text-center" ng-click="incrStat('no_connection')" style="color:red">
+            Could not connect 
+            <span class="item-note" style="color:green">{{stat.no_connection?stat.no_connection:0}}</span>
+        </div>
+        <div class="item text-center" ng-click="incrStat('no')" style="color:green">
+            Need met
+            <span class="item-note" style="color:red">{{stat.no?stat.no:0}}</span>
+        </div>
+    </div>
+    <div class="item text-center" ng-click="incrStat('removal')" style="color:#f0ad4e">
+        Submit a request to remove
+        <span class="item-note" style="color:#f0ad4e">{{stat.removal?stat.removal:0}}</span>
+    </div>
+    <div class="item text-center" ng-click="requestDelete()" style="color:#ff0000; font-weight:bold;" ng-show="isloggedin">
+        Delete this item
+    </div>
+</div>
+</ion-content>
 </ion-view>

@@ -82,22 +82,16 @@ angular.module('starter.controllers', [])
           $scope.stat = data;
       });
     }
-    $scope.markAsUnavailable = function(){
-        api.markAsUnavailable($rootScope.selectedItem).then(function(data){
-            var startAt = $scope.stat.no?parseInt($scope.stat.no):0;
-            $scope.stat.no = startAt+1;
-        });
-    }
-    $scope.markHelpfull = function(){
-        api.markHelpfull($rootScope.selectedItem).then(function(data){
-            var startAt = $scope.stat.yes?parseInt($scope.stat.yes):0;
-            $scope.stat.yes = startAt+1;
-        });
-    }
-    $scope.requestRemove = function(){
-        api.requestRemove($rootScope.selectedItem).then(function(data){
-            var startAt = $scope.stat.removal?parseInt($scope.stat.removal):0;
-            $scope.stat.removal = startAt+1;
+    $scope.incrStat = function(statKey) {
+        api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
+            if (typeof($scope.stat.$$statKey) == 'undefined') {
+                $scope.stat.$$statKey = 0;
+            }
+            var startAt = $scope.stat.$$statKey ? parseInt($scope.stat.$$statKey) : 0;
+            $scope.stat.$$statKey = startAt+1;
+        },
+        function(error) {
+            alert('Error updating stat');
         });
     }
     $scope.editItem = function(){

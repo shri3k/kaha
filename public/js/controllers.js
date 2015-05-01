@@ -65,39 +65,39 @@ angular.module('starter.controllers', [])
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
     $rootScope.selectedItem = api.selected.get();
+    $rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
+    if ($rootScope.selectedItem.channel == 'supply') {
+        $rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'available' : 'not available';
+    } else {
+        $rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'needed' : 'not needed';
+    }
     if(!$rootScope.selectedItem){
-      api.getItem($stateParams.uuid).then(function(data){
-        if(data.success){
-          $rootScope.selectedItem = data.content;
-          api.stat($rootScope.selectedItem).then(function(data){
-              $scope.stat = data;
-          });
-        }else{
-          alert("no data found");
-          window.location = "/";
-        }
-      })
+        api.getItem($stateParams.uuid).then(function(data){
+            if(data.success){
+                $rootScope.selectedItem = data.content;
+                api.stat($rootScope.selectedItem).then(function(data){
+                    $scope.stat = data;
+                });
+            }else{
+                alert("no data found");
+                window.location = "/";
+            }
+        })
     }else{
-      api.stat($rootScope.selectedItem).then(function(data){
-          $scope.stat = data;
-      });
-    }
-    $scope.markAsUnavailable = function(){
-        api.markAsUnavailable($rootScope.selectedItem).then(function(data){
-            var startAt = $scope.stat.no?parseInt($scope.stat.no):0;
-            $scope.stat.no = startAt+1;
+        api.stat($rootScope.selectedItem).then(function(data){
+            $scope.stat = data;
         });
     }
-    $scope.markHelpfull = function(){
-        api.markHelpfull($rootScope.selectedItem).then(function(data){
-            var startAt = $scope.stat.yes?parseInt($scope.stat.yes):0;
-            $scope.stat.yes = startAt+1;
-        });
-    }
-    $scope.requestRemove = function(){
-        api.requestRemove($rootScope.selectedItem).then(function(data){
-            var startAt = $scope.stat.removal?parseInt($scope.stat.removal):0;
-            $scope.stat.removal = startAt+1;
+    $scope.incrStat = function(statKey) {
+        api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
+            if (typeof($scope.stat.$$statKey) == 'undefined') {
+                $scope.stat.$$statKey = 0;
+            }
+            var startAt = $scope.stat.$$statKey ? parseInt($scope.stat.$$statKey) : 0;
+            $scope.stat.$$statKey = startAt+1;
+        },
+        function(error) {
+            alert('Error updating stat');
         });
     }
     $scope.editItem = function(){

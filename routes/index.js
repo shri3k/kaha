@@ -92,16 +92,17 @@ router.post('/api', function(req, res, next) {
     }
 
   var okResult = [];
+  var multi = db.multi();
 
   function entry(obj) {
       var data_uuid = uuid.v4();
       obj.uuid = data_uuid;
       obj = dateEntry(obj);
-      db.set(data_uuid, JSON.stringify(obj), function(err, reply) {
+      multi.set(data_uuid, JSON.stringify(obj), function(err, reply) {
           if (err) {
-              okResult.push("fail");
+              return err;
           }
-          okResult.push("ok");
+          return reply;
       });
   }
 
@@ -124,7 +125,17 @@ router.post('/api', function(req, res, next) {
   } else {
       entry(data);
   }
-  res.send(okResult);
+  multi.exec(function(err, replies) {
+      if (err) {
+          console.log(err);
+          res.status(500).send(err);
+          return;
+      }
+      //console.log(JSON.stringify(replies));
+      if (replies) {
+          res.send(replies);
+      }
+  });
 });
 
 //Edit Flags
@@ -148,6 +159,7 @@ router.get('/api/flags/:id', function(req, res, next) {
   multi.get(uuid + ':yes', stdCb);
   multi.get(uuid + ':no', stdCb);
   multi.get(uuid + ':removal', stdCb);
+  multi.get(uuid + ':no_connection', stdCb);
   multi.exec(function(err, replies) {
     if (err) {
       return err;
@@ -155,7 +167,8 @@ router.get('/api/flags/:id', function(req, res, next) {
     var result = {
       'yes': replies[0],
       'no': replies[1],
-      'removal': replies[2]
+      'removal': replies[2],
+      'no_connection': replies[3]
     };
     res.json(result);
   });
@@ -173,6 +186,7 @@ router.delete('/api/:id', function(req, res, next) {
     multi.del(uuid + ':yes', stdCb);
     multi.del(uuid + ':no', stdCb);
     multi.del(uuid + ':removal', stdCb);
+    multi.del(uuid + ':no_connection', stdCb);
     multi.exec(function(err, replies) {
       if (err) return err;
       return Boolean(replies[0]) ? res.sendStatus(200) : res.sendStatus(400);

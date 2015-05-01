@@ -1,25 +1,30 @@
 <ion-view>
-
-
-    <div style="position:fixed; right:0px; bottom:10px; z-index:999">
-        <a href="#/app/submit?type={{name}}&channel=supply" class="button button-balanced" style="width:110px;"><i class="icon ion-android-add-circle"></i> I supply</a><br>
-        <a href="#/app/submit?type={{name}}&channel=need" class="button button-assertive" style="width:110px; margin-top:4px;"><i class="icon ion-android-add-circle"></i> I need</a>
+    <div id="addItems">
+        <div class="add-button-wrapper" ng-show="isAddActive">
+            <a href="#/app/submit?type={{name}}&channel=supply" class="button button-balanced" style="width:110px;"><i class="icon ion-android-add-circle"></i> I supply</a><br>
+            <a href="#/app/submit?type={{name}}&channel=need" class="button button-assertive" style="width:110px; margin-top:4px;"><i class="icon ion-android-add-circle"></i> I need</a>
+        </div>
+        <div class="round-button" ng-click="addIconToggle()">
+            <i class="icon ion-android-add-circle"></i>
+        </div>
     </div>
-<ion-nav-title>
-<div class="h1 title">{{name | ucfirst }}</div>
-</ion-nav-title>
 
-<ion-content>
-<ion-refresher
-pulling-text="Pull to refresh..."
-on-refresh="doRefresh()">
-</ion-refresher>
-<div class="list">
-<div class="searchbar" style="text-align:center">
+<div class="searchbar" style="text-align:center; position:fixed; top:40px; z-index:9999; width:100%">
     <div class="bar bar-header item-input-inset">
         <ion-search placeholder="Type to search" filter="search"></ion-search>
     </div>
 </div>
+<ion-nav-title>
+<div class="h1 title">{{name | ucfirst }}</div>
+</ion-nav-title>
+
+<ion-content style="margin-top:38px;">
+<ion-refresher
+pulling-text="Pull to refresh..."
+on-refresh="doRefresh()">
+</ion-refresher>
+
+<div class="list">
 
 <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
     <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>

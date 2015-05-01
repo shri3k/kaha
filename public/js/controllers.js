@@ -8,6 +8,9 @@ angular.module('starter.controllers', [])
     $scope.menuClicked = function() {
         $rootScope.isSideMenuOpen= $ionicSideMenuDelegate.isOpen();
     };
+    $rootScope.addIconToggle = function(){
+        $rootScope.isAddActive = $rootScope.isAddActive?false:true;
+    }
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
     $rootScope.selected = {};

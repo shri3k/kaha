@@ -65,22 +65,28 @@ angular.module('starter.controllers', [])
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
     $rootScope.selectedItem = api.selected.get();
+    $rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
+    if ($rootScope.selectedItem.channel == 'supply') {
+        $rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'available' : 'not available';
+    } else {
+        $rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'needed' : 'not needed';
+    }
     if(!$rootScope.selectedItem){
-      api.getItem($stateParams.uuid).then(function(data){
-        if(data.success){
-          $rootScope.selectedItem = data.content;
-          api.stat($rootScope.selectedItem).then(function(data){
-              $scope.stat = data;
-          });
-        }else{
-          alert("no data found");
-          window.location = "/";
-        }
-      })
+        api.getItem($stateParams.uuid).then(function(data){
+            if(data.success){
+                $rootScope.selectedItem = data.content;
+                api.stat($rootScope.selectedItem).then(function(data){
+                    $scope.stat = data;
+                });
+            }else{
+                alert("no data found");
+                window.location = "/";
+            }
+        })
     }else{
-      api.stat($rootScope.selectedItem).then(function(data){
-          $scope.stat = data;
-      });
+        api.stat($rootScope.selectedItem).then(function(data){
+            $scope.stat = data;
+        });
     }
     $scope.incrStat = function(statKey) {
         api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {

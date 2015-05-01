@@ -7,9 +7,9 @@
 </ion-nav-buttons>
 <ion-content data-tap-disabled="true">
 <div class="card list">
-    <div class="item item-divider  item-text-wrap {{selectedItem.channel?selectedItem.channel:'supply'}}-channel">
+    <div class="item item-divider  item-text-wrap {{selectedItem.channel}}-channel">
         <span class="item-note" ng-class="selectedItem.active?'active':''">
-            <small>{{selectedItem.active?"available":"not available"}}</small><br>
+            <small>{{selectedItem.activeText}}</small><br>
         </span> 
         <h3>
             {{selectedItem.description.title}} - {{selectedItem.channel?selectedItem.channel:'supply'}}

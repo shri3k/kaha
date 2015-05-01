@@ -28,7 +28,7 @@ angular.module('starter.controllers', [])
         function(err) {
             $rootScope.doRefresh(refresh);
         });*/
-        api.data(false).then(function(data){
+        api.data(true).then(function(data){
             $scope.dataset = api.filter.type(data.content, $scope.name);
             $rootScope.items = $scope.dataset;
             $rootScope.districts = api.location.districts(data.content, $scope.name);

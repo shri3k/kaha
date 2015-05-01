@@ -175,47 +175,21 @@ angular.module('starter.services', [])
       isFirstTime:function(){
         return localStorage.getItem("kahacodata")?false:true;
       },
-      requestRemove:function(data){
-      	var def = $q.defer();
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/'+data.uuid+'?flag=removal', true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.onload = function() {
-          if(this.status === 200){
-            def.resolve({success:true});
-          }
-        };
-        xhr.send();
-        return def.promise;
-      },
-      markAsUnavailable:function(data){
-      	var def = $q.defer();
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/'+data.uuid+"?flag=no", true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.onload = function() {
-          if(this.status === 200){
-            def.resolve({success:true});
-          }
-        };
-        xhr.send();
-        return def.promise;
-      },
-      markHelpfull:function(data){
-      	var def = $q.defer();
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/'+data.uuid+"?flag=yes", true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.onload = function() {
-          if(this.status === 200){
-            def.resolve({success:true});
-          }
-          else{
-            def.resolve({success:false});
-          }
-        };
-        xhr.send();
-        return def.promise;
+      incrStat:function(uuid, statKey) {
+          console.log('Setting ' + uuid + ' StatKey' + statKey);
+          var def = $q.defer();
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', '/api/'+uuid+'?flag='+statKey, true);
+          xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+          xhr.onload = function() {
+              if(this.status === 200){
+                  def.resolve(this.status);
+              } else {
+                  def.reject(this.status);
+              }
+          };
+          xhr.send();
+          return def.promise;
       },
       requestDelete:function(data){
           var def = $q.defer();

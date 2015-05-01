@@ -9,17 +9,49 @@ var readonly = Number(process.env.KAHA_READONLY) || 0;
 console.log('Server in read-only mode ? ' + Boolean(readonly));
 
 function enforceReadonly(res) {
-    if (readonly) {
-        res.status(503).send('Service Unavailable');
-        return true;
-    }
-    return false;
+  if (readonly) {
+    res.status(503).send('Service Unavailable');
+    return true;
+  }
+  return false;
 }
 
 function stdCb(err, reply) {
   if (err) {
     return err;
   }
+}
+
+
+function getAll(cb) {
+  var results = [];
+  db.keys('*', function(err, reply) {
+    db.keys('*:*', function(err, reply2) {
+      reply.forEach(function(id, index) {
+        if (!~reply2.indexOf(id)) {
+          db.get(id, function(err, reply3) {
+            if (err) {
+              cb(err);
+            }
+            results.push(JSON.parse(reply3));
+            if (reply.length === index + 1) {
+              cb(null, results);
+            }
+          });
+        }
+      });
+    });
+  });
+}
+
+function getSha(obj, shaFilters){
+    var key, extract = {};
+    if(Array.isArray(shaFilters)){
+      shaFilters.forEach(function(filter){
+        extract.filter = obj.filter;
+      });
+    }
+    return sha(extract);
 }
 db.on('connect', function() {
   console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
@@ -29,23 +61,18 @@ db.auth(dbpass, function() {
 });
 //Get core home data
 router.get('/api', function(req, res, next) {
-  var results = [];
-  var someString = db.keys('*', function(err, reply) {
-    db.keys('*:*', function(err, reply2) {
-      reply.forEach(function(id, index) {
-        if (!~reply2.indexOf(id)) {
-          db.get(id, function(err, reply3) {
-            if (err) {
-              return new Error('Error on retrieveing');
-            }
-            results.push(JSON.parse(reply3));
-            if (reply.length === index + 1) {
-              res.send(results);
-            }
-          });
-        }
-      });
-    });
+  getAll(function(err, results) {
+    if (err) {
+      return new Error(err);
+    }
+    res.send(results);
+  });
+});
+
+//Get dupe items
+router.get('/api/dupe', function(req, res, next) {
+  getAll(function(err, results){
+
   });
 });
 
@@ -56,9 +83,9 @@ router.get('/', function(req, res, next) {
 
 //EDIT POST
 router.put('/api', function(req, res, next) {
-    if (enforceReadonly(res)) {
-        return;
-    }
+  if (enforceReadonly(res)) {
+    return;
+  }
   var data = req.body;
   var data_uuid = data.uuid;
   db.get(data_uuid, function(err, reply) {
@@ -67,18 +94,21 @@ router.put('/api', function(req, res, next) {
     }
     var staledate;
     var parseReply = JSON.parse(reply);
-    staledate = (typeof parseReply.date != "undefined") ? parseReply.date : {'created':'', 'modified':''};
+    staledate = (typeof parseReply.date != "undefined") ? parseReply.date : {
+      'created': '',
+      'modified': ''
+    };
     data.date = staledate;
     data.date.modified = (new Date()).toUTCString();
 
     var yesHelp, noHelp, remove;
 
     db.set(data_uuid, JSON.stringify(data), function(err, reply) {
-        if (err) {
-            res.send('fail');
-        } else {
-            res.send('ok');
-        }
+      if (err) {
+        res.send('fail');
+      } else {
+        res.send('ok');
+      }
     });
 
   });
@@ -87,22 +117,22 @@ router.put('/api', function(req, res, next) {
 
 //Add Entry
 router.post('/api', function(req, res, next) {
-    if (enforceReadonly(res)) {
-        return;
-    }
+  if (enforceReadonly(res)) {
+    return;
+  }
 
   var okResult = [];
 
   function entry(obj) {
-      var data_uuid = uuid.v4();
-      obj.uuid = data_uuid;
-      obj = dateEntry(obj);
-      db.set(data_uuid, JSON.stringify(obj), function(err, reply) {
-          if (err) {
-              okResult.push("fail");
-          }
-          okResult.push("ok");
-      });
+    var data_uuid = uuid.v4();
+    obj.uuid = data_uuid;
+    obj = dateEntry(obj);
+    db.set(data_uuid, JSON.stringify(obj), function(err, reply) {
+      if (err) {
+        okResult.push("fail");
+      }
+      okResult.push("ok");
+    });
   }
 
   function dateEntry(obj) {
@@ -118,20 +148,20 @@ router.post('/api', function(req, res, next) {
 
   var data = req.body;
   if (Array.isArray(data)) {
-      data.forEach(function(item, index) {
-          entry(item);
-      });
+    data.forEach(function(item, index) {
+      entry(item);
+    });
   } else {
-      entry(data);
+    entry(data);
   }
   res.send(okResult);
 });
 
 //Edit Flags
 router.get('/api/:id', function(req, res, next) {
-    if (enforceReadonly(res)) {
-        return;
-    }
+  if (enforceReadonly(res)) {
+    return;
+  }
 
   var uuid = req.params.id;
   var flag = req.query.flag;
@@ -162,9 +192,9 @@ router.get('/api/flags/:id', function(req, res, next) {
 });
 //Delete item
 router.delete('/api/:id', function(req, res, next) {
-    if (enforceReadonly(res)) {
-        return;
-    }
+  if (enforceReadonly(res)) {
+    return;
+  }
 
   var uuid = req.params.id;
   var multi = db.multi();

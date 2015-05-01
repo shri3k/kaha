@@ -14,11 +14,7 @@
         <h3>
             {{selectedItem.description.title}} - {{selectedItem.channel?selectedItem.channel:'supply'}}
         </h3>
-        <p>
-        <small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}<br/>
-            {{selectedItem.date.modified | date:'Y-m-d'}}
-        </small>
-        </p>
+        <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
     </div>
     <div class="item item-text-wrap item-body">
         <p><strong>Contact :</strong> {{selectedItem.description.contactname}}</p>
@@ -27,7 +23,7 @@
         </p>	    
     </div>
     
-    <div class="item" ng-if="selectedItem.channel !== 'need'">
+    <div ng-if="selectedItem.channel !== 'need'">
         <div class="item text-center" ng-click="incrStat('yes')" style="color:green">
             I got help from here
             <span class="item-note" style="color:green">{{stat.yes?stat.yes:0}}</span>
@@ -37,7 +33,7 @@
             <span class="item-note" style="color:red">{{stat.no?stat.no:0}}</span>
         </div>
     </div>
-    <div class="item" ng-if="selectedItem.channel == 'need'">
+    <div ng-if="selectedItem.channel == 'need'">
         <div class="item text-center" ng-click="incrStat('no_connection')" style="color:red">
             Could not Contact 
             <span class="item-note" style="color:green">{{stat.no_connection?stat.no_connection:0}}</span>

@@ -5,6 +5,7 @@ angular.module('starter.controllers', [])
         $ionicSideMenuDelegate.toggleLeft();
         $rootScope.isSideMenuOpen = false;
     }, 100);
+    $rootScope.isAddActive = true;
     $scope.menuClicked = function() {
         $rootScope.isSideMenuOpen= $ionicSideMenuDelegate.isOpen();
     };

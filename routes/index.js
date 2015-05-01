@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var redis = require('redis');
 var conf = require('../config/');
+var sha = require('object-hash');
 var uuid = require('node-uuid');
 var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
@@ -44,14 +45,14 @@ function getAll(cb) {
   });
 }
 
-function getSha(obj, shaFilters){
-    var key, extract = {};
-    if(Array.isArray(shaFilters)){
-      shaFilters.forEach(function(filter){
-        extract.filter = obj.filter;
-      });
-    }
-    return sha(extract);
+function getSha(obj, shaFilters) {
+  var key, extract = {};
+  if (Array.isArray(shaFilters)) {
+    shaFilters.forEach(function(filter) {
+      extract.filter = obj.filter;
+    });
+  }
+  return sha(extract);
 }
 db.on('connect', function() {
   console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
@@ -71,7 +72,7 @@ router.get('/api', function(req, res, next) {
 
 //Get dupe items
 router.get('/api/dupe', function(req, res, next) {
-  getAll(function(err, results){
+  getAll(function(err, results) {
 
   });
 });
@@ -122,16 +123,17 @@ router.post('/api', function(req, res, next) {
   }
 
   var okResult = [];
+  var multi = db.multi();
 
   function entry(obj) {
     var data_uuid = uuid.v4();
     obj.uuid = data_uuid;
     obj = dateEntry(obj);
-    db.set(data_uuid, JSON.stringify(obj), function(err, reply) {
+    multi.set(data_uuid, JSON.stringify(obj), function(err, reply) {
       if (err) {
-        okResult.push("fail");
+        return err;
       }
-      okResult.push("ok");
+      return reply;
     });
   }
 
@@ -154,7 +156,17 @@ router.post('/api', function(req, res, next) {
   } else {
     entry(data);
   }
-  res.send(okResult);
+  multi.exec(function(err, replies) {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+      return;
+    }
+    //console.log(JSON.stringify(replies));
+    if (replies) {
+      res.send(replies);
+    }
+  });
 });
 
 //Edit Flags
@@ -178,6 +190,7 @@ router.get('/api/flags/:id', function(req, res, next) {
   multi.get(uuid + ':yes', stdCb);
   multi.get(uuid + ':no', stdCb);
   multi.get(uuid + ':removal', stdCb);
+  multi.get(uuid + ':no_connection', stdCb);
   multi.exec(function(err, replies) {
     if (err) {
       return err;
@@ -185,7 +198,8 @@ router.get('/api/flags/:id', function(req, res, next) {
     var result = {
       'yes': replies[0],
       'no': replies[1],
-      'removal': replies[2]
+      'removal': replies[2],
+      'no_connection': replies[3]
     };
     res.json(result);
   });
@@ -203,6 +217,7 @@ router.delete('/api/:id', function(req, res, next) {
     multi.del(uuid + ':yes', stdCb);
     multi.del(uuid + ':no', stdCb);
     multi.del(uuid + ':removal', stdCb);
+    multi.del(uuid + ':no_connection', stdCb);
     multi.exec(function(err, replies) {
       if (err) return err;
       return Boolean(replies[0]) ? res.sendStatus(200) : res.sendStatus(400);

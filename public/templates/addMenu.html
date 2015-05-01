@@ -1,0 +1,12 @@
+<ion-popover-view style="height: 110px; width: 200px;" ng-click="popover.hide()">
+  <ion-content>
+    <div class="list">
+      <a class="item need-channel" href="#/app/submit?type={{sectionName}}&channel=need">
+        <i class="icon ion-plus-circled" style="color:red"></i>  I need {{sectionName}}
+      </a>
+      <a class="item need-supply" href="#/app/submit?type={{sectionName}}&channel=supply">
+        <i class="icon ion-plus-circled" style="color:green"></i>  I supply {{sectionName}}
+      </a>
+    </div>
+  </ion-content>
+</ion-popover-view>

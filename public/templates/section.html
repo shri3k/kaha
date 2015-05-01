@@ -1,46 +1,34 @@
 <ion-view>
-    <div id="addItems">
-        <div class="add-button-wrapper" ng-show="isAddActive">
-            <a href="#/app/submit?type={{name}}&channel=supply" class="button button-balanced" style="width:110px;"><i class="icon ion-android-add-circle"></i> I supply</a><br>
-            <a href="#/app/submit?type={{name}}&channel=need" class="button button-assertive" style="width:110px; margin-top:4px;"><i class="icon ion-android-add-circle"></i> I need</a>
-        </div>
-        <div class="round-button" ng-click="addIconToggle()">
-            <i class="icon ion-android-add-circle" ng-hide="isAddActive"></i>
-            <i class="icon ion-android-remove-circle" ng-show="isAddActive"></i>
+    <ion-nav-buttons side="right">
+    <button class="button button-light" ng-click="popover.show($event)">
+        <i class="icon ion-android-add"></i> Add Data
+    </button>
+    </ion-nav-buttons>
+    <div class="searchbar" style="text-align:center; position:fixed; top:40px; z-index:9999; width:100%">
+        <div class="bar bar-header item-input-inset">
+            <ion-search placeholder="Type to search" filter="search"></ion-search>
         </div>
     </div>
+    <ion-nav-title>
+        <div class="h1 title">{{name | ucfirst }}</div>
+    </ion-nav-title>
+    <ion-content style="margin-top:38px;">
+        <ion-refresher pulling-text="Pull to refresh..."on-refresh="doRefresh()"></ion-refresher>
+        <div class="list">
+            <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
+                <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>
+                <p>
+                    {{item.location.district}} , {{item.location.tole}}
 
-<div class="searchbar" style="text-align:center; position:fixed; top:40px; z-index:9999; width:100%">
-    <div class="bar bar-header item-input-inset">
-        <ion-search placeholder="Type to search" filter="search"></ion-search>
-    </div>
-</div>
-<ion-nav-title>
-<div class="h1 title">{{name | ucfirst }}</div>
-</ion-nav-title>
+                    <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'need'">
+                        {{item.active?"available":"not available"}}
+                    </span>
+                    <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel == 'need'">
+                        {{item.active?"needed":"not needed"}}
+                    </span>
 
-<ion-content style="margin-top:38px;">
-<ion-refresher
-pulling-text="Pull to refresh..."
-on-refresh="doRefresh()">
-</ion-refresher>
-
-<div class="list">
-
-<div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
-    <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>
-    <p>
-    {{item.location.district}} , {{item.location.tole}}
-
-    <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'need'">
-        {{item.active?"available":"not available"}}
-    </span>
-    <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel == 'need'">
-        {{item.active?"needed":"not needed"}}
-    </span>
-
-    </p>
-</div>
-</div>
-</ion-content>
+                </p>
+            </div>
+        </div>
+    </ion-content>
 </ion-view>

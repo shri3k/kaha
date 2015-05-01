@@ -21,12 +21,26 @@ angular.module('starter.controllers', [])
         $rootScope.districts = [];
 
         var refresh = $scope.dataset?false:true;
-        api.coordinates().then(function(position) {
+        /*api.coordinates().then(function(position) {
             $rootScope.coordinates = position.coords;
             $rootScope.doRefresh(refresh);
         },
         function(err) {
             $rootScope.doRefresh(refresh);
+        });*/
+        api.data(false).then(function(data){
+            $scope.dataset = api.filter.type(data.content, $scope.name);
+            $rootScope.items = $scope.dataset;
+            $rootScope.districts = api.location.districts(data.content, $scope.name);
+            $scope.$broadcast('scroll.refreshComplete');
+            if ($rootScope.coordinates) {
+                if($rootScope.selected.district){
+                    $rootScope.updateDistrict();
+                }
+                if($rootScope.selected.tole){
+                    $rootScope.updateTole();
+                }
+            }
         });
     });
     $rootScope.updateDistrict = function(){

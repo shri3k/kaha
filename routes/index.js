@@ -126,15 +126,15 @@ router.post('/api', function(req, res, next) {
   var multi = db.multi();
 
   function entry(obj) {
-      var data_uuid = uuid.v4();
-      obj.uuid = data_uuid;
-      obj = dateEntry(obj);
-      multi.set(data_uuid, JSON.stringify(obj), function(err, reply) {
-          if (err) {
-              return err;
-          }
-          return reply;
-      });
+    var data_uuid = uuid.v4();
+    obj.uuid = data_uuid;
+    obj = dateEntry(obj);
+    multi.set(data_uuid, JSON.stringify(obj), function(err, reply) {
+      if (err) {
+        return err;
+      }
+      return reply;
+    });
   }
 
   function dateEntry(obj) {
@@ -157,15 +157,15 @@ router.post('/api', function(req, res, next) {
     entry(data);
   }
   multi.exec(function(err, replies) {
-      if (err) {
-          console.log(err);
-          res.status(500).send(err);
-          return;
-      }
-      //console.log(JSON.stringify(replies));
-      if (replies) {
-          res.send(replies);
-      }
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+      return;
+    }
+    //console.log(JSON.stringify(replies));
+    if (replies) {
+      res.send(replies);
+    }
   });
 });
 

@@ -179,7 +179,7 @@ angular.module('starter.services', [])
           console.log('Setting ' + uuid + ' StatKey' + statKey);
           var def = $q.defer();
           var xhr = new XMLHttpRequest();
-          xhr.open('GET', '/api/'+uuid+'?flag='+statKey, true);
+          xhr.open('GET', '/api/incrflag/'+uuid+'?flag='+statKey, true);
           xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
           xhr.onload = function() {
               if(this.status === 200){

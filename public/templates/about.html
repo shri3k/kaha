@@ -1,7 +1,9 @@
 <ion-view view-title="About">
 <ion-content data-tap-disabled="true">
 <div class="card">
+
     <div class="item">
+		<h1>About</h1>
         Kaha.co as name suggests helps you find help and supplies. You can go through different categories on sidemenu and limit your results by location (districts and tole names). <br>
         If you are providing or know someone who is providing any help or supplies please use Add a supply/resource to add it.<br>
         Please be as descriptive as possible.
@@ -13,6 +15,37 @@
         </p>
     </div>
 
+</div>
+<div class="card" style="padding:15px">
+	<h1>How to use Kaha</h1>
+	<div>
+		<b>1. What does the color code mean?</b><br>
+		Green color indicates avaialble resources/supplie; Red indicates resources needed. See contact details to find out how you can use the suplies or help needed ones.
+	</div>
+	<div>
+		<b>2. How can I search items?</b><br>
+		Navigate to the appropriate supplies and type in what you are looking for. Example: Type in 'supply'  or need' or 'kathmandu' or 'government' etc.
+	</div>
+	<div>
+		<b>3. How can I add new supply?</b><br>
+		Navigate to the section where you want to add supply. Then click on "Plus button" at bottom and click 'I supply'.
+	</div>
+	<div>
+		<b>4.How can I add new resources I need?</b><br>
+		Navigate to the section from which you need supply. Then click on "Plus button" at bottom and click  'I need'.
+	</div>
+	<div>
+		<b>5. How can I report that a supply is not valid?</b><br>
+		Navigate to the appropriate supplies and in the detail description click 'No longer available'. On the right side is the number which indicates how many times the button is clicked. If the counter number is increasing we will remove the item.
+	</div>
+	<div>
+		<b>6. How can I delete supply?</b><br>
+		Navigate to the appropriate supplies and in the detail description click 'Submit a request to remove'. On the right side is the number which indicates how many times the button is clicked. If the counter number is increasing we will delete the item.
+	</div>
+	<div>
+		<b>7. How can I update/edit item?</b><br>
+		Navigate to the appropriate supplies and in the detail description click 'Edit Item' on top right corner. Make change to the item you want and click submit button. The item will be saved.
+ 	</div>
 </div>
 <div style="padding:10px" ng-hide="isloggedin">
     <input type="text" ng-model="submitdata.admincode" placeholder="enter your admin code"/>

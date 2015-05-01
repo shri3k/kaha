@@ -24,11 +24,6 @@
     </div>
     
     <div class="item" ng-if="selectedItem.channel !== 'need'">
-        <div class="item text-center" ng-click="incrStat('no_connection')" style="color:red">
-            Could not connect
-            <span class="item-note" style="color:green">{{stat.no_connection?stat.no_connection:0}}</span>
-        </div>
-
         <div class="item text-center" ng-click="incrStat('yes')" style="color:green">
             I got help from here
             <span class="item-note" style="color:green">{{stat.yes?stat.yes:0}}</span>
@@ -40,11 +35,11 @@
     </div>
     <div class="item" ng-if="selectedItem.channel == 'need'">
         <div class="item text-center" ng-click="incrStat('no_connection')" style="color:red">
-            Could not connect 
+            Could not Contact 
             <span class="item-note" style="color:green">{{stat.no_connection?stat.no_connection:0}}</span>
         </div>
         <div class="item text-center" ng-click="incrStat('no')" style="color:green">
-            Need met
+            Need is met
             <span class="item-note" style="color:red">{{stat.no?stat.no:0}}</span>
         </div>
     </div>

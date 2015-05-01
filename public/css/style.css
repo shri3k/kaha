@@ -17,9 +17,15 @@
 .item-note{
     color:#ff0000;
 }
-.item-note.active{
+
+.supply-channel .item-note.active{
     color:#007700;
 }
+
+.need-channel .item-note.active{
+    color:red;
+}
+
 .popup-container .popup{
     width: 300px;
 }

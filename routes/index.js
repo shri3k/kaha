@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var redis = require('redis');
 var conf = require('../config/');
+var sha = require('object-hash');
 var uuid = require('node-uuid');
 var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
@@ -44,14 +45,14 @@ function getAll(cb) {
   });
 }
 
-function getSha(obj, shaFilters){
-    var key, extract = {};
-    if(Array.isArray(shaFilters)){
-      shaFilters.forEach(function(filter){
-        extract.filter = obj.filter;
-      });
-    }
-    return sha(extract);
+function getSha(obj, shaFilters) {
+  var key, extract = {};
+  if (Array.isArray(shaFilters)) {
+    shaFilters.forEach(function(filter) {
+      extract.filter = obj.filter;
+    });
+  }
+  return sha(extract);
 }
 db.on('connect', function() {
   console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
@@ -71,7 +72,7 @@ router.get('/api', function(req, res, next) {
 
 //Get dupe items
 router.get('/api/dupe', function(req, res, next) {
-  getAll(function(err, results){
+  getAll(function(err, results) {
 
   });
 });

@@ -22,15 +22,14 @@ on-refresh="doRefresh()">
 <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
     <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>
     <p>
-    {{item.location.district}} , {{item.location.tole}}
-
+    {{item.location.district}} , {{item.location.tole}}<br/>
+    {{item.date.modified | date:'d MM yyyy'}}
     <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel == 'supply'">
         {{item.active?"available":"not available"}}
     </span>
     <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'supply'">
         {{item.active?"needed":"not needed"}}
     </span>
-
     </p>
 </div>
 </div>

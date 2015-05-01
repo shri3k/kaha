@@ -14,7 +14,11 @@
         <h3>
             {{selectedItem.description.title}} - {{selectedItem.channel?selectedItem.channel:'supply'}}
         </h3>
-        <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
+        <p>
+        <small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}<br/>
+            {{selectedItem.date.modified | date:'Y-m-d'}}
+        </small>
+        </p>
     </div>
     <div class="item item-text-wrap item-body">
         <p><strong>Contact :</strong> {{selectedItem.description.contactname}}</p>

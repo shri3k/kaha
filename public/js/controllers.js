@@ -1,6 +1,15 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicPopover, $ionicSideMenuDelegate, $timeout, api, $timeout, $rootScope) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicSideMenuDelegate, $timeout, api, $timeout, $rootScope) {
+    /* Disable until this is needed
+    api.coordinates().then(function(position) {
+            $rootScope.coordinates = position;
+    },
+    function(err) {
+        console.error(err);
+    });
+    */
+
     setTimeout(function() {
         $ionicSideMenuDelegate.toggleLeft();
         $rootScope.isSideMenuOpen = false;
@@ -27,14 +36,7 @@ angular.module('starter.controllers', [])
         $rootScope.districts = [];
 
         var refresh = $scope.dataset?false:true;
-        /*api.coordinates().then(function(position) {
-            $rootScope.coordinates = position.coords;
-            $scope.getData(refresh);
-        },
-        function(err) {
-            $scope.getData(refresh);
-        });*/
-        $scope.getData(refresh);
+                $scope.getData(refresh);
     });
     $rootScope.updateDistrict = function(){
         //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);

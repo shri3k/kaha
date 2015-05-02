@@ -5,7 +5,7 @@
 <ion-nav-buttons side="right">
 <button class="button button-icon-left ion-edit" ng-click="editItem()"> Edit Item</button>
 </ion-nav-buttons>
-<ion-content data-tap-disabled="true">
+<ion-content data-tap-disabled="true" overflow-scroll="true">
 <div class="card list">
     <div class="item item-divider  item-text-wrap {{selectedItem.channel}}-channel">
         <span class="item-note" ng-class="selectedItem.active?'active':''">

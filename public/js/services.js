@@ -3,25 +3,22 @@ angular.module('starter.services', [])
     return {
         coordinates: function() {
             var def = $q.defer();
-            var cached_position = localStorage.getItem('position');
+            var _key = 'local_latlon';
+            var cached_position = localStorage.getItem(_key);
             if (cached_position === null) {
-                var options = {
-                    enableHighAccuracy: true,
-                    timeout: 3000,
-                    maximumAge: 0
-                };
-
                 function success(pos) {
-                    localStorage.setItem('position', JSON.stringify(pos));
+                    localStorage.setItem(_key, JSON.stringify({'latitude':pos.coords.latitude, 'longitude':pos.coords.longitude}));
                     def.resolve(pos);
                 };
 
                 function error(err) {
-                    console.log('Unable to get location');
                     def.reject(err);
                 };
-
-                navigator.geolocation.getCurrentPosition(success, error, options);
+                if("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(success, error);
+                } else {
+                    def.reject('Geolocation is not available');
+                }
             } else {
                 var pos = JSON.parse(cached_position);
                 def.resolve(pos);

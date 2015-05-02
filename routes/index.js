@@ -4,10 +4,14 @@ var redis = require('redis');
 var conf = require('../config/');
 var sha = require('object-hash');
 var uuid = require('node-uuid');
+var _ = require('underscore');
 var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
 var readonly = Number(process.env.KAHA_READONLY) || 0;
 console.log('Server in read-only mode ? ' + Boolean(readonly));
+
+_.mixin(require('underscore.deep'));
+var similarFilter = ['type', 'location', 'description.contactnumber'];
 
 function enforceReadonly(res) {
   if (readonly) {
@@ -24,7 +28,7 @@ function stdCb(err, reply) {
 }
 
 
-function getAll(cb) {
+function getAllFromDb(cb) {
   var results = [];
   db.keys('*', function(err, reply) {
     db.keys('*:*', function(err, reply2) {
@@ -49,17 +53,44 @@ function getSha(obj, shaFilters) {
   var key, extract = {};
   if (Array.isArray(shaFilters)) {
     shaFilters.forEach(function(filter) {
-      extract.filter = obj.filter;
+      var selectedObj = _.deepPick(obj, [filter]);
+      _.extend(extract, selectedObj);
     });
   }
   return sha(extract);
 }
+
+function getShaAllWithObjs(objs) {
+  var hashes = [];
+  objs.forEach(function(result) {
+    var tmpObj = {};
+    tmpObj[getSha(result, similarFilter)] = result;
+    hashes.push(tmpObj);
+  });
+  return hashes;
+}
+
+function getShaAll(objs) {
+  var hashes = [];
+  objs.forEach(function(result) {
+    hashes.push(getSha(result, similarFilter));
+  });
+  return hashes;
+}
+
+function getSimilarItems(arrayObj, shaKey) {
+  return _.filter(getShaAllWithObjs(arrayObj), function(obj) {
+    return _.keys(obj)[0] === shaKey;
+  });
+}
+
 db.on('connect', function() {
   console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
 });
 db.auth(dbpass, function() {
   console.log("db auth success");
 });
+
 //Get core home data
 router.get('/api', function(req, res, next) {
   getAll(function(err, results) {
@@ -70,10 +101,21 @@ router.get('/api', function(req, res, next) {
   });
 });
 
-//Get dupe items
+//Get checksum of dupe items
 router.get('/api/dupe', function(req, res, next) {
-  getAll(function(err, results) {
+  getAllFromDb(function(err, results) {
+    var hashes = getShaAll(results);
+    var uniq = _.uniq(hashes);
+    res.send(_.countBy(hashes, function(item) {
+      return _.contains(uniq, item) && item;
+    }));
+  });
+});
 
+//List dupe items
+router.get('/api/dupe/:sha', function(req, res, next) {
+  getAllFromDb(function(err, results) {
+    res.send(getSimilarItems(results, req.params.sha));
   });
 });
 
@@ -148,36 +190,41 @@ router.post('/api', function(req, res, next) {
     return obj;
   }
 
+  function insertToDb(res) {
+    multi.exec(function(err, replies) {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+        return;
+      }
+      //console.log(JSON.stringify(replies));
+      if (replies) {
+        res.send(replies);
+      }
+    });
+  }
+
   var data = req.body;
   if (Array.isArray(data)) {
     data.forEach(function(item, index) {
       entry(item);
+      insertToDb(res);
     });
   } else {
-    entry(data);
-  }
-  multi.exec(function(err, replies) {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-      return;
-    }
-    //console.log(JSON.stringify(replies));
-    if (replies) {
-      res.send(replies);
-    }
-  });
-});
-
-router.get('/api/:id', function(req, res, next) {
-    db.get(req.params.id, function(err, reply) {
-        if (err) { return err; }
-        res.send(reply);
+    getAllFromDb(function(err, results) {
+      var similarItems = getSimilarItems(results, getSha(data, similarFilter));
+      if (similarItems.length > 0) {
+        res.send(similarItems);
+      } else {
+        entry(data);
+        insertToDb(res);
+      }
     });
+  }
 });
 
 //Edit Flags
-router.get('/api/incrflag/:id', function(req, res, next) {
+router.get('/api/:id', function(req, res, next) {
   if (enforceReadonly(res)) {
     return;
   }

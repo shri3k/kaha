@@ -113,7 +113,6 @@ angular.module('starter.controllers', [])
         });
     }
     $scope.incrStat = function(statKey) {
-<<<<<<< HEAD
         api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
             if (typeof($scope.stat[statKey]) == 'undefined') {
                 $scope.stat.$$statKey = 0;
@@ -125,19 +124,7 @@ angular.module('starter.controllers', [])
             alert('Error updating stat');
         });
     }
-=======
-       api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
-           if (typeof($scope.stat[statKey]) == 'undefined') {
-               $scope.stat.$$statKey = 0;
-           }
-           var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
-           $scope.stat[statKey] = startAt+1;
-       },
-       function(error) {
-           alert('Error updating stat');
-       });
-   }
->>>>>>> 64a804e0963fdf2bfa5dce468427c0c79e5280ac
+
     $scope.editItem = function(){
         window.location = "#/app/submit?edit=1";
     }

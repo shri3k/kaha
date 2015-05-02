@@ -32,19 +32,24 @@ function getAllFromDb(cb) {
   var results = [];
   db.keys('*', function(err, reply) {
     db.keys('*:*', function(err, reply2) {
-      reply.forEach(function(id, index) {
-        if (!~reply2.indexOf(id)) {
-          db.get(id, function(err, reply3) {
-            if (err) {
-              cb(err);
-            }
-            results.push(JSON.parse(reply3));
-            if (reply.length === index + 1) {
-              cb(null, results);
-            }
-          });
-        }
-      });
+      if (reply.length > 0) {
+        reply.forEach(function(id, index) {
+          if (!~reply2.indexOf(id)) {
+            db.get(id, function(err, reply3) {
+              if (err) {
+                cb(err);
+              }
+              results.push(JSON.parse(reply3));
+              console.log("reply.length" + reply.length + "index" + index);
+              if (reply.length === index + 1) {
+                cb(null, results);
+              }
+            });
+          }
+        });
+      } else {
+        cb(null, results);
+      }
     });
   });
 }
@@ -98,6 +103,7 @@ router.get('/api', function(req, res, next) {
       return new Error(err);
     }
     res.send(results);
+    res.end();
   });
 });
 
@@ -224,10 +230,12 @@ router.post('/api', function(req, res, next) {
 });
 
 router.get('/api/:id', function(req, res, next) {
-    db.get(req.params.id, function(err, reply) {
-        if (err) { return err; }
-        res.send(reply);
-    });
+  db.get(req.params.id, function(err, reply) {
+    if (err) {
+      return err;
+    }
+    res.send(reply);
+  });
 });
 
 //Edit Flags

@@ -223,8 +223,15 @@ router.post('/api', function(req, res, next) {
   }
 });
 
-//Edit Flags
 router.get('/api/:id', function(req, res, next) {
+    db.get(req.params.id, function(err, reply) {
+        if (err) { return err; }
+        res.send(reply);
+    });
+});
+
+//Edit Flags
+router.get('/api/incrflag/:id', function(req, res, next) {
   if (enforceReadonly(res)) {
     return;
   }

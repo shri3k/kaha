@@ -1,10 +1,20 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicPopover, $ionicSideMenuDelegate, $timeout, api, $timeout, $rootScope) {
+    /* Disable until this is needed
+    api.coordinates().then(function(position) {
+            $rootScope.coordinates = position;
+    },
+    function(err) {
+        console.error(err);
+    });
+    */
+
     setTimeout(function() {
         $ionicSideMenuDelegate.toggleLeft();
         $rootScope.isSideMenuOpen = false;
     }, 100);
+
     $rootScope.isAddActive = true;
     $scope.menuClicked = function() {
         $rootScope.isSideMenuOpen= $ionicSideMenuDelegate.isOpen();
@@ -27,14 +37,7 @@ angular.module('starter.controllers', [])
         $rootScope.districts = [];
 
         var refresh = $scope.dataset?false:true;
-        /*api.coordinates().then(function(position) {
-            $rootScope.coordinates = position.coords;
-            $scope.getData(refresh);
-        },
-        function(err) {
-            $scope.getData(refresh);
-        });*/
-        $scope.getData(refresh);
+                $scope.getData(refresh);
     });
     $rootScope.updateDistrict = function(){
         //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
@@ -110,6 +113,7 @@ angular.module('starter.controllers', [])
         });
     }
     $scope.incrStat = function(statKey) {
+<<<<<<< HEAD
         api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
             if (typeof($scope.stat[statKey]) == 'undefined') {
                 $scope.stat.$$statKey = 0;
@@ -121,6 +125,19 @@ angular.module('starter.controllers', [])
             alert('Error updating stat');
         });
     }
+=======
+       api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
+           if (typeof($scope.stat[statKey]) == 'undefined') {
+               $scope.stat.$$statKey = 0;
+           }
+           var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
+           $scope.stat[statKey] = startAt+1;
+       },
+       function(error) {
+           alert('Error updating stat');
+       });
+   }
+>>>>>>> 64a804e0963fdf2bfa5dce468427c0c79e5280ac
     $scope.editItem = function(){
         window.location = "#/app/submit?edit=1";
     }

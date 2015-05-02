@@ -126,7 +126,7 @@ router.get('/api/dupe/:sha', function(req, res, next) {
 
 // Get home page
 router.get('/', function(req, res, next) {
-  res.render('index');
+  res.render('index', { prod: process.env.NODE_ENV === 'prod' });
 });
 
 //EDIT POST

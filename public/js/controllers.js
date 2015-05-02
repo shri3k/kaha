@@ -18,7 +18,7 @@ angular.module('starter.controllers', [])
         $rootScope.popover = popover;
     });
 })
-.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
+.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
     $rootScope.selected = {};
     $rootScope.sectionName = $stateParams.sectionid;
     $scope.$on('$ionicView.beforeEnter', function() {
@@ -49,10 +49,7 @@ angular.module('starter.controllers', [])
         window.location = "#/app/item/"+item.uuid;
     }
     $rootScope.doRefresh = function(refresh){
-        if (typeof refresh != 'undefined') {
-            refresh = true;
-        }
-        $scope.getData(refresh);
+        $scope.getData(true);
     }
     $scope.getData = function(refresh){
         api.data(refresh).then(function(data){
@@ -73,6 +70,18 @@ angular.module('starter.controllers', [])
             }
         });
     }
+    $scope.print = function(){
+        var p = $window.open();
+        var pbody = p.document.body;
+        var table = "<table style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'><thead style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'><th>Type</th><th>District</th><th>Tole Name</th><th>Title</th><th>Contact Name</th><th>Contact Number</th><th>Detail</th></thead>";
+        for(var i in $rootScope.items){
+            var d = $rootScope.items[i];
+            table = table+"<tr style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'><td>"+d.type+"</td><td>"+d.location.district+"</td><td>"+d.location.tole+"</td><td>"+d.description.title+"</td><td>"+d.description.contactname+"</td><td>"+d.description.contactnumber+"</td><td>"+d.description.detail+"</td></tr>";
+        }
+        table = table+"</table>";
+        pbody.innerHTML = table;
+    }
+
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
@@ -102,11 +111,11 @@ angular.module('starter.controllers', [])
     }
     $scope.incrStat = function(statKey) {
         api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
-            if (typeof($scope.stat.$$statKey) == 'undefined') {
+            if (typeof($scope.stat[statKey]) == 'undefined') {
                 $scope.stat.$$statKey = 0;
             }
-            var startAt = $scope.stat.$$statKey ? parseInt($scope.stat.$$statKey) : 0;
-            $scope.stat.$$statKey = startAt+1;
+            var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
+            $scope.stat[statKey] = startAt+1;
         },
         function(error) {
             alert('Error updating stat');
@@ -163,8 +172,6 @@ angular.module('starter.controllers', [])
                     contactnumber :$scope.selectedItem.description.contactnumber,
                     description :$scope.selectedItem.description.detail
                 };
-                console.log('Edit ');
-                console.log($scope.selectedItem)
             };
         } else {
             $scope.submitdata.supplytype = $stateParams.type;
@@ -233,17 +240,15 @@ angular.module('starter.controllers', [])
             error = true;
         }
         if(!error){
-            console.log('Saving Data');
-            console.log(data);
             if (data.uuid) {
                 api.update(data).then(
                     function(status){
                         alert("Successfully Updated");
+                        $rootScope.selectedItem = data;
+                        api.selected.set(data);
                         $ionicHistory.goBack();
                     },
                     function(status) {
-                        console.log('Failed to save');
-                        console.log(status);
                         alert("We are currently not able to process your request. Please try again later");
                     }
                 );
@@ -256,8 +261,6 @@ angular.module('starter.controllers', [])
                     }
                     },
                     function(status) {
-                        console.log('Failed to save');
-                        console.log(status);
                         alert("We are currently not able to process your request. Please try again later");
                     }
                 );

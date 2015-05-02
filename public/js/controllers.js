@@ -104,17 +104,17 @@ angular.module('starter.controllers', [])
         });
     }
     $scope.incrStat = function(statKey) {
-        api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
-            if (typeof($scope.stat.$$statKey) == 'undefined') {
-                $scope.stat.$$statKey = 0;
-            }
-            var startAt = $scope.stat.$$statKey ? parseInt($scope.stat.$$statKey) : 0;
-            $scope.stat.$$statKey = startAt+1;
-        },
-        function(error) {
-            alert('Error updating stat');
-        });
-    }
+       api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
+           if (typeof($scope.stat[statKey]) == 'undefined') {
+               $scope.stat.$$statKey = 0;
+           }
+           var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
+           $scope.stat[statKey] = startAt+1;
+       },
+       function(error) {
+           alert('Error updating stat');
+       });
+   }
     $scope.editItem = function(){
         window.location = "#/app/submit?edit=1";
     }

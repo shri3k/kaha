@@ -46,7 +46,7 @@ function getAllFromDb(cb) {
         if (err) {
           return err;
         }
-        var result = _.map(replies, function(rep){
+        var result = _.map(replies, function(rep) {
           return JSON.parse(rep);
         });
         cb(null, result);
@@ -85,8 +85,10 @@ function getShaAll(objs) {
 }
 
 function getSimilarItems(arrayObj, shaKey) {
-  return _.filter(getShaAllWithObjs(arrayObj), function(obj) {
+  return _.map(_.filter(getShaAllWithObjs(arrayObj), function(obj) {
     return _.keys(obj)[0] === shaKey;
+  }), function(obj) {
+    return _.values(obj)[0];
   });
 }
 
@@ -113,18 +115,24 @@ router.get('/api/dupe', function(req, res, next) {
   getAllFromDb(function(err, results) {
     var hashes = getShaAll(results);
     var uniq = _.uniq(hashes);
-    console.log(results);
-    res.send(_.countBy(hashes, function(item) {
+    var objCount = _.countBy(hashes, function(item) {
       return _.contains(uniq, item) && item;
-    }));
+    });
+    var tmpObj = {};
+    _.map(objCount, function(val, key, objs) {
+      if (val > 1) {
+        tmpObj[key] = val;
+      }
+    });
+    res.send(tmpObj);
   });
 });
 
 //List dupe items
 router.get('/api/dupe/:sha', function(req, res, next) {
   getAllFromDb(function(err, results) {
-    console.log(results);
-    res.send(getSimilarItems(results, req.params.sha));
+    var similar = getSimilarItems(results, req.params.sha);
+    res.send(similar);
   });
 });
 
@@ -224,7 +232,8 @@ router.post('/api', function(req, res, next) {
   } else {
     getAllFromDb(function(err, results) {
       var similarItems = getSimilarItems(results, getSha(data, similarFilter));
-      if (similarItems.length > 0) {
+      var query = req.query.confirm || "no";
+      if (similarItems.length > 0 && (query.toLowerCase() === "no")) {
         res.send(similarItems);
       } else {
         entry(data);

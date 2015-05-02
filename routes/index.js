@@ -30,25 +30,27 @@ function stdCb(err, reply) {
 
 function getAllFromDb(cb) {
   var results = [];
+  var multi = db.multi();
   db.keys('*', function(err, reply) {
+    if (err) {
+      return err;
+    }
     db.keys('*:*', function(err, reply2) {
-      if (reply.length > 0) {
-        reply.forEach(function(id, index) {
-          if (!~reply2.indexOf(id)) {
-            db.get(id, function(err, reply3) {
-              if (err) {
-                cb(err);
-              }
-              results.push(JSON.parse(reply3));
-              if (reply.length === index + 1) {
-                cb(null, results);
-              }
-            });
-          }
-        });
-      } else {
-        cb(null, results);
+      if (err) {
+        return err;
       }
+      _.each(_.difference(reply, reply2), function(key) {
+        multi.get(key, stdCb);
+      });
+      multi.exec(function(err, replies) {
+        if (err) {
+          return err;
+        }
+        var result = _.map(replies, function(rep){
+          return JSON.parse(rep);
+        });
+        cb(null, result);
+      });
     });
   });
 }
@@ -111,6 +113,7 @@ router.get('/api/dupe', function(req, res, next) {
   getAllFromDb(function(err, results) {
     var hashes = getShaAll(results);
     var uniq = _.uniq(hashes);
+    console.log(results);
     res.send(_.countBy(hashes, function(item) {
       return _.contains(uniq, item) && item;
     }));
@@ -120,13 +123,16 @@ router.get('/api/dupe', function(req, res, next) {
 //List dupe items
 router.get('/api/dupe/:sha', function(req, res, next) {
   getAllFromDb(function(err, results) {
+    console.log(results);
     res.send(getSimilarItems(results, req.params.sha));
   });
 });
 
 // Get home page
 router.get('/', function(req, res, next) {
-  res.render('index', { prod: process.env.NODE_ENV === 'prod' });
+  res.render('index', {
+    prod: process.env.NODE_ENV === 'prod'
+  });
 });
 
 //EDIT POST

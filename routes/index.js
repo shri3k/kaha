@@ -40,7 +40,6 @@ function getAllFromDb(cb) {
                 cb(err);
               }
               results.push(JSON.parse(reply3));
-              console.log("reply.length" + reply.length + "index" + index);
               if (reply.length === index + 1) {
                 cb(null, results);
               }

@@ -93,7 +93,7 @@ db.auth(dbpass, function() {
 
 //Get core home data
 router.get('/api', function(req, res, next) {
-  getAll(function(err, results) {
+  getAllFromDb(function(err, results) {
     if (err) {
       return new Error(err);
     }

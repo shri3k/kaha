@@ -21,13 +21,14 @@ angular.module('starter.controllers', [])
         $rootScope.districts = [];
 
         var refresh = $scope.dataset?false:true;
-        api.coordinates().then(function(position) {
+        /*api.coordinates().then(function(position) {
             $rootScope.coordinates = position.coords;
             $scope.getData(refresh);
         },
         function(err) {
             $scope.getData(refresh);
-        });
+        });*/
+        $scope.getData(refresh);
     });
     $rootScope.updateDistrict = function(){
         //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);

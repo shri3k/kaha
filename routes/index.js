@@ -11,6 +11,7 @@ var readonly = Number(process.env.KAHA_READONLY) || 0;
 console.log('Server in read-only mode ? ' + Boolean(readonly));
 
 _.mixin(require('underscore.deep'));
+var similarFilter = ['type', 'location', 'description.contactnumber'];
 
 function enforceReadonly(res) {
   if (readonly) {
@@ -63,7 +64,7 @@ function getShaAllWithObjs(objs) {
   var hashes = [];
   objs.forEach(function(result) {
     var tmpObj = {};
-    tmpObj[getSha(result, ['type', 'location', 'description.contactnumber'])] = result;
+    tmpObj[getSha(result, similarFilter)] = result;
     hashes.push(tmpObj);
   });
   return hashes;
@@ -72,9 +73,15 @@ function getShaAllWithObjs(objs) {
 function getShaAll(objs) {
   var hashes = [];
   objs.forEach(function(result) {
-    hashes.push(getSha(result, ['type', 'location', 'description.contactnumber']));
+    hashes.push(getSha(result, similarFilter));
   });
   return hashes;
+}
+
+function getSimilarItems(arrayObj, shaKey) {
+  return _.filter(getShaAllWithObjs(arrayObj), function(obj) {
+    return _.keys(obj)[0] === shaKey;
+  });
 }
 
 db.on('connect', function() {
@@ -94,7 +101,7 @@ router.get('/api', function(req, res, next) {
   });
 });
 
-//Get dupe items
+//Get checksum of dupe items
 router.get('/api/dupe', function(req, res, next) {
   getAllFromDb(function(err, results) {
     var hashes = getShaAll(results);
@@ -105,11 +112,10 @@ router.get('/api/dupe', function(req, res, next) {
   });
 });
 
+//List dupe items
 router.get('/api/dupe/:sha', function(req, res, next) {
   getAllFromDb(function(err, results) {
-    res.send(_.filter(getShaAllWithObjs(results), function(obj) {
-      return _.keys(obj)[0] === req.params.sha;
-    }));
+    res.send(getSimilarItems(results, req.params.sha));
   });
 });
 
@@ -184,25 +190,37 @@ router.post('/api', function(req, res, next) {
     return obj;
   }
 
+  function insertToDb(res) {
+    multi.exec(function(err, replies) {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+        return;
+      }
+      //console.log(JSON.stringify(replies));
+      if (replies) {
+        res.send(replies);
+      }
+    });
+  }
+
   var data = req.body;
   if (Array.isArray(data)) {
     data.forEach(function(item, index) {
       entry(item);
+      insertToDb(res);
     });
   } else {
-    entry(data);
+    getAllFromDb(function(err, results) {
+      var similarItems = getSimilarItems(results, getSha(data, similarFilter));
+      if (similarItems.length > 0) {
+        res.send(similarItems);
+      } else {
+        entry(data);
+        insertToDb(res);
+      }
+    });
   }
-  multi.exec(function(err, replies) {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-      return;
-    }
-    //console.log(JSON.stringify(replies));
-    if (replies) {
-      res.send(replies);
-    }
-  });
 });
 
 //Edit Flags

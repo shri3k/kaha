@@ -22,9 +22,15 @@ angular.module('starter.controllers', [])
     $rootScope.addIconToggle = function(){
         $rootScope.isAddActive = $rootScope.isAddActive?false:true;
     }
+    $ionicPopover.fromTemplateUrl('templates/addMenu.html', {
+        scope: $rootScope,
+    }).then(function(popover) {
+        $rootScope.popover = popover;
+    });
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup) {
     $rootScope.selected = {};
+    $rootScope.sectionName = $stateParams.sectionid;
     $scope.$on('$ionicView.beforeEnter', function() {
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];

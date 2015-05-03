@@ -189,8 +189,9 @@ angular.module('starter.services', [])
           xhr.send();
           return def.promise;
       },
-      verifyItem: function(data){
-          data.verified = true;
+      verifyItem: function(data, state, admin_name){
+          data.verified = state;
+          data.verified_by = admin_name;
           return this.update(data);
       },
       requestDelete:function(data){
@@ -217,10 +218,11 @@ angular.module('starter.services', [])
         });
         return def.promise;
       },
-      verifyAdmin:function(val){
+      verifyAdmin:function(val, name){
         var def = $q.defer();
-        if(val=="c00l@dmin"){
-            localStorage.setItem('isloggedin', 1); 
+        if (name && (val=="c00l@dmin")){
+            localStorage.setItem('adminname', name);
+            localStorage.setItem('isloggedinwithname', 1); 
             def.resolve(true);
         } else {
             def.resolve(false);

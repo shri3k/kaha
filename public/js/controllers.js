@@ -10,10 +10,10 @@ angular.module('starter.controllers', [])
     });
     */
 
-   if (localStorage.getItem('isloggedin') !== null) {
-       $rootScope.isloggedin = (localStorage.getItem('isloggedin') == 1);
-   }
-
+    if (localStorage.getItem('isloggedinwithname') !== null) {
+        $rootScope.adminname = localStorage.getItem('adminname');
+        $rootScope.isloggedin = (localStorage.getItem('isloggedin') == 1);
+    }
     setTimeout(function() {
         $ionicSideMenuDelegate.toggleLeft();
         $rootScope.isSideMenuOpen = false;
@@ -132,8 +132,8 @@ angular.module('starter.controllers', [])
     $scope.editItem = function(){
         window.location = "#/app/submit?edit=1";
     }
-    $scope.verifyItem = function() {
-       api.verifyItem($rootScope.selectedItem).then(function(data) {
+    $scope.verifyItem = function(state) {
+       api.verifyItem($rootScope.selectedItem, state, $rootScope.adminname).then(function(data) {
            if (data) {
                alert('Item has been marked as Verified. Thank you');
            }
@@ -152,7 +152,7 @@ angular.module('starter.controllers', [])
 .controller('AboutCtrl', function($scope, $stateParams, $rootScope, api) {
     $scope.submitdata = {};
     $scope.signin = function(){
-        api.verifyAdmin($scope.submitdata.admincode).then(function(data){
+        api.verifyAdmin($scope.submitdata.admincode, $scope.submitdata.adminname).then(function(data){
             if(data){
                 $rootScope.isloggedin = true;
             }else{
@@ -161,7 +161,9 @@ angular.module('starter.controllers', [])
         });
     }
     $scope.signout = function(){
-        localStorage.setItem('isloggedin', 0);
+        localStorage.removeItem('isloggedin');
+        localStorage.removeItem('isloggedinwithname');
+        localStorage.removeItem('adminname');
         $scope.isloggedin = false;
     }
 })
@@ -218,6 +220,8 @@ angular.module('starter.controllers', [])
             //$scope.selectedItem = api.selected.get();
             if ($scope.selectedItem) {
                 $scope.submitdata = {
+                    verified: $scope.selectedItem.verified ? $scope.selectedItem.verified : false,
+                    verified_by: $scope.selectedItem.verified_by ? $scope.selectedItem.verified_by : '',
                     channel: $scope.selectedItem.channel ? $scope.selectedItem.channel : $scope.submitdata.channel,
                     datasource: $scope.selectedItem.datasource ? $scope.selectedItem.datasource: $scope.submitdata.datasource,
                     uuid: $scope.selectedItem.uuid,
@@ -271,6 +275,13 @@ angular.module('starter.controllers', [])
         if ($scope.submitdata.uuid) {
             data.uuid = $scope.submitdata.uuid;
         }
+        if ($scope.submitdata.verified) {
+            data.verified = $scope.submitdata.verified;
+        }
+        if ($scope.submitdata.verified_by) {
+            data.verified_by = $scope.submitdata.verified_by;
+        }
+
         if ($rootScope.coordinates) {
             data.coordinates = {
                 longitude : $rootScope.coordinates.longitude,

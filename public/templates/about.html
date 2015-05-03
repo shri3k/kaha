@@ -48,7 +48,8 @@
  	</div>
 </div>
 <div style="padding:10px" ng-hide="isloggedin">
-    <input type="text" ng-model="submitdata.admincode" placeholder="enter your admin code"/>
+    <input type="text" ng-model="submitdata.adminname" placeholder="Your name"/>
+    <input type="text" ng-model="submitdata.admincode" placeholder="Admin code"/>
     <button class="button-light" ng-click="signin()"> I am admin</button>
 </div>
 <div style="padding:10px" ng-show="isloggedin">

@@ -8,6 +8,7 @@ var _ = require('underscore');
 var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
 var readonly = Number(process.env.KAHA_READONLY) || 0;
+var env = conf.name;
 var url = require('url');
 
 console.log('Server in read-only mode ? ' + Boolean(readonly));
@@ -15,6 +16,17 @@ console.log('Server in read-only mode ? ' + Boolean(readonly));
 _.mixin(require('underscore.deep'));
 var similarFilter = ['type', 'location', 'description.contactnumber'];
 
+var flagcounter = function(dbQry) {
+  return function(req, res, next) {
+    if (enforceReadonly(res)) {
+      return;
+    }
+
+    var uuid = req.params.id;
+    var flag = req.query.flag;
+    dbQry(req, res, flag);
+  };
+};
 
 function enforceReadonly(res) {
   if (readonly) {
@@ -154,7 +166,10 @@ var rootPost = function(req, res, next) {
   if (ref) {
     var u = url.parse(ref);
     var hostname = u && u.hostname.toLowerCase();
-    if (hostname === "kaha.co" || hostname === "demokaha.herokuapp.com") {
+    if (hostname === "kaha.co" ||
+      hostname === "demokaha.herokuapp.com" ||
+      env.toLowerCase() === "stage"
+    ) {
       var okResult = [];
       var multi = db.multi();
 
@@ -176,9 +191,12 @@ var rootPost = function(req, res, next) {
           }
         });
       }
+    } else {
+      res.status(403).send('Invalid Origin');
     }
+  } else {
+    res.status(403).send('Invalid Origin');
   }
-  res.status(403).send('Invalid Origin');
 };
 
 
@@ -281,18 +299,19 @@ router.get('/api/:id', function(req, res, next) {
 });
 
 //Edit Flags
-router.get('/api/incrflag/:id', function(req, res, next) {
-  if (enforceReadonly(res)) {
-    return;
-  }
-
-  var uuid = req.params.id;
-  var flag = req.query.flag;
+router.get('/api/incrflag/:id', flagcounter(function(req, res, flag) {
   db.incr(uuid + ":" + flag, function(err, reply) {
     res.sendStatus(200);
     res.end();
   });
-});
+}));
+
+router.get('/api/decrflag/:id', flagcounter(function(req, res, flag) {
+  db.decr(uuid + ":" + flag, function(err, reply) {
+    res.sendStatus(200);
+    res.end();
+  });
+}));
 
 //Get Flags
 router.get('/api/flags/:id', function(req, res, next) {

@@ -1,0 +1,42 @@
+<ion-view>
+    <ion-nav-buttons side="right">
+    <button class="button button-light" ng-click="popover.show($event)">
+        <i class="icon ion-android-add"></i> Add Data
+    </button>
+
+    <button class="button button-light" ng-click="print()">
+        <i class="icon ion-ios-printer-outline"></i>
+    </button>
+    </ion-nav-buttons>
+    <div class="searchbar" style="text-align:center; position:fixed; top:40px; z-index:9999; width:100%">
+        <div class="bar bar-header item-input-inset">
+            <ion-search placeholder="Type to search" filter="search"></ion-search>
+        </div>
+    </div>
+    <ion-nav-title>
+        <div class="h1 title">{{name | ucfirst }}</div>
+    </ion-nav-title>
+    <ion-content style="margin-top:38px;">
+        <div class="list">
+            <div class="card list {{item.channel?item.channel:'supply'}}-channel" ng-repeat="(key, item) in dups">
+              <div class="item item-stadble">
+                <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>
+                <p>{{item.location.district}} , {{item.location.tole}}</p>
+              </div>
+              <div class="item item-body">
+                <p>
+                    <strong>Conatct Name: </strong>{{item.description.contactname}} <br/>
+                    <strong>Contact Number: </strong>{{item.description.contactnumber}}<br/>
+                    <strong>Detail: </strong>{{item.description.detail}}<br/>
+                    <strong>Created: </strong>{{item.date.created}}<br/>
+                    <strong>Updated: </strong>{{item.date.updated}}<br/>
+                </p>
+              </div>
+              <div class="item tabs item-assertive item-outline tabs-secondary tabs-icon-left" ng-click="remove(item)">
+                  <i class="icon ion-ios-trash-outline"></i>&nbsp; Delete
+              </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
+

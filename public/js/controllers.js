@@ -30,12 +30,12 @@ angular.module('starter.controllers', [])
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
     $rootScope.selected = {};
-    $rootScope.sectionName = $stateParams.sectionid;
+    
     $scope.$on('$ionicView.beforeEnter', function() {
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];
         $rootScope.districts = [];
-
+        $rootScope.sectionName = $stateParams.sectionid;
         var refresh = $scope.dataset?false:true;
                 $scope.getData(refresh);
     });
@@ -152,7 +152,48 @@ angular.module('starter.controllers', [])
     $scope.signout = function(){
         $scope.isloggedin = false;
     }
-
+})
+.controller('DuplicateListCtrl', function($scope, $stateParams, $rootScope, api){
+    $scope.$on('$ionicView.beforeEnter', function() {
+        if($rootScope.isloggedin){
+            $scope.name = "Duplicate Data";
+            $rootScope.toles = [];
+            $rootScope.districts = [];
+            api.duplicates().then(function(data){
+                $scope.dups = data;
+            });
+        }else{
+            alert("Please login to access this page");
+            window.location = "/";
+        }
+    });
+    $scope.loadItem = function(item){
+        window.location = "#/app/duplicateitem/"+item;
+    }
+})
+.controller('DuplicateItemCtrl', function($scope, $stateParams, $rootScope, api){
+    $scope.$on('$ionicView.beforeEnter', function() {
+        if($rootScope.isloggedin){
+            $scope.name = $stateParams.itemid;
+            $rootScope.toles = [];
+            $rootScope.districts = [];
+            $scope.dups = [];
+            api.duplicates($stateParams.itemid).then(function(data){
+                $scope.dups = data;
+                if(data.length<2){
+                    window.location ="#/app/duplicatelist";
+                }
+            });
+        }else{
+            alert("Please login to access this page");
+            window.location = "/";
+        }
+    });
+    $scope.remove = function(item){
+        api.requestDelete(item).then(function(){
+            window.location.reload();
+        });
+    }
 })
 .controller('SubmitCtrl', function($scope, api, $stateParams, $rootScope, $ionicHistory, $window) {
     $scope.formTitle = 'New Supply/Resource';
@@ -194,7 +235,10 @@ angular.module('starter.controllers', [])
     }
     $scope.districts = api.districts.sort();
     $scope.supplytypes = api.supplytypes.sort();
-    $scope.submit = function(){
+    $scope.cancel = function(){
+        window.location.reload();
+    }
+    $scope.submit = function(confirm){
         var data = {
             datasource: $scope.submitdata.datasource,
             channel: $scope.submitdata.channel,
@@ -257,11 +301,19 @@ angular.module('starter.controllers', [])
                     }
                 );
             } else {
-                api.submit(data).then(
+                api.submit(data, confirm).then(
                     function(status){
-                    if(status){
-                        alert("Successfully Created");
-                        $window.location.reload();
+
+                    if(status.status === 200){
+                        var response = JSON.parse(status.response);
+                        if(response[0]!="OK"){
+                            $scope.dups = response;
+                        }
+                        else{
+                            alert("Successfully Created");
+                            $window.location.reload();
+                        }
+                        
                     }
                     },
                     function(status) {

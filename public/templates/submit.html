@@ -28,8 +28,33 @@
         <span class="input-label">Detail</span>
         <textarea rows="5" type="text" name="description" ng-model="submitdata.description" placeholder="Enter detailed description about the supply"></textarea> 
     </div>
-    <div class="item">
+    <div class="item" ng-hide="dups.length>0">
         <button class="button button-block button-positive" ng-click="submit()">Submit</button>
+    </div>
+</div>
+<div class="card" ng-show="dups.length>0">
+    <div class="list">
+            <center><h3>Possible duplicates</h3></center>
+            <div class="card list {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in dups track by item.uuid">
+              <div class="item item-stadble">
+                <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>
+                <p>{{item.location.district}} , {{item.location.tole}}</p>
+              </div>
+              <div class="item item-body">
+                <p>
+                    <strong>Conatct Name: </strong>{{item.description.contactname}} <br/>
+                    <strong>Contact Number: </strong>{{item.description.contactnumber}}<br/>
+                    <strong>Detail: </strong>{{item.description.detail}}<br/>
+                    <strong>Created: </strong>{{item.date.created}}<br/>
+                    <strong>Updated: </strong>{{item.date.updated}}<br/>
+                </p>
+               </div>
+            </div>
+
+            <div class="item row" ng-show="dups.length>0" style="padding:0px 20px 0px 20px">
+                <button class="button button-block button-positive col" style="margin-left:20px; margin-right:20px;" ng-click="cancel()">Cancel</button>
+                <button class="button button-block button-assertive col" style="margin-left:20px; margin-right:20px;" ng-click="submit(true)">Confirm and Submit</button>
+            </div>
     </div>
 </div>
 </ion-content>

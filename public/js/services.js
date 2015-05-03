@@ -137,17 +137,18 @@ angular.module('starter.services', [])
           return filtered;
         }
       },
-      submit: function(data) {
+      submit: function(data, confirm) {
         var def = $q.defer();
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/api', true);
+        var confirmUrlAppend = confirm?"?confirm=yes":"";
+        xhr.open('POST', '/api'+confirmUrlAppend, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onload = function() {
             if(this.status === 200){
-                def.resolve(this.status);
+                def.resolve(this);
             }
             else{
-                def.reject(this.status);
+                def.reject(this);
             }
         };
         xhr.send(JSON.stringify(data));
@@ -218,6 +219,21 @@ angular.module('starter.services', [])
           def.resolve(true);
         }else{
           def.resolve(false);
+        }
+        return def.promise;
+      },
+      duplicates:function(id){
+        var def = $q.defer();
+        var url = "/api/dupe";
+        if(typeof(id)==="undefined"){
+          $http.get(url).success(function(data) {
+                def.resolve(data);
+          });
+        }else{
+          $http.get(url+"/"+id).success(function(data) {
+                console.log(data);
+                def.resolve(data);
+          });
         }
         return def.promise;
       },

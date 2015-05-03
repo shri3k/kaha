@@ -1,0 +1,27 @@
+<ion-view>
+    <ion-nav-buttons side="right">
+    <button class="button button-light" ng-click="popover.show($event)">
+        <i class="icon ion-android-add"></i> Add Data
+    </button>
+
+    <button class="button button-light" ng-click="print()">
+        <i class="icon ion-ios-printer-outline"></i>
+    </button>
+    </ion-nav-buttons>
+    <div class="searchbar" style="text-align:center; position:fixed; top:40px; z-index:9999; width:100%">
+        <div class="bar bar-header item-input-inset">
+            <ion-search placeholder="Type to search" filter="search"></ion-search>
+        </div>
+    </div>
+    <ion-nav-title>
+        <div class="h1 title">{{name | ucfirst }}</div>
+    </ion-nav-title>
+    <ion-content style="margin-top:38px;">
+        <ion-refresher pulling-text="Pull to refresh..."on-refresh="doRefresh()"></ion-refresher>
+        <div class="list">
+            <a class="item" ng-repeat="(key, value) in dups | search:search.value" href="#/app/duplicateitem/{{key}}">
+                <h2>key: {{key}} Repeated: {{value}}</h2>
+            </a>
+        </div>
+    </ion-content>
+</ion-view>

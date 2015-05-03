@@ -66,6 +66,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
     }
   })
+  .state('app.duplicatelist',{
+    url: "/duplicatelist",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/admin/duplicatelist.html",
+        controller: 'DuplicateListCtrl'
+      }
+    }
+  })
+  .state('app.duplicateitem',{
+    url: "/duplicateitem/:itemid",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/admin/duplicateitem.html",
+        controller: 'DuplicateItemCtrl'
+      }
+    }
+  })
   .state('app.edit', {
     url: "/edit",
     views: {
@@ -76,7 +94,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/section/food');
+  $urlRouterProvider.otherwise('/app/section/volunteer');
 })
 .directive('ionSearch', function() {
         return {

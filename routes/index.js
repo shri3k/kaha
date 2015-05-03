@@ -21,10 +21,11 @@ var flagcounter = function(dbQry) {
     if (enforceReadonly(res)) {
       return;
     }
-
-    var uuid = req.params.id;
-    var flag = req.query.flag;
-    dbQry(req, res, flag);
+    var obj = {
+      "uuid": req.params.id,
+      "flag": req.query.flag
+    };
+    dbQry(req, res, obj);
   };
 };
 
@@ -168,7 +169,8 @@ var rootPost = function(req, res, next) {
     var hostname = u && u.hostname.toLowerCase();
     if (hostname === "kaha.co" ||
       hostname === "demokaha.herokuapp.com" ||
-      env.toLowerCase() === "stage"
+      env.toLowerCase() === "stage" ||
+      env.toLowerCase() === "dev"
     ) {
       var okResult = [];
       var multi = db.multi();
@@ -299,15 +301,15 @@ router.get('/api/:id', function(req, res, next) {
 });
 
 //Edit Flags
-router.get('/api/incrflag/:id', flagcounter(function(req, res, flag) {
-  db.incr(uuid + ":" + flag, function(err, reply) {
+router.get('/api/incrflag/:id', flagcounter(function(req, res, obj) {
+  db.incr(obj.uuid + ":" + obj.flag, function(err, reply) {
     res.sendStatus(200);
     res.end();
   });
 }));
 
-router.get('/api/decrflag/:id', flagcounter(function(req, res, flag) {
-  db.decr(uuid + ":" + flag, function(err, reply) {
+router.get('/api/decrflag/:id', flagcounter(function(req, res, obj) {
+  db.decr(obj.uuid + ":" + obj.flag, function(err, reply) {
     res.sendStatus(200);
     res.end();
   });

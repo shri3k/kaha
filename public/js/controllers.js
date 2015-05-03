@@ -9,10 +9,9 @@ angular.module('starter.controllers', [])
         console.error(err);
     });
     */
-
     if (localStorage.getItem('isloggedinwithname') !== null) {
         $rootScope.adminname = localStorage.getItem('adminname');
-        $rootScope.isloggedin = (localStorage.getItem('isloggedin') == 1);
+        $rootScope.isloggedin = (localStorage.getItem('isloggedinwithname') == 1);
     }
     setTimeout(function() {
         $ionicSideMenuDelegate.toggleLeft();
@@ -36,6 +35,7 @@ angular.module('starter.controllers', [])
     $rootScope.selected = {};
     
     $scope.$on('$ionicView.beforeEnter', function() {
+        
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];
         $rootScope.districts = [];
@@ -92,6 +92,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
+    
     $rootScope.selectedItem = api.selected.get();
     $rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
     if ($rootScope.selectedItem.channel == 'supply') {

@@ -48,6 +48,7 @@
     </div>
     <div class="item" ng-show="isloggedin">
         <div class="item text-center">
+            <p><span>Verified By : {{selectedItem.verified_by}}</span></p>
             <button ng-click="verifyItem(true)" class="button button-balanced">Mark as Verified</button>
             <button ng-click="verifyItem(false)" class="button button-assertive">Mark as Not Verified</button>
             <br/><br/>

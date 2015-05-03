@@ -12,9 +12,12 @@
             <small>{{selectedItem.activeText}}</small><br>
         </span> 
         <h3>
-            {{selectedItem.description.title}} - {{selectedItem.channel?selectedItem.channel:'supply'}}
+            [<span class="selectedItem.verified?'verified':'non-verified'">{{selectedItem.verified?'Verified':'Not Verified'}}]
+            {{selectedItem.description.title}}  </span>
         </h3>
         <p><small>{{selectedItem.location.tole}}, {{selectedItem.location.district}}</small></p>
+
+        <p><small>Updated: {{selectedItem.date.modified | date:'Y-m-d'}}</small></p>
     </div>
     <div class="item item-text-wrap item-body">
         <p><strong>Contact :</strong> {{selectedItem.description.contactname}}</p>
@@ -43,13 +46,13 @@
             <span class="item-note" style="color:red">{{stat.no?stat.no:0}}</span>
         </div>
     </div>
-    <div class="item text-center" ng-click="incrStat('removal')" style="color:#f0ad4e">
-        Submit a request to remove
-        <span class="item-note" style="color:#f0ad4e">{{stat.removal?stat.removal:0}}</span>
+    <div class="item" ng-show="isloggedin">
+        <div class="item text-center">
+            <button ng-click="verifyItem(true)" class="button button-balanced">Mark as Verified</button>
+            <button ng-click="verifyItem(false)" class="button button-assertive">Mark as Not Verified</button>
+            <br/><br/>
+            <button ng-click="requestDelete()" class="button button-dark">Delete this item</button>
+        </div>
     </div>
-    <div class="item text-center" ng-click="requestDelete()" style="color:#ff0000; font-weight:bold;" ng-show="isloggedin">
-        Delete this item
-    </div>
-</div>
 </ion-content>
 </ion-view>

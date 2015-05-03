@@ -156,10 +156,11 @@ router.put('/api', function(req, res, next) {
     }
     var staledate;
     var parseReply = JSON.parse(reply);
-    staledate = (typeof parseReply.date != "undefined") ? parseReply.date : {
+    staledate = (typeof parseReply.date !== "undefined") ? parseReply.date : {
       'created': '',
       'modified': ''
     };
+    data.verified = (typeof data.verified !== "undefined") ? data.verified : false;
     data.date = staledate;
     data.date.modified = (new Date()).toUTCString();
 
@@ -190,6 +191,10 @@ router.post('/api', function(req, res, next) {
     var data_uuid = uuid.v4();
     obj.uuid = data_uuid;
     obj = dateEntry(obj);
+    if (typeof obj.verified === 'undefined') {
+        obj.verified = false;
+    }
+
     multi.set(data_uuid, JSON.stringify(obj), function(err, reply) {
       if (err) {
         return err;

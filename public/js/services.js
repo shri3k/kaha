@@ -188,6 +188,10 @@ angular.module('starter.services', [])
           xhr.send();
           return def.promise;
       },
+      verifyItem: function(data){
+          data.verified = true;
+          return this.update(data);
+      },
       requestDelete:function(data){
           var def = $q.defer();
           var xhr = new XMLHttpRequest();
@@ -215,9 +219,10 @@ angular.module('starter.services', [])
       verifyAdmin:function(val){
         var def = $q.defer();
         if(val=="c00l@dmin"){
-          def.resolve(true);
-        }else{
-          def.resolve(false);
+            localStorage.setItem('isloggedin', 1); 
+            def.resolve(true);
+        } else {
+            def.resolve(false);
         }
         return def.promise;
       },

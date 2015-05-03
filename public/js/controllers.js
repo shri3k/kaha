@@ -10,6 +10,10 @@ angular.module('starter.controllers', [])
     });
     */
 
+   if (localStorage.getItem('isloggedin') !== null) {
+       $rootScope.isloggedin = (localStorage.getItem('isloggedin') == 1);
+   }
+
     setTimeout(function() {
         $ionicSideMenuDelegate.toggleLeft();
         $rootScope.isSideMenuOpen = false;
@@ -128,6 +132,13 @@ angular.module('starter.controllers', [])
     $scope.editItem = function(){
         window.location = "#/app/submit?edit=1";
     }
+    $scope.verifyItem = function() {
+       api.verifyItem($rootScope.selectedItem).then(function(data) {
+           if (data) {
+               alert('Item has been marked as Verified. Thank you');
+           }
+       });
+    }
     $scope.requestDelete = function(){
         api.requestDelete($rootScope.selectedItem).then(function(data){
             if(data){
@@ -150,6 +161,7 @@ angular.module('starter.controllers', [])
         });
     }
     $scope.signout = function(){
+        localStorage.setItem('isloggedin', 0);
         $scope.isloggedin = false;
     }
 

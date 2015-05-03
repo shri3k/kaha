@@ -22,6 +22,8 @@
             <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
                 <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>
                 <p>
+                <h2>{{item.description.title}} - {{item.channel?item.channel:'supply'}}</h2>
+                <p>
                     {{item.location.district}} , {{item.location.tole}}
                     <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'need'">
                         {{item.active?"available":"not available"}}
@@ -29,6 +31,15 @@
                     <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel == 'need'">
                         {{item.active?"needed":"not needed"}}
                     </span>
+                <h2>
+                    [<span class="item.verified?'verified':'non-verified'">{{item.verified?'Verified':'Not Verified'}}]
+                    {{item.description.title}} </h2>
+                <p>
+                    Contact Number : {{item.description.contactnumber}}
+                    <br/>
+                    {{item.location.district}} , {{item.location.tole}}
+
+                    <p><small>Updated: {{item.date.modified | date:'Y-m-d'}}</small></p>
                 </p>
             </div>
         </div>

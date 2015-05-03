@@ -6,7 +6,7 @@ gulp.task('copy-fonts', function() {
 });
 
 gulp.task('copy-js-sourcemaps', function() {
-	return gulp.src('public/lib/ionic/js/*.js.map')
+	return gulp.src(['public/lib/ionic/js/*.js.map', 'public/lib/ionic/js/angular*.js'])
 		.pipe(gulp.dest('public/dist/js'));
 });
 

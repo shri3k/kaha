@@ -8,10 +8,13 @@ var _ = require('underscore');
 var db = redis.createClient(conf.dbport, conf.dbhost);
 var dbpass = process.env.DBPWD || '';
 var readonly = Number(process.env.KAHA_READONLY) || 0;
+var url = require('url');
+
 console.log('Server in read-only mode ? ' + Boolean(readonly));
 
 _.mixin(require('underscore.deep'));
 var similarFilter = ['type', 'location', 'description.contactnumber'];
+
 
 function enforceReadonly(res) {
   if (readonly) {
@@ -26,7 +29,6 @@ function stdCb(err, reply) {
     return err;
   }
 }
-
 
 function getAllFromDb(cb) {
   var results = [];
@@ -92,14 +94,93 @@ function getSimilarItems(arrayObj, shaKey) {
   });
 }
 
-function getUniqueUserID(req){
-    var proxies = req.headers['x-forwarded-for'] || '';
-    var ip = _.last(proxies.split(',')) ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      req.connection.socket.remoteAddress;
-    return ip;
+function getUniqueUserID(req) {
+  var proxies = req.headers['x-forwarded-for'] || '';
+  var ip = _.last(proxies.split(',')) ||
+    req.connection.remoteAddress ||
+    req.socket.remoteAddress ||
+    req.connection.socket.remoteAddress;
+  return ip;
 }
+
+var rootPost = function(req, res, next) {
+  function entry(obj) {
+    var data_uuid = uuid.v4();
+    obj.uuid = data_uuid;
+    obj = dateEntry(obj);
+    if (typeof obj.verified === 'undefined') {
+      obj.verified = false;
+    }
+
+    multi.set(data_uuid, JSON.stringify(obj), function(err, reply) {
+      if (err) {
+        return err;
+      }
+      return reply;
+    });
+  }
+
+  function dateEntry(obj) {
+    var today = new Date();
+    if (!(obj.date && obj.date.created)) {
+      obj.date = {
+        'created': today.toUTCString(),
+        'modified': today.toUTCString()
+      };
+    }
+    return obj;
+  }
+
+  function insertToDb(res) {
+      multi.exec(function(err, replies) {
+        if (err) {
+          console.log(err);
+          res.status(500).send(err);
+          return;
+        }
+        //console.log(JSON.stringify(replies));
+        if (replies) {
+          res.send(replies);
+        }
+      });
+    }
+    //Can be set on/off with environment variable
+  if (enforceReadonly(res)) {
+    return;
+  }
+
+  var ref = (req.headers && req.headers.referer) || false;
+  //No POST request allowed from other sources
+  if (ref) {
+    var u = url.parse(ref);
+    var hostname = u && u.hostname.toLowerCase();
+    if (hostname === "kaha.co" || hostname === "demokaha.herokuapp.com") {
+      var okResult = [];
+      var multi = db.multi();
+
+      var data = req.body;
+      if (Array.isArray(data)) {
+        data.forEach(function(item, index) {
+          entry(item);
+          insertToDb(res);
+        });
+      } else {
+        getAllFromDb(function(err, results) {
+          var similarItems = getSimilarItems(results, getSha(data, similarFilter));
+          var query = req.query.confirm || "no";
+          if (similarItems.length > 0 && (query.toLowerCase() === "no")) {
+            res.send(similarItems);
+          } else {
+            entry(data);
+            insertToDb(res);
+          }
+        });
+      }
+    }
+  }
+  res.status(403).send('Invalid Origin');
+};
+
 
 db.on('connect', function() {
   console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
@@ -185,78 +266,10 @@ router.put('/api', function(req, res, next) {
     });
 
   });
-
 });
 
 //Add Entry
-router.post('/api', function(req, res, next) {
-  if (enforceReadonly(res)) {
-    return;
-  }
-
-  var okResult = [];
-  var multi = db.multi();
-
-  function entry(obj) {
-    var data_uuid = uuid.v4();
-    obj.uuid = data_uuid;
-    obj = dateEntry(obj);
-    if (typeof obj.verified === 'undefined') {
-        obj.verified = false;
-    }
-
-    multi.set(data_uuid, JSON.stringify(obj), function(err, reply) {
-      if (err) {
-        return err;
-      }
-      return reply;
-    });
-  }
-
-  function dateEntry(obj) {
-    var today = new Date();
-    if (!(obj.date && obj.date.created)) {
-      obj.date = {
-        'created': today.toUTCString(),
-        'modified': today.toUTCString()
-      };
-    }
-    return obj;
-  }
-
-  function insertToDb(res) {
-    multi.exec(function(err, replies) {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-        return;
-      }
-      //console.log(JSON.stringify(replies));
-      if (replies) {
-        res.send(replies);
-      }
-    });
-  }
-
-  var data = req.body;
-  if (Array.isArray(data)) {
-    data.forEach(function(item, index) {
-      entry(item);
-      insertToDb(res);
-    });
-  } else {
-    getAllFromDb(function(err, results) {
-      var similarItems = getSimilarItems(results, getSha(data, similarFilter));
-      var query = req.query.confirm || "no";
-      if (similarItems.length > 0 && (query.toLowerCase() === "no")) {
-        res.send(similarItems);
-      } else {
-        entry(data);
-        insertToDb(res);
-      }
-    });
-  }
-});
+router.post('/api', rootPost);
 
 router.get('/api/:id', function(req, res, next) {
   db.get(req.params.id, function(err, reply) {

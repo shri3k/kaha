@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compression = require('compression');
-var url = require('url');
 
 var routes = require('./routes/index');
 
@@ -17,26 +16,12 @@ var CORS = function(req, res, next) {
   next();
 };
 
-//Allow only kaha.co and demokaha to post
-var AllowPOST = function(req, res, next) {
-  var ref = (req.headers && req.headers.referer) || false;
-  if (ref) {
-    var u = url.parse(ref);
-    var hostname = u && u.hostname.toLowerCase();
-    if (hostname === "kaha.co" || hostname === "demokaha.herokuapp.com") {
-      return next();
-    }
-  }
-  res.status(403).send('Invalid Origin');
-};
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
 
 app.use(compression());
-app.use(AllowPOST);
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json({

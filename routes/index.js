@@ -169,8 +169,7 @@ var rootPost = function(req, res, next) {
     var hostname = u && u.hostname.toLowerCase();
     if (hostname === "kaha.co" ||
       hostname === "demokaha.herokuapp.com" ||
-      env.toLowerCase() === "stage" ||
-      env.toLowerCase() === "dev"
+      env.toLowerCase() === "stage"
     ) {
       var okResult = [];
       var multi = db.multi();

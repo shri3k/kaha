@@ -92,6 +92,15 @@ function getSimilarItems(arrayObj, shaKey) {
   });
 }
 
+function getUniqueUserID(req){
+    var proxies = req.headers['x-forwarded-for'] || '';
+    var ip = _.last(proxies.split(',')) ||
+      req.connection.remoteAddress ||
+      req.socket.remoteAddress ||
+      req.connection.socket.remoteAddress;
+    return ip;
+}
+
 db.on('connect', function() {
   console.log('Connected to the ' + conf.name + ' db: ' + conf.dbhost + ":" + conf.dbport);
 });
@@ -139,7 +148,8 @@ router.get('/api/dupe/:sha', function(req, res, next) {
 // Get home page
 router.get('/', function(req, res, next) {
   res.render('index', {
-    prod: process.env.NODE_ENV === 'prod'
+    prod: process.env.NODE_ENV === 'prod',
+    userID: getUniqueUserID(req)
   });
 });
 

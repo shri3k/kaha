@@ -161,7 +161,9 @@ angular.module('starter.controllers', [])
         });
     }
     $scope.signout = function(){
-        localStorage.setItem('isloggedin', 0);
+        localStorage.removeItem('isloggedin');
+        localStorage.removeItem('isloggedinwithname');
+        localStorage.removeItem('adminname');
         $scope.isloggedin = false;
     }
 })

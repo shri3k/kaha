@@ -21,6 +21,7 @@ When you do `npm run start` or `node bin/www` then by default it'll run on stagi
 but you'll need to set a db environment (DBPWD) for db passwd.   
 Contact me or contributors in this repo for the db pass.
 
+```
 The MIT License (MIT)
 
 Copyright (c) 2015 kaha.co
@@ -42,6 +43,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
 
 
 

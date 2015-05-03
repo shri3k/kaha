@@ -26,14 +26,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   .state('app', {
     url: "/app",
     abstract: true,
-    templateUrl: "templates/menu.html",
+    template: require('../templates/menu.html'),
     controller: 'AppCtrl'
   })
     .state('app.section', {
       url: "/section/:sectionid",
       views: {
         'menuContent': {
-          templateUrl: "templates/section.html",
+          template: require('../templates/section.html'),
           controller: 'SectionCtrl'
         }
       }
@@ -43,7 +43,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     url: "/item/:uuid",
     views: {
       'menuContent': {
-        templateUrl: "templates/item.html",
+        template: require('../templates/item.html'),
         controller: 'ItemCtrl'
       }
     }
@@ -52,7 +52,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     url: "/submit?edit&type&district&channel&datasource",
     views: {
       'menuContent': {
-        templateUrl: "templates/submit.html",
+        template: require('../templates/submit.html'),
         controller: 'SubmitCtrl'
       }
     }
@@ -61,7 +61,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     url: "/about",
     views: {
       'menuContent': {
-        templateUrl: "templates/about.html",
+        template: require('../templates/about.html'),
         controller: 'AboutCtrl'
       }
     }
@@ -70,7 +70,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     url: "/duplicatelist",
     views: {
       'menuContent': {
-        templateUrl: "templates/admin/duplicatelist.html",
+        template: require('../templates/admin/duplicatelist.html'),
         controller: 'DuplicateListCtrl'
       }
     }
@@ -79,7 +79,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     url: "/duplicateitem/:itemid",
     views: {
       'menuContent': {
-        templateUrl: "templates/admin/duplicateitem.html",
+        template: require('../templates/admin/duplicateitem.html'),
         controller: 'DuplicateItemCtrl'
       }
     }
@@ -88,7 +88,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     url: "/edit",
     views: {
       'menuContent': {
-        templateUrl: "templates/submit.html",
+        template: require('../templates/submit.html'),
         controller: 'EditCtrl'
       }
     }

@@ -24,11 +24,9 @@ angular.module('starter.controllers', [])
     };
     $rootScope.addIconToggle = function(){
         $rootScope.isAddActive = $rootScope.isAddActive?false:true;
-    }
-    $ionicPopover.fromTemplateUrl('templates/addMenu.html', {
+    };
+    $rootScope.popover = $ionicPopover.fromTemplate(require('../templates/addMenu.html'), {
         scope: $rootScope,
-    }).then(function(popover) {
-        $rootScope.popover = popover;
     });
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {

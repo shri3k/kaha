@@ -19,7 +19,7 @@
     <ion-content style="margin-top:38px;">
         <ion-refresher pulling-text="Pull to refresh..."on-refresh="doRefresh()"></ion-refresher>
         <div class="list">
-            <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value" ng-click="loadItem(item)">
+            <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value track by item.uuid" ng-click="loadItem(item)">
                 <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'need'">
                     {{item.active?"available":"not available"}}
                 </span>

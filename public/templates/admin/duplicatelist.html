@@ -17,7 +17,6 @@
         <div class="h1 title">{{name | ucfirst }}</div>
     </ion-nav-title>
     <ion-content style="margin-top:38px;">
-        <ion-refresher pulling-text="Pull to refresh..."on-refresh="doRefresh()"></ion-refresher>
         <div class="list">
             <a class="item" ng-repeat="(key, value) in dups | search:search.value" href="#/app/duplicateitem/{{key}}">
                 <h2>key: {{key}} Repeated: {{value}}</h2>

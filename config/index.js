@@ -5,7 +5,7 @@ module.exports = {
     "dbport": 10191
   },
   "stage": {
-    "name": "dev",
+    "name": "stage",
     "dbhost": "pub-redis-13914.us-east-1-4.2.ec2.garantiadata.com",
     "dbport": 13914
   },

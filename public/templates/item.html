@@ -27,23 +27,53 @@
     </div>
     
     <div ng-if="selectedItem.channel !== 'need'">
-        <div class="item text-center" ng-click="incrStat('yes')" style="color:green">
-            I got help from here
-            <span class="item-note" style="color:green">{{stat.yes?stat.yes:0}}</span>
+        <div class="item text-center buttons-wrapper">
+            <button class="button button-outline button-light"  ng-click="incrStat('yes')" style="color:green" ng-disabled="isButtonDisabled('yes')" >
+                I got help from here
+            </button>
+            <button class="button button-outline button-light col-10 item-note" style="color:green">
+                {{stat.yes?stat.yes:0}}
+            </button>
+            <button class="button button-outline button-light col-20 item-note" ng-click="decrStat('yes')" style="color:green" ng-class="isButtonDisabled('yes')?'show-button':'hide-button'" >
+                Undo
+            </button>
+
         </div>
-        <div class="item text-center" ng-click="incrStat('no')" style="color:red">
-            No longer available
-            <span class="item-note" style="color:red">{{stat.no?stat.no:0}}</span>
+        <div class="item text-center buttons-wrapper">
+            <button class="button button-outline button-light" ng-class="isButtonDisabled('yes')?'col-50':'col-95'" ng-click="incrStat('no')" style="color:red" ng-disabled="isButtonDisabled('no')" >
+                No longer available
+            </button>
+            <button class="button button-outline button-light item-note col-10" style="color:red">
+                {{stat.no?stat.no:0}}
+            </button>
+            <button class="button button-outline button-light col-20 item-note" ng-click="decrStat('no')" style="color:red" ng-class="isButtonDisabled('no')?'show-button':'hide-button'" >
+                Undo
+            </button>
         </div>
     </div>
     <div ng-if="selectedItem.channel == 'need'">
-        <div class="item text-center" ng-click="incrStat('no_connection')" style="color:red">
-            Could not Contact 
-            <span class="item-note" style="color:green">{{stat.no_connection?stat.no_connection:0}}</span>
+        <div class="item text-center buttons-wrapper">
+            <button class="button button-outline button-light" ng-class="isButtonDisabled('no_connection')?'col-50':'col-95'" ng-click="incrStat('no_connection')" style="color:green" ng-disabled="isButtonDisabled('no_connection')" >
+                Could not Contact
+            </button>
+            
+            <button class="button button-outline button-light col-10 item-note" style="color:green">
+                {{stat.no_connection?stat.no_connection:0}}
+            </button>
+            <button class="button button-outline button-light col-20 item-note" ng-click="decrStat('no_connection')" style="color:green" ng-class="isButtonDisabled('no_connection')?'show-button':'hide-button'" >
+                Undo
+            </button>
         </div>
-        <div class="item text-center" ng-click="incrStat('no')" style="color:green">
-            Need is met
-            <span class="item-note" style="color:red">{{stat.no?stat.no:0}}</span>
+        <div class="item text-center buttons-wrapper">
+            <button class="button button-outline button-light" ng-class="isButtonDisabled('yes')?'col-50':'col-95'" ng-click="incrStat('yes')" style="color:red" ng-disabled="isButtonDisabled('yes')" >
+                Need is met
+            </button>
+            <button class="button button-outline button-light col-10 item-note" style="color:red">
+                {{stat.yes?stat.yes:0}}
+            </button>
+            <button class="button button-outline button-light col-20 item-note" ng-click="decrStat('yes')" style="color:red" ng-class="isButtonDisabled('yes')?'show-button':'hide-button'" >
+                Undo
+            </button>
         </div>
     </div>
     <div class="item" ng-show="isloggedin">

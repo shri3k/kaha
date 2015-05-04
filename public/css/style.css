@@ -113,3 +113,9 @@ pre {
 .add-button-wrapper{
   margin-bottom: 60px;
 }
+.buttons-wrapper button{
+  border:0px;
+}
+.hide-button{
+  visibility: hidden;
+}

@@ -1,4 +1,4 @@
-<ion-side-menus enable-menu-with-back-views="false">
+<ion-side-menus enable-menu-with-back-views="false" ng-controller="SideMenuCtrl">
   <ion-side-menu-content ng-class="$exposeAside.active?'active':''">
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button ng-hide="$exposeAside.active">
@@ -6,8 +6,8 @@
 
       <ion-nav-buttons side="left">
         <button class="button button-clear" menu-toggle="left" ng-hide="$exposeAside.active" ng-click="menuClicked()">
-        <i class="icon ion-ios-arrow-left"></i> 
-        MENU 
+        <i class="icon ion-ios-arrow-left"></i>
+        MENU
         </button>
       </ion-nav-buttons>
     </ion-nav-bar>
@@ -20,7 +20,10 @@
     </ion-header-bar>
     <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''" >
       <ion-list>
-
+        <ion-item class="item-icon-left item-location-select" nav-clear menu-close ng-click="showDistrictSelector()">
+          <i class="icon ion-location"></i>
+          District
+        </ion-item>
         <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/volunteer">
         <i class="icon ion-person-stalker"></i>
         Volunteers
@@ -48,7 +51,7 @@
 
         <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/transportation">
         <i class="icon ion-model-s"></i>
-        Transportation 
+        Transportation
         </ion-item>
 
         <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/medical supplies">

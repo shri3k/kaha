@@ -34,7 +34,7 @@ angular.module('starter.controllers', [])
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
     $rootScope.selected = {};
-    
+
     $scope.$on('$ionicView.beforeEnter', function() {
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];
@@ -43,6 +43,18 @@ angular.module('starter.controllers', [])
         var refresh = $scope.dataset?false:true;
         $scope.getData(refresh);
     });
+
+    $scope.$on(ConstEvents.UPDATE_DISTRICTS, function(evnt, newSelectedDistricts) {
+        if (newSelectedDistricts.length) {
+          $rootScope.items = newSelectedDistricts.reduce(function(result, selectedDistrict) {
+              var filteredItems = api.filter.location.district($scope.dataset, $scope.name, selectedDistrict.name);
+              return result.concat(filteredItems);
+          }, []);
+        } else {
+          $rootScope.doRefresh();
+        }
+    });
+
     $rootScope.updateDistrict = function(){
         //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
         $rootScope.items = api.filter.location.district($scope.dataset, $scope.name, $rootScope.selected.district);
@@ -50,14 +62,17 @@ angular.module('starter.controllers', [])
     $rootScope.updateTole = function(){
         $rootScope.items = api.filter.location.tole($rootScope.items, $scope.name,  $rootScope.selected.tole);
     }
+
     $scope.loadItem = function(item){
         $rootScope.selectedItem = item;
         api.selected.set(item);
         window.location = "#/app/item/"+item.uuid;
     }
+
     $rootScope.doRefresh = function(refresh){
         $scope.getData(true);
     }
+
     $scope.getData = function(refresh){
         api.data(refresh).then(function(data){
             $scope.dataset = api.filter.type(data.content, $scope.name);
@@ -77,6 +92,7 @@ angular.module('starter.controllers', [])
             }
         });
     }
+
     $scope.print = function(){
         var p = $window.open();
         var pbody = p.document.body;
@@ -91,7 +107,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
-    
+
     $rootScope.selectedItem = api.selected.get();
     $rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
     if ($rootScope.selectedItem.channel == 'supply') {
@@ -352,7 +368,7 @@ angular.module('starter.controllers', [])
                             alert("Successfully Created");
                             $window.location.reload();
                         }
-                        
+
                     }
                     },
                     function(status) {
@@ -365,5 +381,55 @@ angular.module('starter.controllers', [])
             alert("All fields are required");
         }
     };
+});
+
+/* @ngInject */
+function SideMenuCtrl($scope, $ionicModal) {
+  $ionicModal.fromTemplateUrl('templates/districtSelector.html', {
+    scope: $scope,
+    animation: 'slide-in-up',
+  }).then(function(modal) {
+    $scope.districtModal = modal;
+  });
+
+  $scope.showDistrictSelector = function showDistrictSelector() {
+    $scope.districtModal.show();
+  };
 }
-);
+
+/* @ngInject */
+function LocationSelectorCtrl($scope, $rootScope, api, DistrictSelectService) {
+  $scope.allDistricts = DistrictSelectService.getAllDistricts();
+  $scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
+  $scope.viewModel = {
+    searchText: '',
+  };
+
+  $scope.dismiss = function() {
+    $scope.districtModal.hide();
+  };
+
+  $scope.selectionChange = function() {
+    $scope.currentDistricts = $scope.allDistricts.filter(function(district) {
+      return district.selected;
+    });
+  };
+
+  $scope.clearSelections = function() {
+    $scope.allDistricts.map(function(district) {
+      district.selected = false;
+    });
+    $scope.viewModel.searchText = '';
+    $scope.currentDistricts = [];
+    DistrictSelectService.setCurrentDistricts([]);
+  };
+
+  $scope.update = function() {
+    DistrictSelectService.setCurrentDistricts($scope.currentDistricts);
+    $scope.districtModal.hide();
+  };
+}
+
+angular.module('starter.controllers')
+  .controller('SideMenuCtrl', SideMenuCtrl)
+  .controller('LocationSelectorCtrl', LocationSelectorCtrl);

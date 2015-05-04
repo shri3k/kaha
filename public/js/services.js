@@ -1,5 +1,5 @@
-angular.module('starter.services', [])
-  .factory("api", function($q, $http) {
+/* @ngInject */
+function APIService($q, $http) {
     return {
         init:function(){
           var userdata = localStorage.getItem('userdata');
@@ -7,8 +7,7 @@ angular.module('starter.services', [])
             localStorage.setItem('userdata',JSON.stringify({yes:[], no:[], no_connection:[]}));
           }
         },
-        coordinates: function() {
-            var def = $q.defer();
+        coordinates: function() { var def = $q.defer();
             var _key = 'local_latlon';
             var cached_position = localStorage.getItem(_key);
             if (cached_position === null) {
@@ -136,7 +135,7 @@ angular.module('starter.services', [])
           angular.forEach(data, function(item) {
             if (item.location.district.toUpperCase() == district.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
               if (filtered.indexOf(item.location.tole) == -1){
-				filtered.push(item.location.tole);
+  			filtered.push(item.location.tole);
               }
             }
           });
@@ -242,7 +241,7 @@ angular.module('starter.services', [])
         var def = $q.defer();
         if (name && (val=="c00l@dmin")){
             localStorage.setItem('adminname', name);
-            localStorage.setItem('isloggedinwithname', 1); 
+            localStorage.setItem('isloggedinwithname', 1);
             def.resolve(true);
         } else {
             def.resolve(false);
@@ -293,4 +292,42 @@ angular.module('starter.services', [])
       supplytypes: ['food', 'water', 'shelter', 'blood', 'medical supplies', 'medical services', 'volunteer', 'transportation', 'other contacts']
     };
 
-  });
+}
+
+/* @ngInject */
+function DistrictSelectService(api, ConstEvents, $rootScope) {
+    var currentDistricts = [];
+
+    var allDistricts = api.districts.map(function(districtName) {
+        return { 'name': districtName, 'selected': false };
+    });
+
+    function getAllDistricts() {
+        return allDistricts;
+    }
+
+    function getCurrentDistricts() {
+        return currentDistricts;
+    }
+
+    function setCurrentDistricts(newDistricts) {
+        currentDistricts = newDistricts;
+        $rootScope.$broadcast(ConstEvents.UPDATE_DISTRICTS, currentDistricts);
+        return currentDistricts;
+    }
+
+    return {
+        'getAllDistricts': getAllDistricts,
+        'getCurrentDistricts': getCurrentDistricts,
+        'setCurrentDistricts': setCurrentDistricts,
+    }
+}
+
+var ConstEvents = {
+    'UPDATE_DISTRICTS': 'UPDATE_DISTRICTS',
+};
+
+angular.module('starter.services', [])
+    .factory("api", APIService)
+    .factory("DistrictSelectService", DistrictSelectService)
+    .constant("ConstEvents", ConstEvents);

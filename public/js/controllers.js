@@ -32,7 +32,21 @@ angular.module('starter.controllers', [])
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
     $rootScope.selected = {};
-    
+    $scope.search_options = [
+        {search:'NeedVerified', label:'Show verified needs'},
+        {search:'Need', label:'Show all needs'},
+        {search:'SupplyVerified', label:'Show verified supplies'}, 
+        {search:'Supply', label:'Show all supplies'}, 
+        {search:'Unverified', label:'Show unverified resources'}
+    ];
+    $scope.searchMenu = function(){
+        $scope.search.value = "";
+        return $scope.showHide=!$scope.showHide;
+    };
+    $scope.selecionar = function(item){
+        $scope.search.value = item.search;
+        $scope.showHide = false;
+    };
     $scope.$on('$ionicView.beforeEnter', function() {
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];

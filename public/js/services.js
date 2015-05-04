@@ -37,6 +37,29 @@ angular.module('starter.services', [])
         if (refresh) {
           $http.get(url).success(function(data) {
             if (data) {
+                data = data.map(function(row){
+                    row.tags = [];
+                    verified = false;
+                    if (row.verified === true) {
+                        row.tags.push('Verified');
+                        verified = true;
+                    } else {
+                        row.tags.push('Unverified');
+                    }
+                    if (row.channel === 'need') {
+                        row.tags.push('Needed');
+                        if (verified) {
+                            row.tags.push('NeedVerified');
+                        }
+                    } else {
+                        row.tags.push('Supply');
+                        if (verified) {
+                            row.tags.push('SupplyVerified');
+                        }
+                    }
+                    return row;
+                });
+
               def.resolve({
                 success: true,
                 content: data
@@ -51,6 +74,21 @@ angular.module('starter.services', [])
           });
         } else {
           var data = JSON.parse(localStorage.getItem("kahacodata"));
+          data = data.map(function(row){
+              row.tags = [];
+              if (row.verified === true) {
+                  row.tags.push('Verified');
+              } else {
+                  row.tags.push('Unverified');
+              }
+
+              if (row.channel === 'need') {
+                  row.tags.push('Needed');
+              } else {
+                  row.tags.push('Supply');
+              }
+              return row;
+          });
           def.resolve({
             success: true,
             content: data

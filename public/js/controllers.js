@@ -36,13 +36,12 @@ angular.module('starter.controllers', [])
     $rootScope.selected = {};
     
     $scope.$on('$ionicView.beforeEnter', function() {
-        
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];
         $rootScope.districts = [];
         $rootScope.sectionName = $stateParams.sectionid;
         var refresh = $scope.dataset?false:true;
-                $scope.getData(refresh);
+        $scope.getData(refresh);
     });
     $rootScope.updateDistrict = function(){
         //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
@@ -89,7 +88,6 @@ angular.module('starter.controllers', [])
         table = table+"</table>";
         pbody.innerHTML = table;
     }
-
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
@@ -131,14 +129,14 @@ angular.module('starter.controllers', [])
             alert('Error updating stat');
         });
     }
-    $scope.decrStat =function(key){
+    $scope.decrStat =function(statKey){
         api.decrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
             if (typeof($scope.stat[statKey]) == 'undefined') {
                 $scope.stat.$$statKey = 0;
             }
             var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
             $scope.stat[statKey] = startAt-1;
-            api.cookie.remove(key, $rootScope.selectedItem.uuid);
+            api.cookie.remove(statKey, $rootScope.selectedItem.uuid);
         },
         function(error) {
             alert('Error updating stat');

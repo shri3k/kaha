@@ -249,7 +249,7 @@ router.get('/api/dupe/:sha', function(req, res, next) {
 router.get('/', function(req, res, next) {
   res.render('index', {
     prod: process.env.NODE_ENV === 'prod',
-    userID: getUniqueUserID(req)
+    userID: sha(getUniqueUserID(req))
   });
 });
 

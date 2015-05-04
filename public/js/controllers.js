@@ -28,18 +28,18 @@ angular.module('starter.controllers', [])
     $rootScope.popover = $ionicPopover.fromTemplate(require('../templates/addMenu.html'), {
         scope: $rootScope,
     });
+    api.init();
 })
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
     $rootScope.selected = {};
     
     $scope.$on('$ionicView.beforeEnter', function() {
-        
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];
         $rootScope.districts = [];
         $rootScope.sectionName = $stateParams.sectionid;
         var refresh = $scope.dataset?false:true;
-                $scope.getData(refresh);
+        $scope.getData(refresh);
     });
     $rootScope.updateDistrict = function(){
         //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
@@ -86,7 +86,6 @@ angular.module('starter.controllers', [])
         table = table+"</table>";
         pbody.innerHTML = table;
     }
-
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
@@ -122,12 +121,28 @@ angular.module('starter.controllers', [])
             }
             var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
             $scope.stat[statKey] = startAt+1;
+            api.cookie.set(statKey, $rootScope.selectedItem.uuid);
         },
         function(error) {
             alert('Error updating stat');
         });
     }
-
+    $scope.decrStat =function(statKey){
+        api.decrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
+            if (typeof($scope.stat[statKey]) == 'undefined') {
+                $scope.stat.$$statKey = 0;
+            }
+            var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
+            $scope.stat[statKey] = startAt-1;
+            api.cookie.remove(statKey, $rootScope.selectedItem.uuid);
+        },
+        function(error) {
+            alert('Error updating stat');
+        });
+    }
+    $scope.isButtonDisabled = function(key){
+        return api.cookie.get(key, $rootScope.selectedItem.uuid)?true:false;
+    }
     $scope.editItem = function(){
         window.location = "#/app/submit?edit=1";
     }

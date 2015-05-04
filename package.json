@@ -6,8 +6,7 @@
     "start": "node ./bin/www",
     "build-dev": "gulp dev",
     "build-dist": "gulp",
-    "prod": "npm run build-dist && NODE_ENV=prod node ./bin/www",
-    "post-install": "npm run prod"
+    "prod": "npm run build-dist && NODE_ENV=prod node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.10.2",

@@ -1,6 +1,12 @@
 angular.module('starter.services', [])
   .factory("api", function($q, $http) {
     return {
+        init:function(){
+          var userdata = localStorage.getItem('userdata');
+          if(!userdata){
+            localStorage.setItem('userdata',JSON.stringify({yes:[], no:[], no_connection:[]}));
+          }
+        },
         coordinates: function() {
             var def = $q.defer();
             var _key = 'local_latlon';
@@ -174,10 +180,24 @@ angular.module('starter.services', [])
         return localStorage.getItem("kahacodata")?false:true;
       },
       incrStat:function(uuid, statKey) {
-          console.log('Setting ' + uuid + ' StatKey' + statKey);
           var def = $q.defer();
           var xhr = new XMLHttpRequest();
           xhr.open('GET', '/api/incrflag/'+uuid+'?flag='+statKey, true);
+          xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+          xhr.onload = function() {
+              if(this.status === 200){
+                  def.resolve(this.status);
+              } else {
+                  def.reject(this.status);
+              }
+          };
+          xhr.send();
+          return def.promise;
+      },
+      decrStat:function(uuid, statKey) {
+          var def = $q.defer();
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', '/api/decrflag/'+uuid+'?flag='+statKey, true);
           xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
           xhr.onload = function() {
               if(this.status === 200){
@@ -243,6 +263,29 @@ angular.module('starter.services', [])
           });
         }
         return def.promise;
+      },
+      cookie:{
+        set:function(type, data){
+            var userdata = JSON.parse(localStorage.getItem('userdata'));
+            var typeData = userdata[type];
+            if(typeData.indexOf(data)===-1){
+              typeData.push(data);
+            }
+            userdata[type] = typeData;
+            localStorage.setItem('userdata', JSON.stringify(userdata));
+        },
+        remove:function(type, data){
+            var userdata = JSON.parse(localStorage.getItem('userdata'));
+            var index = userdata[type].indexOf(data);
+            if(index!==-1){
+              userdata[type].splice(index, 1);
+            }
+            localStorage.setItem('userdata', JSON.stringify(userdata));
+        },
+        get:function(type, data){
+            var userdata = JSON.parse(localStorage.getItem('userdata'));
+            return userdata[type][userdata[type].indexOf(data)];
+        }
       },
       districts: [
         "Bhaktapur", "Dhading", "Kathmandu", "Kavrepalanchok", "Lalitpur", "Nuwakot", "Rasuwa", "Sindhupalchok", "Banke", "Bardiya", "Dailekh", "Jajarkot", "Surkhet", "Baglung", "Mustang", "Myagdi", "Parbat", "Gorkha", "Kaski", "Lamjung", "Manang", "Syangja", "Tanahu", "Dhanusa", "Dolakha", "Mahottari", "Ramechhap", "Sarlahi", "Sindhuli", "Dolpa", "Humla", "Jumla", "Kalikot", "Mugu", "Bhojpur", "Dhankuta", "Morang", "Sankhuwasabha", "Sunsari", "Terhathum", "Arghakhanchi", "Gulmi", "Kapilvastu", "Nawalparasi", "Palpa", "Rupandehi", "Baitadi", "Dadeldhura", "Darchula", "Kanchanpur", "Ilam", "Jhapa", "Panchthar", "Taplejung", "Bara", "Chitwan", "Makwanpur", "Parsa", "Rautahat", "Dang Deokhuri", "Pyuthan", "Rolpa", "Rukum", "Salyan", "Khotang", "Okhaldhunga", "Saptari", "Siraha", "Solukhumbu", "Udayapur", "Achham", "Bajhang", "Bajura", "Doti", "Kailali"

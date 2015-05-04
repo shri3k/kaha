@@ -7,7 +7,8 @@ function APIService($q, $http) {
             localStorage.setItem('userdata',JSON.stringify({yes:[], no:[], no_connection:[]}));
           }
         },
-        coordinates: function() { var def = $q.defer();
+        coordinates: function() {
+            var def = $q.defer();
             var _key = 'local_latlon';
             var cached_position = localStorage.getItem(_key);
             if (cached_position === null) {
@@ -135,7 +136,7 @@ function APIService($q, $http) {
           angular.forEach(data, function(item) {
             if (item.location.district.toUpperCase() == district.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
               if (filtered.indexOf(item.location.tole) == -1){
-  			filtered.push(item.location.tole);
+                filtered.push(item.location.tole);
               }
             }
           });
@@ -241,7 +242,7 @@ function APIService($q, $http) {
         var def = $q.defer();
         if (name && (val=="c00l@dmin")){
             localStorage.setItem('adminname', name);
-            localStorage.setItem('isloggedinwithname', 1);
+            localStorage.setItem('isloggedinwithname', 1); 
             def.resolve(true);
         } else {
             def.resolve(false);
@@ -291,7 +292,6 @@ function APIService($q, $http) {
       ],
       supplytypes: ['food', 'water', 'shelter', 'blood', 'medical supplies', 'medical services', 'volunteer', 'transportation', 'other contacts']
     };
-
 }
 
 /* @ngInject */

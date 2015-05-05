@@ -31,71 +31,62 @@ angular.module('starter.services', [])
             }
             return def.promise;
         },
-      data: function(refresh) {
-        var url = "/api";
-        var def = $q.defer();
-        if (refresh) {
-          $http.get(url).success(function(data) {
-            if (data) {
+        data: function(refresh) {
+            var tagData =  function(data) {
                 data = data.map(function(row){
                     row.tags = [];
                     verified = false;
                     if (row.verified === true) {
-                        row.tags.push('Verified');
+                        row.tags.push('#verified');
                         verified = true;
                     } else {
-                        row.tags.push('Unverified');
+                        row.tags.push('#unverified');
                     }
                     if (row.channel === 'need') {
-                        row.tags.push('Needed');
+                        row.tags.push('#need');
                         if (verified) {
-                            row.tags.push('NeedVerified');
+                            row.tags.push('#needverified');
                         }
                     } else {
-                        row.tags.push('Supply');
+                        row.tags.push('#supply');
                         if (verified) {
-                            row.tags.push('SupplyVerified');
+                            row.tags.push('#supplyverified');
                         }
                     }
                     return row;
                 });
 
-              def.resolve({
-                success: true,
-                content: data
-              });
-              localStorage.setItem("kahacodata", JSON.stringify(data));
-            }
-          }).error(function(data, status, headers, config) {
-            def.resolve({
-              success: false,
-              message: "No data found"
-            });
-          });
-        } else {
-          var data = JSON.parse(localStorage.getItem("kahacodata"));
-          data = data.map(function(row){
-              row.tags = [];
-              if (row.verified === true) {
-                  row.tags.push('Verified');
-              } else {
-                  row.tags.push('Unverified');
-              }
+                return data;
+            };
 
-              if (row.channel === 'need') {
-                  row.tags.push('Needed');
-              } else {
-                  row.tags.push('Supply');
-              }
-              return row;
-          });
-          def.resolve({
-            success: true,
-            content: data
-          });
-        }
-        return def.promise;
-      },
+            var url = "/api";
+            var def = $q.defer();
+            if (refresh) {
+                $http.get(url).success(function(data) {
+                    if (data) {
+                        data = tagData(data);
+                        def.resolve({
+                            success: true,
+                            content: data
+                        });
+                        localStorage.setItem("kahacodata", JSON.stringify(data));
+                    }
+                }).error(function(data, status, headers, config) {
+                    def.resolve({
+                        success: false,
+                        message: "No data found"
+                    });
+                });
+            } else {
+                var data = JSON.parse(localStorage.getItem("kahacodata"));
+                data = tagData(data)
+                def.resolve({
+                    success: true,
+                    content: data
+                });
+            }
+            return def.promise;
+        },
       getItem:function(uuid){
         var url = "/api";
         var def = $q.defer();

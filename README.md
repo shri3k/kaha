@@ -35,17 +35,21 @@ To ensure uniform environments across all of dev, staging and prod (and quickly 
 
 First install docker following the instructions  [here](https://docs.docker.com/installation/).
 
-Build the kaha docker image:
+### Build the kaha docker image
 
     sudo docker build -t kaha .
 
 You can see it now from `sudo docker images`
+
+### Dev use (against staging)
 
 To run kaha node app against the remote staging db, do this from the repo root directory:
 
     sudo docker run --name kaha_stage -v $(pwd):/kaha -p 3000:3000 kaha
 
 This creates a docker container called `kaha_stage` based on the kaha image, with the repo dir used as a shared volume inside the container (so that code changes are picked up).
+
+### Dev use (local db)
 
 To run kaha against a local redis installation:
 
@@ -58,17 +62,25 @@ Using docker compose thus simplifies the dev setup. But if you prefer to do it d
     sudo docker run -d --name redis -p 6379:6379 redis && \
     sudo docker run --name kaha_dev -v $(pwd):/kaha -p 3000:3000 --link redis:db kaha
 
-Managing docker containers:
+### Prod use
+
+```
+sudo docker run --name kaha_prod -v $(pwd):/kaha -p 3000:3000 kaha npm run build-dist && NODE_ENV=prod DBPWD=<passwd> node ./bin/www
+```
+
+This creates container `kaha_prod` and uses remote prod redis instance hosted on redislabs. For ease in deployments, a separate dockerfile can be setup with prod details and kaha image can be added to the public docker registry.
+
+### Managing docker containers
 
     # list the running containers
     sudo docker ps
     # stop and start the container (kaha_stage, kaha_redis_1 etc.)
     sudo docker stop <container_name>
     sudo docker start <container_name>
+    # remove container
+    sudo docker rm <container_name>
 
-Deploying to production with docker:
-
-*coming soon with kaha image in the docker public registry*
+For more details, read the docker docs.
 
 ```
 The MIT License (MIT)

@@ -33,11 +33,10 @@ angular.module('starter.controllers', [])
 .controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
     $rootScope.selected = {};
     $scope.search_options = [
-        {search:'NeedVerified', label:'Show verified needs'},
-        {search:'Need', label:'Show all needs'},
-        {search:'SupplyVerified', label:'Show verified supplies'}, 
-        {search:'Supply', label:'Show all supplies'}, 
-        {search:'Unverified', label:'Show unverified resources'}
+        {search:'#needverified', label:'Show verified needs'},
+        {search:'#need', label:'Show all needs'},
+        {search:'#supply', label:'Show all supplies'}, 
+        {search:'#unverified', label:'Show unverfied resources'} 
     ];
     $scope.searchMenu = function(){
         $scope.search.value = "";

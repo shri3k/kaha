@@ -8,9 +8,20 @@
         <i class="icon ion-ios-printer-outline"></i>
     </button>
     </ion-nav-buttons>
-    <div class="searchbar" style="text-align:center; position:fixed; top:40px; z-index:9999; width:100%">
-        <div class="bar bar-header item-input-inset">
+    <div class="searchbar" style="text-align:center; position:fixed; top:44px; z-index:9999; width:100%">
+
+        <div class="bar item-input-inset">
             <ion-search placeholder="Type to search" filter="search"></ion-search>
+            <button class="button button-small button-clear" ng-click="searchMenu()">'
+                <i class="icon ion-chevron-down"></i>
+            </button>
+        </div>
+        <div class="optionList padding-left padding-right" ng-show="showHide">
+            <ion-scroll>
+            <ul class="list">
+                <li class="item" ng-click="selecionar(item)" ng-repeat="item in search_options | filter:ngModel">{{item['label']}}</li>                 
+            </ul>
+            </ion-scroll>
         </div>
     </div>
     <ion-nav-title>

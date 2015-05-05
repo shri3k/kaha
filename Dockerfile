@@ -1,19 +1,10 @@
 FROM ubuntu
 MAINTAINER Kaha Team
-LABEL Description="Image for kaha"
-
-RUN apt-get update
+LABEL Description="Image for kaha: quick relief lookup for nepal earthquake"
 
 # install node
-RUN \
-  apt-get install -y wget && \
-  cd /tmp && \
-  wget http://nodejs.org/dist/v0.12.2/node-v0.12.2-linux-x64.tar.gz && \
-  tar --strip-components 1 -xvzf node-v0.12.2-linux-x64.tar.gz -C /usr/local
-
-# install redis
-#RUN apt-get install -y redis-server
-#RUN service redis-server start
+ADD http://nodejs.org/dist/v0.12.2/node-v0.12.2-linux-x64.tar.gz /tmp/
+RUN cd /tmp && tar --strip-components 1 -xvzf node-v0.12.2-linux-x64.tar.gz -C /usr/local
 
 ADD . /kaha
 WORKDIR /kaha
@@ -21,8 +12,5 @@ WORKDIR /kaha
 RUN npm install
 
 EXPOSE 3000
-
-ENV NODE_ENV dev
-
+ENV NODE_ENV stage
 CMD ["npm", "start"]
-#CMD ["node", "./bin/www"]

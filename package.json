@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "build-dev": "gulp dev",
     "build-dist": "gulp",
-    "prod": "npm run build-dist && NODE_ENV=prod node ./bin/www"
+    "build-dev-watch": "npm run build-dev & npm run start",
+    "prod": "npm run build-dist && DBPWD=nepalkaha_33 NODE_ENV=prod node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.10.2",

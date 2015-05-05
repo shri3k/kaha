@@ -20,7 +20,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($compileProvider, $stateProvider, $urlRouterProvider) {
+  
+  //Disable debug data for PROD
+  if (ENV === 'prod') {
+    $compileProvider.debugInfoEnabled(false);
+  }
+  
   $stateProvider
 
   .state('app', {

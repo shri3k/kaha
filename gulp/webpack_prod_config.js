@@ -22,6 +22,7 @@ module.exports = {
 	plugins: [
 			new webpack.optimize.OccurenceOrderPlugin(),
 			new ngAnnotatePlugin({ add: true }), 
-			new webpack.optimize.UglifyJsPlugin()
+			new webpack.optimize.UglifyJsPlugin(),
+			new webpack.DefinePlugin({ ENV: JSON.stringify(process.env.NODE_ENV) })
 	]		
 };

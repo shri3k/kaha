@@ -16,5 +16,6 @@ module.exports = {
 	},
 	watch: true,
 	devtool: 'sourcemap',
-	plugins: [new webpack.optimize.OccurenceOrderPlugin()]	
+	plugins: [new webpack.optimize.OccurenceOrderPlugin(),
+						new webpack.DefinePlugin({ ENV: JSON.stringify(process.env.NODE_ENV) })]
 };

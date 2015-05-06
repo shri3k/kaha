@@ -24,10 +24,13 @@
           <i class="icon ion-location"></i>
           <span>Districts</span>
           <small ng-if="currentDistricts.length" class="muted-text">
-            ({{ currentDistricts[0].name }} + {{ currentDistricts.length - 1}} more.)
+            (
+            <span>{{ currentDistricts[0].name }}</span>
+            <span ng-if="currentDistricts.length > 1"> + {{ currentDistricts.length - 1}} more</span>
+            )
           </small>
           <small ng-if="!currentDistricts.length" class="muted-text">
-            (All Districts)
+            ( All Districts )
           </small>
         </ion-item>
         <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/volunteer">

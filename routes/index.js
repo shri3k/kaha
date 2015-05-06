@@ -164,12 +164,15 @@ var rootPost = function(req, res, next) {
 
   var ref = (req.headers && req.headers.referer) || false;
   //No POST request allowed from other sources
+  //TODO probably need to fix this for prod docker
   if (ref) {
     var u = url.parse(ref);
     var hostname = u && u.hostname.toLowerCase();
+    var environment = env.toLowerCase();
     if (hostname === "kaha.co" ||
       hostname === "demokaha.herokuapp.com" ||
-      env.toLowerCase() === "stage"
+      environment === "stage" ||
+      environment === "dev"
     ) {
       var okResult = [];
       var multi = db.multi();

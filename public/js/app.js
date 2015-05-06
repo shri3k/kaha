@@ -104,6 +104,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             scope: {
                 getData: '&source',
                 model: '=?',
+                placeholder: '@',
                 search: '=?filter'
             },
             link: function(scope, element, attrs) {

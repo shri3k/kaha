@@ -1,5 +1,6 @@
 <ion-view>
     <ion-nav-buttons side="right">
+
     <button class="button button-light" ng-click="popover.show($event)">
         <i class="icon ion-android-add"></i> Add Data
     </button>
@@ -8,10 +9,11 @@
         <i class="icon ion-ios-printer-outline"></i>
     </button>
     </ion-nav-buttons>
+
     <div class="searchbar" style="text-align:center; position:fixed; top:44px; z-index:9999; width:100%">
 
         <div class="bar item-input-inset">
-            <ion-search placeholder="Type to search" filter="search"></ion-search>
+            <ion-search placeholder="Type to search {{name}}" filter="search"></ion-search>
             <button class="button button-small button-clear" ng-click="searchMenu()">
                 <i class="icon ion-chevron-down"></i>
             </button>

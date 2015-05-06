@@ -124,3 +124,12 @@ pre {
 .item-location-select {
   cursor: pointer;
 }
+
+/* District Selector */
+.current-districts-label {
+  vertical-align: middle;
+}
+
+.current-districts-container {
+  vertical-align: middle;
+}

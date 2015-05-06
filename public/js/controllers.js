@@ -413,6 +413,7 @@ function LocationSelectorCtrl($scope, $rootScope, api, DistrictSelectService) {
     $scope.currentDistricts = $scope.allDistricts.filter(function(district) {
       return district.selected;
     });
+    DistrictSelectService.setCurrentDistricts($scope.currentDistricts);
   };
 
   $scope.clearSelections = function() {

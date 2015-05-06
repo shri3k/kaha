@@ -6,14 +6,18 @@
 </ion-header-bar>
 <ion-content padding=true>
   <div class="padding" ng-switch="currentDistricts.length">
-    <strong class="current-districts-label">Current Districts</strong>
-    <span class="button button-small button-outline" ng-switch-when="0">
-      All
-    </span>
-    <span ng-switch-default>
-      <span class="button button-small button-outline" ng-repeat="district in currentDistricts">{{ district.name }}</span>
-      <button class="button button-small button-assertive" ng-click="clearSelections()">Clear</button>
-    </span>
+    <label class="item">
+      <strong class="current-districts-label">Current Districts</strong>
+      <div class="current-districts-container">
+        <span class="button button-small button-outline" ng-switch-when="0">
+          All
+        </span>
+        <span ng-switch-default>
+          <span class="button button-small button-outline" ng-repeat="district in currentDistricts">{{ district.name }}</span>
+          <button class="button button-small button-assertive" ng-click="clearSelections()">Clear</button>
+        </span>
+      </div>
+    </label>
   </div>
   <div class="padding">
     <label class="item item-input">

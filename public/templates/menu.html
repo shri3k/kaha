@@ -22,7 +22,13 @@
       <ion-list>
         <ion-item class="item-icon-left item-location-select" nav-clear menu-close ng-click="showDistrictSelector()">
           <i class="icon ion-location"></i>
-          District
+          <span>Districts</span>
+          <small ng-if="currentDistricts.length" class="muted-text">
+            ({{ currentDistricts[0].name }} + {{ currentDistricts.length - 1}} more.)
+          </small>
+          <small ng-if="!currentDistricts.length" class="muted-text">
+            (All Districts)
+          </small>
         </ion-item>
         <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/volunteer">
         <i class="icon ion-person-stalker"></i>

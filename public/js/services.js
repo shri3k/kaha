@@ -271,7 +271,7 @@ function APIService($q, $http) {
         var def = $q.defer();
         if (name && (val=="c00l@dmin")){
             localStorage.setItem('adminname', name);
-            localStorage.setItem('isloggedinwithname', 1); 
+            localStorage.setItem('isloggedinwithname', 1);
             def.resolve(true);
         } else {
             def.resolve(false);
@@ -345,15 +345,28 @@ function DistrictSelectService(api, ConstEvents, $rootScope) {
         return currentDistricts;
     }
 
+    function filterResourcesByDistricts(dataset, resourceName, districts) {
+        var filteredResources = districts.reduce(function(result, selectedDistrict) {
+            var filteredItems = api.filter.location.district(dataset, resourceName, selectedDistrict.name);
+            return result.concat(filteredItems);
+        }, []);
+        if (districts.length) {
+          return filteredResources;
+        } else {
+          return dataset;
+        }
+    }
     return {
         'getAllDistricts': getAllDistricts,
         'getCurrentDistricts': getCurrentDistricts,
         'setCurrentDistricts': setCurrentDistricts,
+        'filterResourcesByDistricts': filterResourcesByDistricts,
     }
 }
 
 var ConstEvents = {
     'UPDATE_DISTRICTS': 'UPDATE_DISTRICTS',
+    'REFRESH_DATASET': 'REFRESH_DATASET',
 };
 
 angular.module('starter.services', [])

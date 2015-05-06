@@ -32,22 +32,9 @@ angular.module('starter.controllers', [])
     });
     api.init();
 })
-.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
+.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window, DistrictSelectService) {
     $rootScope.selected = {};
-    $scope.search_options = [
-        {search:'#needverified', label:'Show verified needs'},
-        {search:'#need', label:'Show all needs'},
-        {search:'#supply', label:'Show all supplies'}, 
-        {search:'#unverified', label:'Show unverfied resources'} 
-    ];
-    $scope.searchMenu = function(){
-        $scope.search.value = "";
-        return $scope.showHide=!$scope.showHide;
-    };
-    $scope.selecionar = function(item){
-        $scope.search.value = item.search;
-        $scope.showHide = false;
-    };
+
     $scope.$on('$ionicView.beforeEnter', function() {
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];
@@ -58,14 +45,11 @@ angular.module('starter.controllers', [])
     });
 
     $scope.$on(ConstEvents.UPDATE_DISTRICTS, function(evnt, newSelectedDistricts) {
-        if (newSelectedDistricts.length) {
-          $rootScope.items = newSelectedDistricts.reduce(function(result, selectedDistrict) {
-              var filteredItems = api.filter.location.district($scope.dataset, $scope.name, selectedDistrict.name);
-              return result.concat(filteredItems);
-          }, []);
-        } else {
-          $rootScope.doRefresh();
-        }
+        $rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, newSelectedDistricts);
+    });
+
+    $scope.$on(ConstEvents.REFRESH_DATASET, function() {
+        $rootScope.doRefresh();
     });
 
     $rootScope.updateDistrict = function(){
@@ -89,7 +73,8 @@ angular.module('starter.controllers', [])
     $scope.getData = function(refresh){
         api.data(refresh).then(function(data){
             $scope.dataset = api.filter.type(data.content, $scope.name);
-            $rootScope.items = $scope.dataset;
+            var districtFilters = DistrictSelectService.getCurrentDistricts();
+            $rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, districtFilters);
             $rootScope.districts = api.location.districts(data.content, $scope.name);
             $scope.$broadcast('scroll.refreshComplete');
             if ($rootScope.coordinates) {
@@ -397,7 +382,7 @@ angular.module('starter.controllers', [])
 });
 
 /* @ngInject */
-function SideMenuCtrl($scope, $ionicModal) {
+function SideMenuCtrl($scope, $ionicModal, DistrictSelectService, ConstEvents) {
   $ionicModal.fromTemplateUrl('templates/districtSelector.html', {
     scope: $scope,
     animation: 'slide-in-up',
@@ -408,10 +393,16 @@ function SideMenuCtrl($scope, $ionicModal) {
   $scope.showDistrictSelector = function showDistrictSelector() {
     $scope.districtModal.show();
   };
+
+  $scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
+
+  $scope.$on(ConstEvents.UPDATE_DISTRICTS, function(evnts, newDistricts) {
+    $scope.currentDistricts = newDistricts;
+  });
 }
 
 /* @ngInject */
-function LocationSelectorCtrl($scope, $rootScope, api, DistrictSelectService) {
+function LocationSelectorCtrl($scope, $rootScope, api, DistrictSelectService, ConstEvents) {
   $scope.allDistricts = DistrictSelectService.getAllDistricts();
   $scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
   $scope.viewModel = {
@@ -436,6 +427,7 @@ function LocationSelectorCtrl($scope, $rootScope, api, DistrictSelectService) {
     $scope.viewModel.searchText = '';
     $scope.currentDistricts = [];
     DistrictSelectService.setCurrentDistricts([]);
+    $rootScope.$broadcast(ConstEvents.REFRESH_DATASET);
   };
 
   $scope.update = function() {

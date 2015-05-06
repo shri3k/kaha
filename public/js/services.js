@@ -31,33 +31,62 @@ function APIService($q, $http) {
             }
             return def.promise;
         },
-      data: function(refresh) {
-        var url = "/api";
-        var def = $q.defer();
-        if (refresh) {
-          $http.get(url).success(function(data) {
-            if (data) {
-              def.resolve({
-                success: true,
-                content: data
-              });
-              localStorage.setItem("kahacodata", JSON.stringify(data));
+        data: function(refresh) {
+            var tagData =  function(data) {
+                data = data.map(function(row){
+                    row.tags = [];
+                    verified = false;
+                    if (row.verified === true) {
+                        row.tags.push('#verified');
+                        verified = true;
+                    } else {
+                        row.tags.push('#unverified');
+                    }
+                    if (row.channel === 'need') {
+                        row.tags.push('#need');
+                        if (verified) {
+                            row.tags.push('#needverified');
+                        }
+                    } else {
+                        row.tags.push('#supply');
+                        if (verified) {
+                            row.tags.push('#supplyverified');
+                        }
+                    }
+                    return row;
+                });
+
+                return data;
+            };
+
+            var url = "/api";
+            var def = $q.defer();
+            if (refresh) {
+                $http.get(url).success(function(data) {
+                    if (data) {
+                        data = tagData(data);
+                        def.resolve({
+                            success: true,
+                            content: data
+                        });
+                        localStorage.setItem("kahacodata", JSON.stringify(data));
+                    }
+                }).error(function(data, status, headers, config) {
+                    def.resolve({
+                        success: false,
+                        message: "No data found"
+                    });
+                });
+            } else {
+                var data = JSON.parse(localStorage.getItem("kahacodata"));
+                data = tagData(data)
+                def.resolve({
+                    success: true,
+                    content: data
+                });
             }
-          }).error(function(data, status, headers, config) {
-            def.resolve({
-              success: false,
-              message: "No data found"
-            });
-          });
-        } else {
-          var data = JSON.parse(localStorage.getItem("kahacodata"));
-          def.resolve({
-            success: true,
-            content: data
-          });
-        }
-        return def.promise;
-      },
+            return def.promise;
+        },
       getItem:function(uuid){
         var url = "/api";
         var def = $q.defer();

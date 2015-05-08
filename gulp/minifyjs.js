@@ -4,28 +4,40 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sourceMaps = require('gulp-sourcemaps');
 var runSequence = require('run-sequence');
+var webpack = require('gulp-webpack');
 
-gulp.task('ng-annotate', function () {
-    return gulp.src(['public/js/app.js', 
-                     'public/js/controllers.js', 
-                     'public/js/plexusSelect.js',
-                     'public/js/services.js'])
-        .pipe(sourceMaps.init())
-        .pipe(concat('app.min.js', { newLines: ';' }))
-        .pipe(ngAnnotate())
-        .pipe(uglify())
-        .pipe(sourceMaps.write('./'))
-        .pipe(gulp.dest('public/dist/js'));
+/**
+ * Builds JS files for dev work
+ */
+gulp.task('webpack-dev', function(){
+  return gulp.src('./no_op.js')
+    .pipe(webpack(require('./webpack_dev_config.js')))
+    .pipe(gulp.dest('public/js'));
 });
 
+/**
+ * Builds JS files for prod
+ */
+gulp.task('webpack-prod', function(){
+  return gulp.src('./no_op.js')
+    .pipe(webpack(require('./webpack_prod_config.js')))
+    .pipe(gulp.dest('public/dist/js'));
+});
+
+/**
+ * Concat ionic to bundle.min.js
+ */
 gulp.task('concat-js', function () {
-    return gulp.src(['public/lib/ionic/js/ionic.bundle.min.js', 'public/dist/js/app.min.js'])
-         .pipe(concat('app.min.js'), {newLines: ';'})
+    return gulp.src(['public/lib/ionic/js/ionic.bundle.min.js', 'public/dist/js/bundle.min.js'])
+         .pipe(concat('bundle.min.js'), {newLines: ';'})
          .pipe(gulp.dest('public/dist/js'));
 });
 
+/**
+ * Run's webpack-prod to minify app js files and concats ionic.bundle.min.js
+ */
 gulp.task('build-js', function () {
-    runSequence('ng-annotate', 'concat-js', function (err) {
+    runSequence('webpack-prod', 'concat-js', function (err) {
         if (err) {
             console.log(err);
             return;

@@ -4,3 +4,5 @@ require('./gulp/minifycss');
 require('./gulp/copydependencies');
 
 gulp.task('default', ['build-js', 'build-css', 'build-deps']);
+
+gulp.task('dev', ['webpack-dev']);

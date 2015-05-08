@@ -6,6 +6,14 @@ quick relief lookup for nepal earthquake
 
     npm install 
 
+## Run the app in dev mode
+
+    npm build-dev-watch
+
+This should build a bundle.js file for your app to run in dev mode, plus starts up 
+the server as well. The bundle.js file is automatically rebuild on any change made 
+to your js files.
+
 ## Run the app
 
     node bin/www

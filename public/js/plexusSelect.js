@@ -17,7 +17,7 @@ angular.module('plexusSelect', [])
                    },
                    require: 'ngModel',
                    restrict: 'E',
-                   templateUrl: 'templates/plexusSelect.html',
+                   template: require('../templates/plexusSelect.html'),
                    link: function($scope, iElm, iAttrs, ngModel) {
 
                        if (!ngModel) return; // do nothing if no ng-model

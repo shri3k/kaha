@@ -1,4 +1,3 @@
-/* @ngInject */
 function APIService($q, $http) {
     return {
         init:function(){
@@ -323,7 +322,6 @@ function APIService($q, $http) {
     };
 }
 
-/* @ngInject */
 function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
     var currentDistricts = [];
 

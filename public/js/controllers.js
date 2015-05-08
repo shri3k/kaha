@@ -29,7 +29,7 @@ angular.module('starter.controllers', [])
     });
     api.init();
 })
-.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicLoading, $window, DistrictSelectService) {
+.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicLoading, $window, DistrictSelectService, ConstEvents) {
     $rootScope.selected = {};
 
     $scope.search_options = [

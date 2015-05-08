@@ -1,0 +1,29 @@
+<ion-modal-view  ng-controller="LocationSelectorCtrl">
+<ion-header-bar class="bar bar-header bar-positive">
+  <h1 class="title">
+    Select Districts
+  </h1>
+</ion-header-bar>
+<ion-content padding=true>
+
+  <div class="padding">
+    <label class="item item-input">
+      <input type="text" placeholder="Type to filter" ng-model="viewModel.searchText">
+    </label>
+    <ul class="list">
+      <li class="item item-checkbox" ng-repeat="district in allDistricts | filter: { $: viewModel.searchText }" >
+       <label class="checkbox">
+         <input type="checkbox" ng-model="district.selected" ng-change="selectionChange()">
+       </label>
+       {{ district.name }}
+      </li>
+    </ul>
+  </div>
+</ion-content>
+<ion-footer-bar>
+  <div class="button-bar">
+    <a class="button" ng-click="dismiss()">Cancel</a>
+    <a class="button button-positive" ng-click="update()">Update</a>
+  </div>
+</ion-footer-bar>
+</ion-modal-view>

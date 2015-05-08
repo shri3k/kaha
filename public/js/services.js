@@ -324,7 +324,7 @@ function APIService($q, $http) {
 }
 
 /* @ngInject */
-function DistrictSelectService(api, ConstEvents, $rootScope) {
+function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
     var currentDistricts = [];
 
     var allDistricts = api.districts.map(function(districtName) {
@@ -339,10 +339,31 @@ function DistrictSelectService(api, ConstEvents, $rootScope) {
         return currentDistricts;
     }
 
+    function clearCurrentDistricts() {
+        allDistricts.map(function(district) {
+            district.selected = false;
+        });
+        setCurrentDistricts([]);
+        $rootScope.$broadcast(ConstEvents.REFRESH_DATASET);
+    }
+
     function setCurrentDistricts(newDistricts) {
         currentDistricts = newDistricts;
         $rootScope.$broadcast(ConstEvents.UPDATE_DISTRICTS, currentDistricts);
         return currentDistricts;
+    }
+
+    function removeDistrictFilter(districtName) {
+        var newCurrentDistricts = currentDistricts.filter(function(district) {
+            return (district.name !== districtName);
+        });
+        allDistricts.map(function(district) {
+            if(district.name === districtName) {
+              district.selected = false;
+            }
+            return district;
+        });
+        setCurrentDistricts(newCurrentDistricts);
     }
 
     function filterResourcesByDistricts(dataset, resourceName, districts) {
@@ -356,12 +377,25 @@ function DistrictSelectService(api, ConstEvents, $rootScope) {
           return dataset;
         }
     }
+
+    function createDistrictSelectorModal(scope) {
+      return $ionicModal.fromTemplateUrl('templates/districtSelector.html', {
+        scope: scope,
+        animation: 'slide-in-up',
+      }).then(function(modal) {
+        scope.districtModal = modal;
+      });
+    }
+
     return {
         'getAllDistricts': getAllDistricts,
         'getCurrentDistricts': getCurrentDistricts,
         'setCurrentDistricts': setCurrentDistricts,
+        'clearCurrentDistricts': clearCurrentDistricts,
         'filterResourcesByDistricts': filterResourcesByDistricts,
-    }
+        'removeDistrictFilter': removeDistrictFilter,
+        'createDistrictSelectorModal': createDistrictSelectorModal,
+    };
 }
 
 var ConstEvents = {

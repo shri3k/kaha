@@ -1,5 +1,4 @@
 angular.module('starter.controllers', [])
-
 .controller('AppCtrl', function($scope, $ionicPopover, $ionicSideMenuDelegate, $timeout, api, $timeout, $rootScope) {
     /* Disable until this is needed
     api.coordinates().then(function(position) {
@@ -32,22 +31,26 @@ angular.module('starter.controllers', [])
     });
     api.init();
 })
-.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window, DistrictSelectService) {
+.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicLoading, $window, DistrictSelectService) {
     $rootScope.selected = {};
+
     $scope.search_options = [
         {search:'#needverified', label:'Show verified needs'},
         {search:'#need', label:'Show all needs'},
         {search:'#supply', label:'Show all supplies'},
         {search:'#unverified', label:'Show unverfied resources'}
     ];
+
     $scope.searchMenu = function(){
         $scope.search.value = "";
         return $scope.showHide=!$scope.showHide;
     };
+
     $scope.selecionar = function(item){
         $scope.search.value = item.search;
         $scope.showHide = false;
     };
+
     $scope.$on('$ionicView.beforeEnter', function() {
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];
@@ -57,7 +60,10 @@ angular.module('starter.controllers', [])
         $scope.getData(refresh);
     });
 
+    DistrictSelectService.createDistrictSelectorModal($scope);
+
     $scope.$on(ConstEvents.UPDATE_DISTRICTS, function(evnt, newSelectedDistricts) {
+        $scope.currentDistricts = newSelectedDistricts;
         $rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, newSelectedDistricts);
     });
 
@@ -65,10 +71,24 @@ angular.module('starter.controllers', [])
         $rootScope.doRefresh();
     });
 
+    $scope.removeOneDistrictFilter = function(districtName) {
+        DistrictSelectService.removeDistrictFilter(districtName);
+    };
+
+    $scope.clearDistrictFilters = function() {
+        DistrictSelectService.clearCurrentDistricts();
+    };
+
+    $scope.showDistrictSelector = function showDistrictSelector() {
+      $scope.showHide = false;
+      $scope.districtModal.show();
+    };
+
     $rootScope.updateDistrict = function(){
         //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
         $rootScope.items = api.filter.location.district($scope.dataset, $scope.name, $rootScope.selected.district);
     }
+
     $rootScope.updateTole = function(){
         $rootScope.items = api.filter.location.tole($rootScope.items, $scope.name,  $rootScope.selected.tole);
     }
@@ -86,8 +106,8 @@ angular.module('starter.controllers', [])
     $scope.getData = function(refresh){
         api.data(refresh).then(function(data){
             $scope.dataset = api.filter.type(data.content, $scope.name);
-            var districtFilters = DistrictSelectService.getCurrentDistricts();
-            $rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, districtFilters);
+            $scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
+            $rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, $scope.currentDistricts);
             $rootScope.districts = api.location.districts(data.content, $scope.name);
             $scope.$broadcast('scroll.refreshComplete');
             if ($rootScope.coordinates) {
@@ -118,7 +138,6 @@ angular.module('starter.controllers', [])
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
-
     $rootScope.selectedItem = api.selected.get();
     $rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
     if ($rootScope.selectedItem.channel == 'supply') {
@@ -392,32 +411,10 @@ angular.module('starter.controllers', [])
             alert("All fields are required");
         }
     };
-});
+})
 
-/* @ngInject */
-function SideMenuCtrl($scope, $ionicModal, DistrictSelectService, ConstEvents) {
-  $ionicModal.fromTemplateUrl('templates/districtSelector.html', {
-    scope: $scope,
-    animation: 'slide-in-up',
-  }).then(function(modal) {
-    $scope.districtModal = modal;
-  });
-
-  $scope.showDistrictSelector = function showDistrictSelector() {
-    $scope.districtModal.show();
-  };
-
-  $scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
-
-  $scope.$on(ConstEvents.UPDATE_DISTRICTS, function(evnts, newDistricts) {
-    $scope.currentDistricts = newDistricts;
-  });
-}
-
-/* @ngInject */
-function LocationSelectorCtrl($scope, $rootScope, api, DistrictSelectService, ConstEvents) {
+.controller('LocationSelectorCtrl', function ($scope, $rootScope, api, DistrictSelectService, ConstEvents) {
   $scope.allDistricts = DistrictSelectService.getAllDistricts();
-  $scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
   $scope.viewModel = {
     searchText: '',
   };
@@ -427,28 +424,13 @@ function LocationSelectorCtrl($scope, $rootScope, api, DistrictSelectService, Co
   };
 
   $scope.selectionChange = function() {
-    $scope.currentDistricts = $scope.allDistricts.filter(function(district) {
+    var newFilterDistricts = $scope.allDistricts.filter(function(district) {
       return district.selected;
     });
-    DistrictSelectService.setCurrentDistricts($scope.currentDistricts);
-  };
-
-  $scope.clearSelections = function() {
-    $scope.allDistricts.map(function(district) {
-      district.selected = false;
-    });
-    $scope.viewModel.searchText = '';
-    $scope.currentDistricts = [];
-    DistrictSelectService.setCurrentDistricts([]);
-    $rootScope.$broadcast(ConstEvents.REFRESH_DATASET);
+    DistrictSelectService.setCurrentDistricts(newFilterDistricts);
   };
 
   $scope.update = function() {
-    DistrictSelectService.setCurrentDistricts($scope.currentDistricts);
     $scope.districtModal.hide();
   };
-}
-
-angular.module('starter.controllers')
-  .controller('SideMenuCtrl', SideMenuCtrl)
-  .controller('LocationSelectorCtrl', LocationSelectorCtrl);
+});

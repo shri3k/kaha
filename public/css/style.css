@@ -132,4 +132,11 @@ pre {
 
 .current-districts-container {
   vertical-align: middle;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.current-districts-container>.button {
+  margin-right: 5px;
+  margin-bottom: 3px;
 }

@@ -1,6 +1,5 @@
 angular.module('starter.controllers')
-.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
-
+.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicLoading, $window, DistrictSelectService, ConstEvents) {
 		$rootScope.selected = {};
 
 		$scope.search_options = [
@@ -30,6 +29,30 @@ angular.module('starter.controllers')
 				$scope.getData(refresh);
 		});
 
+		DistrictSelectService.createDistrictSelectorModal($scope);
+
+		$scope.$on(ConstEvents.UPDATE_DISTRICTS, function(evnt, newSelectedDistricts) {
+				$scope.currentDistricts = newSelectedDistricts;
+				$rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, newSelectedDistricts);
+		});
+
+		$scope.$on(ConstEvents.REFRESH_DATASET, function() {
+				$rootScope.doRefresh();
+		});
+
+		$scope.removeOneDistrictFilter = function(districtName) {
+				DistrictSelectService.removeDistrictFilter(districtName);
+		};
+
+		$scope.clearDistrictFilters = function() {
+				DistrictSelectService.clearCurrentDistricts();
+		};
+
+		$scope.showDistrictSelector = function showDistrictSelector() {
+			$scope.showHide = false;
+			$scope.districtModal.show();
+		};
+
 		$rootScope.updateDistrict = function(){
 				//$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
 				$rootScope.items = api.filter.location.district($scope.dataset, $scope.name, $rootScope.selected.district);
@@ -52,7 +75,8 @@ angular.module('starter.controllers')
 		$scope.getData = function(refresh){
 				api.data(refresh).then(function(data){
 						$scope.dataset = api.filter.type(data.content, $scope.name);
-						$rootScope.items = $scope.dataset;
+						$scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
+						$rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, $scope.currentDistricts);
 						$rootScope.districts = api.location.districts(data.content, $scope.name);
 						$scope.$broadcast('scroll.refreshComplete');
 						if ($rootScope.coordinates) {

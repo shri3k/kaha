@@ -2,7 +2,7 @@ kaha:
   build: .
   environment:
     NODE_ENV: dev
-  command: npm start
+  command: npm run build-dev-watch
   ports:
     - "3000:3000"
   volumes:

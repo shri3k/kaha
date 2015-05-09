@@ -100,7 +100,7 @@ router.delete('/api/:id', function(req, res, next) {
   }
 
   var uuid = req.params.id;
-  var multi = db.multi();
+  var multi = utils.db.multi();
   if (uuid) {
     multi.del(uuid, utils.stdCb);
     multi.del(uuid + ':yes', utils.stdCb);

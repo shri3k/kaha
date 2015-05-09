@@ -46,7 +46,7 @@ fi
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd "$SCRIPT_DIR"
 
-# This could have worked but docker hub builds are slow the hub webhook was not working.
+# This could have worked but docker hub builds are slow & the hub webhook was not working.
 # That's why we build the image locally. Maybe move this to our own private registry later
 #echo "Getting the image from docker hub..."
 #docker pull "$DOCKER_IMAGE"

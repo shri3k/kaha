@@ -1,12 +1,14 @@
 # kaha
+
 quick relief lookup for nepal earthquake
 
-# Run the app locally 
-## Install dependencies
+## Run the app locally 
+
+### Install dependencies
 
     npm install 
 
-## Run the app in dev mode
+### Run the app in dev mode
 
     npm run build-dev-watch
 
@@ -14,73 +16,45 @@ This should build a bundle.js file for your app to run in dev mode, plus starts 
 the server as well. The bundle.js file is automatically rebuild on any change made 
 to your js files.
 
-## Run the app
-
-    node bin/www
-
 Access the app at http://localhost:3000/
 
-**NOTE**:-
-When you do `npm run start` or `node bin/www` then by default it'll run on staging db.
-###To run on prod db do:-
+**NOTE**:
+When you do `npm run start` or `node bin/www` (which `build-dev-watch` uses)
+then by default it'll run on staging db, so that people don't have to setup their local db installation.
+
+### Run on prod db
 
     npm run prod
 
 but you'll need to set a db environment (DBPWD) for db passwd.
-Contact me or contributors in this repo for the db pass.
+Contact the contributors in this repo for the db pass.
 
-## Using docker
+## Run using docker
 
-To ensure uniform environments across all of dev, staging and prod (and quickly get the app up and running), you can run kaha from docker.
+To ensure uniform environments across all of dev, staging and prod for all developers/testers (and quickly get the app up and running), we can run kaha from docker.
 
-First install docker following the instructions  [here](https://docs.docker.com/installation/).
+First install docker following the instructions [here](https://docs.docker.com/installation/).
 
-### Build the kaha docker image
+kaha image is [public](https://registry.hub.docker.com/u/kahaco/kaha/) so all you have to do is:
 
-    sudo docker build -t kaha .
+    docker run kahaco/kaha
 
-You can see it now from `sudo docker images`
+This is setup so that the kaha app runs from http://localhost:3000, with the remote staging db as backend (so that people don't have to configure it on their own.)
 
-### Dev use (against staging)
+If you are on ubuntu, you might have to do some [configuration](https://docs.docker.com/installation/ubuntulinux/#enable-ufw-forwarding) work to make the port 3000 accessible. You can get around this by explicitly mapping the container/host ports (-p option, see below).
 
-To run kaha node app against the remote staging db, do this from the repo root directory:
+If you want to develop with the docker containers, clone the repo and run this from the repo root directory:
 
-    sudo docker run --name kaha_stage -v $(pwd):/kaha -p 3000:3000 kaha
+    docker run --name kaha_stage -v $(pwd):/kaha -p 3000:3000 kahaco/kaha
 
 This creates a docker container called `kaha_stage` based on the kaha image, with the repo dir used as a shared volume inside the container (so that code changes are picked up).
 
-### Dev use (local db)
-
-To run kaha against a local redis installation:
+If you want your own local db setup, you can use run `deploy_kaha.sh dev` (which has some other nice features, read `deploy_notes.md`). This is the recommended way, but docker-compose support is also available.
 
     sudo pip install docker-compose
-    sudo docker-compose up
+    docker-compose up
 
-Based on docker-compose.yml, this creates and runs two containers: `kaha_kaha_1` and `kaha_redis_1` (one each for the node app and redis), and links the two.
-Using docker compose thus simplifies the dev setup. But if you prefer to do it directly with docker:
-
-    sudo docker run -d --name redis -p 6379:6379 redis && \
-    sudo docker run --name kaha_dev -v $(pwd):/kaha -p 3000:3000 --link redis:db kaha
-
-### Prod use
-
-```
-sudo docker run --name kaha_prod -v $(pwd):/kaha -p 3000:3000 kaha npm run build-dist && NODE_ENV=prod DBPWD=<passwd> node ./bin/www
-```
-
-This creates container `kaha_prod` and uses remote prod redis instance hosted on redislabs. For ease in deployments, a separate dockerfile can be setup with prod details and kaha image can be added to the public docker registry.
-
-### Managing docker containers
-
-    # list the running containers
-    sudo docker ps
-    # stop and start the container (kaha_stage, kaha_redis_1 etc.)
-    sudo docker stop <container_name>
-    sudo docker start <container_name>
-    # remove container
-    sudo docker rm <container_name>
-
-For more details, read the docker docs.
+## LICENSE
 
 ```
 The MIT License (MIT)

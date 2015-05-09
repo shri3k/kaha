@@ -1,5 +1,7 @@
 #!/bin/bash
-# confgure docker to not require sudo
+# Run kaha docker containers easily for different environmnets
+# Meant for deployment, with features like container backup and slack notifications
+# but can be used to quickly setup different environments anytime
 
 # exit whenever a command returns with a non-zero exit code
 set -e
@@ -15,7 +17,7 @@ container="${APP_NAME}_${env}"
 # post to slack
 function notify {
   echo "$1"
-  curl -X POST "$SLACK_WEBHOOK_URL" --data-urlencode 'payload={
+  curl -s -X POST "$SLACK_WEBHOOK_URL" --data-urlencode 'payload={
     "channel": "'"$SLACK_CHANNEL"'",
     "username": "deploybot",
     "text": "'"$1"'",

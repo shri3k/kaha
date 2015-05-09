@@ -1,0 +1,15 @@
+kaha:
+  build: .
+  environment:
+    NODE_ENV: dev
+  command: npm start
+  ports:
+    - "3000:3000"
+  volumes:
+   - .:/kaha
+  links:
+    - redis:db
+redis:
+  image: redis
+  ports:
+    - "6379:6379"

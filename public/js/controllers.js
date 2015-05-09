@@ -1,5 +1,4 @@
 angular.module('starter.controllers', [])
-
 .controller('AppCtrl', function($scope, $ionicPopover, $ionicSideMenuDelegate, $timeout, api, $timeout, $rootScope) {
     /* Disable until this is needed
     api.coordinates().then(function(position) {
@@ -24,31 +23,32 @@ angular.module('starter.controllers', [])
     };
     $rootScope.addIconToggle = function(){
         $rootScope.isAddActive = $rootScope.isAddActive?false:true;
-    }
-    $ionicPopover.fromTemplateUrl('templates/addMenu.html', {
+    };
+    $rootScope.popover = $ionicPopover.fromTemplate(require('../templates/addMenu.html'), {
         scope: $rootScope,
-    }).then(function(popover) {
-        $rootScope.popover = popover;
     });
     api.init();
 })
-.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicPopup, $window) {
+.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicLoading, $window, DistrictSelectService, ConstEvents) {
     $rootScope.selected = {};
+
     $scope.search_options = [
-        {search:'NeedVerified', label:'Show verified needs'},
-        {search:'Need', label:'Show all needs'},
-        {search:'SupplyVerified', label:'Show verified supplies'}, 
-        {search:'Supply', label:'Show all supplies'}, 
-        {search:'Unverified', label:'Show unverified resources'}
+        {search:'#needverified', label:'Show verified needs'},
+        {search:'#need', label:'Show all needs'},
+        {search:'#supply', label:'Show all supplies'},
+        {search:'#unverified', label:'Show unverfied resources'}
     ];
+
     $scope.searchMenu = function(){
         $scope.search.value = "";
         return $scope.showHide=!$scope.showHide;
     };
+
     $scope.selecionar = function(item){
         $scope.search.value = item.search;
         $scope.showHide = false;
     };
+
     $scope.$on('$ionicView.beforeEnter', function() {
         $scope.name = $stateParams.sectionid;
         $rootScope.toles = [];
@@ -57,25 +57,55 @@ angular.module('starter.controllers', [])
         var refresh = $scope.dataset?false:true;
         $scope.getData(refresh);
     });
+
+    DistrictSelectService.createDistrictSelectorModal($scope);
+
+    $scope.$on(ConstEvents.UPDATE_DISTRICTS, function(evnt, newSelectedDistricts) {
+        $scope.currentDistricts = newSelectedDistricts;
+        $rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, newSelectedDistricts);
+    });
+
+    $scope.$on(ConstEvents.REFRESH_DATASET, function() {
+        $rootScope.doRefresh();
+    });
+
+    $scope.removeOneDistrictFilter = function(districtName) {
+        DistrictSelectService.removeDistrictFilter(districtName);
+    };
+
+    $scope.clearDistrictFilters = function() {
+        DistrictSelectService.clearCurrentDistricts();
+    };
+
+    $scope.showDistrictSelector = function showDistrictSelector() {
+      $scope.showHide = false;
+      $scope.districtModal.show();
+    };
+
     $rootScope.updateDistrict = function(){
         //$rootScope.toles = api.location.tole($scope.dataset, $scope.name, $rootScope.selected.district);
         $rootScope.items = api.filter.location.district($scope.dataset, $scope.name, $rootScope.selected.district);
     }
+
     $rootScope.updateTole = function(){
         $rootScope.items = api.filter.location.tole($rootScope.items, $scope.name,  $rootScope.selected.tole);
     }
+
     $scope.loadItem = function(item){
         $rootScope.selectedItem = item;
         api.selected.set(item);
         window.location = "#/app/item/"+item.uuid;
     }
+
     $rootScope.doRefresh = function(refresh){
         $scope.getData(true);
     }
+
     $scope.getData = function(refresh){
         api.data(refresh).then(function(data){
             $scope.dataset = api.filter.type(data.content, $scope.name);
-            $rootScope.items = $scope.dataset;
+            $scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
+            $rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, $scope.currentDistricts);
             $rootScope.districts = api.location.districts(data.content, $scope.name);
             $scope.$broadcast('scroll.refreshComplete');
             if ($rootScope.coordinates) {
@@ -91,6 +121,7 @@ angular.module('starter.controllers', [])
             }
         });
     }
+
     $scope.print = function(){
         var p = $window.open();
         var pbody = p.document.body;
@@ -105,7 +136,6 @@ angular.module('starter.controllers', [])
 })
 
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory, $stateParams) {
-    
     $rootScope.selectedItem = api.selected.get();
     $rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
     if ($rootScope.selectedItem.channel == 'supply') {
@@ -366,7 +396,7 @@ angular.module('starter.controllers', [])
                             alert("Successfully Created");
                             $window.location.reload();
                         }
-                        
+
                     }
                     },
                     function(status) {
@@ -379,5 +409,26 @@ angular.module('starter.controllers', [])
             alert("All fields are required");
         }
     };
-}
-);
+})
+
+.controller('LocationSelectorCtrl', function ($scope, $rootScope, api, DistrictSelectService, ConstEvents) {
+  $scope.allDistricts = DistrictSelectService.getAllDistricts();
+  $scope.viewModel = {
+    searchText: '',
+  };
+
+  $scope.dismiss = function() {
+    $scope.districtModal.hide();
+  };
+
+  $scope.selectionChange = function() {
+    var newFilterDistricts = $scope.allDistricts.filter(function(district) {
+      return district.selected;
+    });
+    DistrictSelectService.setCurrentDistricts(newFilterDistricts);
+  };
+
+  $scope.update = function() {
+    $scope.districtModal.hide();
+  };
+});

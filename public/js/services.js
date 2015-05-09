@@ -1,5 +1,4 @@
-angular.module('starter.services', [])
-  .factory("api", function($q, $http) {
+function APIService($q, $http) {
     return {
         init:function(){
           var userdata = localStorage.getItem('userdata');
@@ -31,71 +30,62 @@ angular.module('starter.services', [])
             }
             return def.promise;
         },
-      data: function(refresh) {
-        var url = "/api";
-        var def = $q.defer();
-        if (refresh) {
-          $http.get(url).success(function(data) {
-            if (data) {
+        data: function(refresh) {
+            var tagData =  function(data) {
                 data = data.map(function(row){
                     row.tags = [];
                     verified = false;
                     if (row.verified === true) {
-                        row.tags.push('Verified');
+                        row.tags.push('#verified');
                         verified = true;
                     } else {
-                        row.tags.push('Unverified');
+                        row.tags.push('#unverified');
                     }
                     if (row.channel === 'need') {
-                        row.tags.push('Needed');
+                        row.tags.push('#need');
                         if (verified) {
-                            row.tags.push('NeedVerified');
+                            row.tags.push('#needverified');
                         }
                     } else {
-                        row.tags.push('Supply');
+                        row.tags.push('#supply');
                         if (verified) {
-                            row.tags.push('SupplyVerified');
+                            row.tags.push('#supplyverified');
                         }
                     }
                     return row;
                 });
 
-              def.resolve({
-                success: true,
-                content: data
-              });
-              localStorage.setItem("kahacodata", JSON.stringify(data));
-            }
-          }).error(function(data, status, headers, config) {
-            def.resolve({
-              success: false,
-              message: "No data found"
-            });
-          });
-        } else {
-          var data = JSON.parse(localStorage.getItem("kahacodata"));
-          data = data.map(function(row){
-              row.tags = [];
-              if (row.verified === true) {
-                  row.tags.push('Verified');
-              } else {
-                  row.tags.push('Unverified');
-              }
+                return data;
+            };
 
-              if (row.channel === 'need') {
-                  row.tags.push('Needed');
-              } else {
-                  row.tags.push('Supply');
-              }
-              return row;
-          });
-          def.resolve({
-            success: true,
-            content: data
-          });
-        }
-        return def.promise;
-      },
+            var url = "/api";
+            var def = $q.defer();
+            if (refresh) {
+                $http.get(url).success(function(data) {
+                    if (data) {
+                        data = tagData(data);
+                        def.resolve({
+                            success: true,
+                            content: data
+                        });
+                        localStorage.setItem("kahacodata", JSON.stringify(data));
+                    }
+                }).error(function(data, status, headers, config) {
+                    def.resolve({
+                        success: false,
+                        message: "No data found"
+                    });
+                });
+            } else {
+                var data = JSON.parse(localStorage.getItem("kahacodata"));
+                data = tagData(data)
+                def.resolve({
+                    success: true,
+                    content: data
+                });
+            }
+            return def.promise;
+        },
       getItem:function(uuid){
         var url = "/api";
         var def = $q.defer();
@@ -174,7 +164,7 @@ angular.module('starter.services', [])
           angular.forEach(data, function(item) {
             if (item.location.district.toUpperCase() == district.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
               if (filtered.indexOf(item.location.tole) == -1){
-				filtered.push(item.location.tole);
+                filtered.push(item.location.tole);
               }
             }
           });
@@ -280,7 +270,7 @@ angular.module('starter.services', [])
         var def = $q.defer();
         if (name && (val=="c00l@dmin")){
             localStorage.setItem('adminname', name);
-            localStorage.setItem('isloggedinwithname', 1); 
+            localStorage.setItem('isloggedinwithname', 1);
             def.resolve(true);
         } else {
             def.resolve(false);
@@ -326,9 +316,92 @@ angular.module('starter.services', [])
         }
       },
       districts: [
-        "Bhaktapur", "Dhading", "Kathmandu", "Kavrepalanchok", "Lalitpur", "Nuwakot", "Rasuwa", "Sindhupalchok", "Banke", "Bardiya", "Dailekh", "Jajarkot", "Surkhet", "Baglung", "Mustang", "Myagdi", "Parbat", "Gorkha", "Kaski", "Lamjung", "Manang", "Syangja", "Tanahu", "Dhanusa", "Dolakha", "Mahottari", "Ramechhap", "Sarlahi", "Sindhuli", "Dolpa", "Humla", "Jumla", "Kalikot", "Mugu", "Bhojpur", "Dhankuta", "Morang", "Sankhuwasabha", "Sunsari", "Terhathum", "Arghakhanchi", "Gulmi", "Kapilvastu", "Nawalparasi", "Palpa", "Rupandehi", "Baitadi", "Dadeldhura", "Darchula", "Kanchanpur", "Ilam", "Jhapa", "Panchthar", "Taplejung", "Bara", "Chitwan", "Makwanpur", "Parsa", "Rautahat", "Dang Deokhuri", "Pyuthan", "Rolpa", "Rukum", "Salyan", "Khotang", "Okhaldhunga", "Saptari", "Siraha", "Solukhumbu", "Udayapur", "Achham", "Bajhang", "Bajura", "Doti", "Kailali"
+          "Achham", "Arghakhanchi", "Baglung", "Baitadi", "Bajhang", "Bajura", "Banke", "Bara", "Bardiya", "Bhaktapur", "Bhojpur", "Chitwan", "Dadeldhura", "Dailekh", "Dang Deokhuri", "Darchula", "Dhading", "Dhankuta", "Dhanusa", "Dolakha", "Dolpa", "Doti", "Gorkha", "Gulmi", "Humla", "Ilam", "Jajarkot", "Jhapa", "Jumla", "Kailali", "Kalikot", "Kanchanpur", "Kapilvastu", "Kaski", "Kathmandu", "Kavre", "Khotang", "Lalitpur", "Lamjung", "Mahottari", "Makwanpur", "Manang", "Morang", "Mugu", "Mustang", "Myagdi", "Nawalparasi", "Nuwakot", "Okhaldhunga", "Palpa", "Panchthar", "Parbat", "Parsa", "Pyuthan", "Ramechhap", "Rasuwa", "Rautahat", "Rolpa", "Rukum", "Rupandehi", "Salyan", "Sankhuwasabha", "Saptari", "Sarlahi", "Sindhuli", "Sindhupalchowk", "Siraha", "Solukhumbu", "Sunsari", "Surkhet", "Syangja", "Tanahu", "Taplejung", "Terhathum", "Udayapur"
       ],
       supplytypes: ['food', 'water', 'shelter', 'blood', 'medical supplies', 'medical services', 'volunteer', 'transportation', 'other contacts']
     };
+}
 
-  });
+function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
+    var currentDistricts = [];
+
+    var allDistricts = api.districts.map(function(districtName) {
+        return { 'name': districtName, 'selected': false };
+    });
+
+    function getAllDistricts() {
+        return allDistricts;
+    }
+
+    function getCurrentDistricts() {
+        return currentDistricts;
+    }
+
+    function clearCurrentDistricts() {
+        allDistricts.map(function(district) {
+            district.selected = false;
+        });
+        setCurrentDistricts([]);
+        $rootScope.$broadcast(ConstEvents.REFRESH_DATASET);
+    }
+
+    function setCurrentDistricts(newDistricts) {
+        currentDistricts = newDistricts;
+        $rootScope.$broadcast(ConstEvents.UPDATE_DISTRICTS, currentDistricts);
+        return currentDistricts;
+    }
+
+    function removeDistrictFilter(districtName) {
+        var newCurrentDistricts = currentDistricts.filter(function(district) {
+            return (district.name !== districtName);
+        });
+        allDistricts.map(function(district) {
+            if(district.name === districtName) {
+              district.selected = false;
+            }
+            return district;
+        });
+        setCurrentDistricts(newCurrentDistricts);
+    }
+
+    function filterResourcesByDistricts(dataset, resourceName, districts) {
+        var filteredResources = districts.reduce(function(result, selectedDistrict) {
+            var filteredItems = api.filter.location.district(dataset, resourceName, selectedDistrict.name);
+            return result.concat(filteredItems);
+        }, []);
+        if (districts.length) {
+          return filteredResources;
+        } else {
+          return dataset;
+        }
+    }
+
+    function createDistrictSelectorModal(scope) {
+      return $ionicModal.fromTemplateUrl('templates/districtSelector.html', {
+        scope: scope,
+        animation: 'slide-in-up',
+      }).then(function(modal) {
+        scope.districtModal = modal;
+      });
+    }
+
+    return {
+        'getAllDistricts': getAllDistricts,
+        'getCurrentDistricts': getCurrentDistricts,
+        'setCurrentDistricts': setCurrentDistricts,
+        'clearCurrentDistricts': clearCurrentDistricts,
+        'filterResourcesByDistricts': filterResourcesByDistricts,
+        'removeDistrictFilter': removeDistrictFilter,
+        'createDistrictSelectorModal': createDistrictSelectorModal,
+    };
+}
+
+var ConstEvents = {
+    'UPDATE_DISTRICTS': 'UPDATE_DISTRICTS',
+    'REFRESH_DATASET': 'REFRESH_DATASET',
+};
+
+angular.module('starter.services', [])
+    .factory("api", APIService)
+    .factory("DistrictSelectService", DistrictSelectService)
+    .constant("ConstEvents", ConstEvents);

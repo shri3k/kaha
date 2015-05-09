@@ -11,7 +11,7 @@ module.exports = {
   },
   "dev": {
     "name": "dev",
-    "dbhost": "localhost",
+    "dbhost": process.env.DB_PORT_6379_TCP_ADDR || 'localhost',
     "dbport": 6379
   }
 }[process.env.NODE_ENV || "stage"];

@@ -2,7 +2,7 @@
 # confgure docker to not require sudo
 
 # exit whenever a command returns with a non-zero exit code
-set -e 
+set -e
 set -o pipefail
 
 DOCKER_USER="kahaco"
@@ -11,18 +11,30 @@ DOCKER_IMAGE="${DOCKER_USER}/${APP_NAME}:latest"
 APP_PORT=3000
 DB_CONTAINER="redis"
 PROD_DB_PASS="change_this"
+SLACK_WEBHOOK_URL="https://hooks.slack.com/services/change_this"
+SLACK_CHANNEL="#deploy"
 
 success=false
 env=$1
 container="${APP_NAME}_${env}"
 
+# post to slack
+function notify {
+  echo "$1"
+  curl -X POST "$SLACK_WEBHOOK_URL" --data-urlencode 'payload={
+    "channel": "'"$SLACK_CHANNEL"'",
+    "username": "deploybot",
+    "text": "'"$1"'",
+    "icon_emoji": ":ghost:"}'
+}
+
 # On exit, always do this
 function finish {
   if [ "$success" = true ]; then
-    echo "Deploy was successful!"
+    notify "Deploy was successful! Check the site just to be sure :)"
     exit 0
   else
-    echo "Deploy was un-successful :("
+    notify "Deploy was unsuccessful :( Check the server logs. \nIf the site is down, you can restore the site by doing 'docker start kaha_prod_previous'"
     exit -1
   fi
 }
@@ -88,3 +100,4 @@ sleep 10
 if docker ps | grep -q "$container"; then
   success=true
 fi
+

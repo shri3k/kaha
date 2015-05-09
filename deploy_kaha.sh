@@ -46,6 +46,10 @@ if [ "$env" != "dev" ] && [ "$env" != "stage" ] && [ "$env" != "prod" ]; then
   exit -1
 fi
 
+# switch to the script directory no matter where this is launched from
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd "$SCRIPT_DIR"
+
 # This could have worked but docker hub builds are slow the hub webhook was not working.
 # That's why we build the image locally. Maybe move this to our own private registry later
 #echo "Getting the image from docker hub..."
@@ -55,8 +59,9 @@ echo "Pulling the latest changes to the repo..."
 git pull origin master
 echo "Building the docker image locally..."
 docker build -t "$DOCKER_IMAGE" .
-echo "Cleaning up..."
-docker rmi $(docker images -q -f dangling=true)
+# Better to do this via cron job
+#echo "Cleaning up..."
+#docker rmi $(docker images -q -f dangling=true)
 
 running_containers=$(docker ps -q --filter="name=${APP_NAME}")
 

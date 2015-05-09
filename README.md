@@ -62,7 +62,7 @@ with the repo dir used as a shared volume inside the container (so that code
 changes are picked up).
 
 If you want your own local db setup, you can use run `deploy_kaha.sh dev` (which
-has some other nice features, read [deploy notes](deploy_notes.md). This is the
+has some other nice features, read [deploy notes](deploy_kaha.md). This is the
 recommended way, but docker-compose support is also available.
 
     sudo pip install docker-compose && docker-compose up

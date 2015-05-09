@@ -46,22 +46,29 @@ if [ "$env" != "dev" ] && [ "$env" != "stage" ] && [ "$env" != "prod" ]; then
   exit -1
 fi
 
-echo "Getting the image from docker hub..."
-docker pull "$DOCKER_IMAGE"
+# This could have worked but docker hub builds are slow the hub webhook was not working.
+# That's why we build the image locally. Maybe move this to our own private registry later
+#echo "Getting the image from docker hub..."
+#docker pull "$DOCKER_IMAGE"
 
-# alternative to above
-#echo "Building the docker image locally"
-#docker build -t "$DOCKER_IMAGE" .
+echo "Pulling the latest changes to the repo..."
+git pull origin master
+echo "Building the docker image locally..."
+docker build -t "$DOCKER_IMAGE" .
+echo "Cleaning up..."
+docker rmi $(docker images -q -f dangling=true)
 
-if docker ps | grep -q "$container"; then
-  echo "Stopping running container..."
-  docker stop "$container"
+running_containers=$(docker ps -q --filter="name=${APP_NAME}")
+
+if [ -n "$running_containers" ]; then
+  echo "Stopping running app containers..."
+  docker stop "$running_containers"
 fi
 
 if docker ps -a | grep -q "$container"; then
   container_backup="${container}_previous"
 
-  echo "Removing previous container backup..."
+  echo "Removing previous container backup if any..."
   docker ps -a | grep -q "$container_backup" && docker rm "$container_backup"
 
   echo "Backing up the container..."

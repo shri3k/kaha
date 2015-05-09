@@ -32,7 +32,8 @@ script:
     # look at the app logs (stdout)
     docker logs <container_name>
     # stop and start the container
-    docker stop <container_name> docker start <container_name>
+    docker stop <container_name>
+    docker start <container_name>
 
 For more details, read the docker docs.
 
@@ -53,8 +54,7 @@ git push. To implement this URL endpoint, use
 [captainhook](https://github.com/bketelsen/captainhook) or implement your own
 mini-server.
 
-    $GOPATH/bin/captainhook -listen-addr=<kaha_server_ip> -echo -configdir
-    ~/captainhook_configs
+    $GOPATH/bin/captainhook -listen-addr=<kaha_server_ip> -echo -configdir ~/captainhook_configs
 
 We have this running in the kaha server. This endpoint then executes the script
 `deploy_kaha.sh` on incoming requests. It is configured to do so only on

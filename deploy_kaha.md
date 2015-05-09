@@ -58,14 +58,15 @@ We have this running in the kaha server. This endpoint then executes the script 
 }
 ```
 
-This is all we need for now. If you have configures slack notification, you will get a message in your channel at the end with deployment status. You can view the deploy script logs from the github webhooks page.
+This is all we need for now. If you have configured slack notifications, you will get a message in your channel at the end with deployment status. You can view the deploy script logs from the github webhooks page.
 
-Parallel to this deploy process, pushes to kaha master also triggers kaha image build in the [public docker registry](https://registry.hub.docker.com/u/kahaco/kaha/), to keep the image there up to date.
+Parallel to this deploy process, pushes to kaha master also triggers kaha image build in the [public docker registry](https://registry.hub.docker.com/u/kahaco/kaha/), to keep the image there up to date. You can [add](https://docs.docker.com/docker-hub/builds/#automated-builds-from-github) docker service in github to achieve this.
 
 For docker deployments, the norm seems to be to [trigger](http://blog.gopheracademy.com/advent-2014/easy-deployment/) [image](http://nathanleclaire.com/blog/2014/08/17/automagical-deploys-from-docker-hub/) builds in docker hub first, and then catch the webhook from there to run the docker. However, the webhook functionlaity from docker hub was not working for us and also dockerhub builds were a serious bottleneck, taking as much half an hour for the build to finish sometimes. If this situation improves, the deploy script can be modifed to pull the public image instead of building the image locally.
 
 ## TODO
 
-* Add codeship intgeration to the deploy workflow when we add tests 
-* Better logging 
+* Only trigger deploy on pushes to master
 * Validation for local db setup
+* Better logging
+* Add codeship intgeration to the deploy workflow when we add tests

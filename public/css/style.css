@@ -70,7 +70,7 @@
 }
 
 .need-channel, .need-channel textarea {
-    background-color:#FFFAFA; 
+    background-color:#FFFAFA;
 }
 .supply-channel, .supply-channel textarea {
     background-color:#FCFFF0;
@@ -80,9 +80,9 @@ pre {
     font-size:14px;
 }
 #addItems{
-  position:fixed; 
-  right:2px; 
-  bottom:10px; 
+  position:fixed;
+  right:2px;
+  bottom:10px;
   z-index:999
 }
 .round-button {
@@ -118,4 +118,25 @@ pre {
 }
 .hide-button{
   visibility: hidden;
+}
+
+/* Side Menu */
+.item-location-select {
+  cursor: pointer;
+}
+
+/* District Selector */
+.current-districts-label {
+  vertical-align: middle;
+}
+
+.current-districts-container {
+  vertical-align: middle;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.current-districts-container>.button {
+  margin-right: 5px;
+  margin-bottom: 3px;
 }

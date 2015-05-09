@@ -25,13 +25,13 @@
                 <li class="item item-icon-left item-location-select" ng-click="showDistrictSelector()">
                   <i class="icon ion-location"></i>
                   <span>Districts</span>
-                  <small ng-if="currentDistricts.length" class="muted-text">
+                  <small ng-show="currentDistricts.length" class="muted-text">
                     (
                     <span>{{ currentDistricts[0].name }}</span>
-                    <span ng-if="currentDistricts.length > 1"> + {{ currentDistricts.length - 1}} more</span>
+                    <span ng-show="currentDistricts.length > 1"> + {{ currentDistricts.length - 1}} more</span>
                     )
                   </small>
-                  <small ng-if="!currentDistricts.length" class="muted-text">
+                  <small ng-show="!currentDistricts.length" class="muted-text">
                     ( All Districts )
                   </small>
                 </li>
@@ -71,7 +71,7 @@
                     <p><small>Updated: {{item.date.modified | date:'Y-m-d'}}</small></p>
                 </p>
             </div>
-            <div class="padding" ng-if="! angular.isUndefined(items) && items.length === 0">
+            <div class="padding" ng-show="! angular.isUndefined(items) && items.length === 0">
               There are no results for current filters. Try changing some filters.
             </div>
         </div>

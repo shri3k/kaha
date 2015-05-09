@@ -5,14 +5,8 @@
 set -e
 set -o pipefail
 
-DOCKER_USER="kahaco"
-APP_NAME="kaha"
-DOCKER_IMAGE="${DOCKER_USER}/${APP_NAME}:latest"
-APP_PORT=3000
-DB_CONTAINER="redis"
-PROD_DB_PASS="change_this"
-SLACK_WEBHOOK_URL="https://hooks.slack.com/services/change_this"
-SLACK_CHANNEL="#deploy"
+# import the config vars
+source deploy_kaha.conf
 
 success=false
 env=$1

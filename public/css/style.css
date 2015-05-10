@@ -69,13 +69,19 @@
   border-color: #d43f3a;
 }
 
-.need-channel, .need-channel textarea {
-    background-color:#FFC2B2;
+.need-channel, .need-channel ion-item.item {
+   background-color:#FFC2B2;
 }
-.supply-channel, .supply-channel textarea {
+.need-channel .item-input, .need-channel textarea {
+   background-color:#FFEBE6;
+}
+.supply-channel, .supply-channel ion-item.item {
     background-color:#CCFFCC;
 }
-
+.supply-channel .item-input, .supply-channel textarea {
+   background-color:#E6FFE6;
+}
+.
 pre {
     font-size:14px;
 }

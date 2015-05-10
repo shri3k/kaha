@@ -237,9 +237,12 @@ function APIService($q, $http) {
           xhr.send();
           return def.promise;
       },
-      verifyItem: function(data, state, admin_name){
+      verifyItem: function(data, state, admin_name, comments){
           data.verified = state;
           data.verified_by = admin_name;
+		  data.verification_comments = comments;
+		  today = new Date();
+		  data.verification_date = today.toUTCString();
           return this.update(data);
       },
       requestDelete:function(data){

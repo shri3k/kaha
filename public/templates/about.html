@@ -1,8 +1,17 @@
 <ion-view view-title="About">
 <ion-content data-tap-disabled="true" overflow-scroll="true">
 <div class="card">
+    <div style="padding:10px" ng-hide="isloggedin">
+        <input type="text" ng-model="submitdata.adminname" placeholder="Your name"/>
+        <input type="text" ng-model="submitdata.admincode" placeholder="Admin code"/>
+        <button class="button-light" ng-click="signin()"> I am admin</button>
+    </div>
+    <div style="padding:10px" ng-show="isloggedin">
+        You are logged in as {{adminname}}
+        <button class="button-light" ng-click="signout()"> Logout</button>
+    </div>
 
-    <div class="item">
+    <div class="item item-text-wrap">
 		<h1>About</h1>
         Kaha.co as name suggests helps you find help and supplies. You can go through different categories on sidemenu and limit your results by location (districts and tole names). <br>
         If you are providing or know someone who is providing any help or supplies please use Add a supply/resource to add it.<br>
@@ -46,15 +55,6 @@
 		<b>7. How can I update/edit item?</b><br>
 		Navigate to the appropriate supplies and in the detail description click 'Edit Item' on top right corner. Make change to the item you want and click submit button. The item will be saved.
  	</div>
-</div>
-<div style="padding:10px" ng-hide="isloggedin">
-    <input type="text" ng-model="submitdata.adminname" placeholder="Your name"/>
-    <input type="text" ng-model="submitdata.admincode" placeholder="Admin code"/>
-    <button class="button-light" ng-click="signin()"> I am admin</button>
-</div>
-<div style="padding:10px" ng-show="isloggedin">
-    <button class="button-light" ng-click="signout()"> Logout</button>
-</div>
 </div>
 </ion-content>
 </ion-view>

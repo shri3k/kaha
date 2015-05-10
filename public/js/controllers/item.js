@@ -9,8 +9,6 @@ angular.module('starter.controllers')
 			verification_date : $rootScope.selectedItem.verification_date ? $rootScope.selectedItem.verification_date : ''
 		};
 
-		console.log($rootScope.selectedItem);
-		console.log($scope.itemdata);
 		if ($rootScope.selectedItem.channel == 'supply') {
 				$rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'available' : 'not available';
 		} else {

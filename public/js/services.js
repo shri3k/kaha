@@ -314,7 +314,7 @@ function APIService($q, $http) {
           });
         }else{
           $http.get(url+"/"+id).success(function(data) {
-                console.log(data);
+                //console.log(data);
                 def.resolve(data);
           });
         }

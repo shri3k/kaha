@@ -1,6 +1,6 @@
 <ion-side-menus enable-menu-with-back-views="false">
   <ion-side-menu-content ng-class="$exposeAside.active?'active':''">
-    <ion-nav-bar class="bar-stable">
+    <ion-nav-bar class="bar-energized">
       <ion-nav-back-button ng-hide="$exposeAside.active">
       </ion-nav-back-button>
 
@@ -15,16 +15,16 @@
   </ion-side-menu-content>
 
   <ion-side-menu side="left" expose-aside-when="large">
-    <ion-header-bar class="bar-stable">
+    <ion-header-bar class="bar-energized">
       <h1 class="title">Resources</h1>
     </ion-header-bar>
     <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''" >
       <ion-list>
-      <ion-item menu-close>
+      <ion-item nav-clear menu-close>
           <a class="item need-channel button button-block " href="#/app/submit?type={{sectionName}}&channel=need">
               <i class="icon ion-plus-circled" style="color:red"></i>  Add Need Request
           </a>
-          <a class="item need-supply button button-block " href="#/app/submit?type={{sectionName}}&channel=supply">
+          <a class="item supply-channel button button-block " href="#/app/submit?type={{sectionName}}&channel=supply">
               <i class="icon ion-plus-circled" style="color:green"></i>  Add Supply Info 
           </a>
       </ion-item>

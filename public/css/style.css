@@ -70,10 +70,10 @@
 }
 
 .need-channel, .need-channel textarea {
-    background-color:#FFFAFA;
+    background-color:#FFC2B2;
 }
 .supply-channel, .supply-channel textarea {
-    background-color:#FCFFF0;
+    background-color:#CCFFCC;
 }
 
 pre {

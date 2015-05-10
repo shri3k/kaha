@@ -64,6 +64,18 @@ function APIService($q, $http) {
                 $http.get(url).success(function(data) {
                     if (data) {
                         data = tagData(data);
+
+						data.sort(function(a, b){
+							if (!a.date) {
+								a.date = {'modified':''}
+							}
+							if (!b.date) {
+								b.date = {'modified':''}
+							}
+							if (a.date.modified == b.date.modified) return 0;
+							if (a.date.modified > b.date.modified) return -1;
+							return 1;
+						});
                         def.resolve({
                             success: true,
                             content: data
@@ -79,6 +91,19 @@ function APIService($q, $http) {
             } else {
                 var data = JSON.parse(localStorage.getItem("kahacodata"));
                 data = tagData(data)
+
+				data.sort(function(a, b){
+					if (!a.date) {
+						a.date = {'modified':''}
+					}
+					if (!b.date) {
+						b.date = {'modified':''}
+					}
+					if (a.date.modified == b.date.modified) return 0;
+					if (a.date.modified > b.date.modified) return -1;
+					return 1;
+				});
+
                 def.resolve({
                     success: true,
                     content: data
@@ -237,9 +262,12 @@ function APIService($q, $http) {
           xhr.send();
           return def.promise;
       },
-      verifyItem: function(data, state, admin_name){
+      verifyItem: function(data, state, admin_name, comments){
           data.verified = state;
           data.verified_by = admin_name;
+		  data.verification_comments = comments;
+		  today = new Date();
+		  data.verification_date = today.toUTCString();
           return this.update(data);
       },
       requestDelete:function(data){
@@ -323,17 +351,37 @@ function APIService($q, $http) {
 }
 
 function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
-    var currentDistricts = [];
+    var currentDistricts = _getLocalStorageDistricts();
 
     var allDistricts = api.districts.map(function(districtName) {
         return { 'name': districtName, 'selected': false };
     });
 
     function getAllDistricts() {
-        return allDistricts;
+		return allDistricts;
     }
+	function _getLocalStorageDistricts() {
+		var lsd =  localStorage.getItem('currentDistricts');
+		if (null === lsd) {
+			return [];
+		} else {
+			return JSON.parse(lsd);
+		}
+	}
 
-    function getCurrentDistricts() {
+	function _setLocalStorageDistricts(districts) {
+		localStorage.setItem('currentDistricts', JSON.stringify(districts));
+		return districts;
+	}
+
+	function _isDistrictSelected(districtName) {
+		var match = currentDistricts.filter(function(district) {
+			return district.name == districtName;
+		});
+		return match.length !== 0;
+	}
+
+	function getCurrentDistricts() {
         return currentDistricts;
     }
 
@@ -347,6 +395,7 @@ function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
 
     function setCurrentDistricts(newDistricts) {
         currentDistricts = newDistricts;
+		_setLocalStorageDistricts(newDistricts);
         $rootScope.$broadcast(ConstEvents.UPDATE_DISTRICTS, currentDistricts);
         return currentDistricts;
     }

@@ -5,6 +5,7 @@ var _ = require('underscore');
 var db = require('./db')();
 var utils = require('./utils');
 utils.init(db);
+
 //Get core home data
 router.get('/api', function(req, res, next) {
   utils.getAllFromDb(function(err, results) {
@@ -16,6 +17,20 @@ router.get('/api', function(req, res, next) {
   });
 });
 
+//Get everything from db
+//diff between this and /api is
+//it gets the counter flags too
+router.get('/api/all', function(req, res, next) {
+  utils.getEverything(function(err, results) {
+    if (err) {
+      return err;
+    }
+    res.send(results);
+    res.end();
+  });
+});
+
+//Insert or edit post
 router.put('/api', function(req, res, next) {
   if (utils.enforceReadonly(res)) {
     return;
@@ -50,6 +65,22 @@ router.put('/api', function(req, res, next) {
 });
 
 router.post('/api', utils.rootPost);
+
+//Add everything to db
+router.post('/api/all', function(req, res, next) {
+  var body = req.body;
+  var multi = db.multi();
+  _.each(body, function(obj, key) {
+    multi.set(key, JSON.stringify(obj), function(err, reply) {
+      if (err) {
+        return err;
+      }
+    });
+  });
+  multi.exec(function(err, replies) {
+    res.send(replies);
+  });
+});
 
 //Get checksum of dupe items
 router.get('/api/dupe', function(req, res, next) {

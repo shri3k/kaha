@@ -4,13 +4,13 @@ var uuid = require('node-uuid');
 var _ = require('underscore');
 _.mixin(require('underscore.deep'));
 var url = require('url');
-
+var db;
 var env = exports.env = conf.name;
 var similarFilter = ['type', 'location', 'description.contactnumber'];
 var readonly = exports.readonly = Number(process.env.KAHA_READONLY) || 0;
 
-exports.init = function(db){
-  db = db;
+exports.init = function(dbObj){
+  db = dbObj;
 };
 
 /**
@@ -64,6 +64,35 @@ var stdCb = exports.stdCb = function(err, reply) {
   if (err) {
     return err;
   }
+};
+/**
+ * Description: Get Everything
+ *
+ * @method getAllFromDb
+ * @param  Function
+ * @return  N/A
+ */
+exports.getEverything = function(cb) {
+  var results = [];
+  var multi = db.multi();
+  db.keys('*', function(err, reply) {
+    if (err) {
+      return err;
+    }
+    reply.forEach(function(key) {
+      multi.get(key, stdCb);
+    });
+    multi.exec(function(err, replies) {
+      if (err) {
+        return err;
+      }
+      var result = _.map(replies, function(rep) {
+        return JSON.parse(rep);
+      });
+      var keyVals = _.object(reply, result);
+      cb(null, keyVals);
+    });
+  });
 };
 
 /**

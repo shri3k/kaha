@@ -323,17 +323,37 @@ function APIService($q, $http) {
 }
 
 function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
-    var currentDistricts = [];
+    var currentDistricts = _getLocalStorageDistricts();
 
     var allDistricts = api.districts.map(function(districtName) {
         return { 'name': districtName, 'selected': false };
     });
 
     function getAllDistricts() {
-        return allDistricts;
+		return allDistricts;
     }
+	function _getLocalStorageDistricts() {
+		var lsd =  localStorage.getItem('currentDistricts');
+		if (null === lsd) {
+			return [];
+		} else {
+			return JSON.parse(lsd);
+		}
+	}
 
-    function getCurrentDistricts() {
+	function _setLocalStorageDistricts(districts) {
+		localStorage.setItem('currentDistricts', JSON.stringify(districts));
+		return districts;
+	}
+
+	function _isDistrictSelected(districtName) {
+		var match = currentDistricts.filter(function(district) {
+			return district.name == districtName;
+		});
+		return match.length !== 0;
+	}
+
+	function getCurrentDistricts() {
         return currentDistricts;
     }
 
@@ -347,6 +367,7 @@ function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
 
     function setCurrentDistricts(newDistricts) {
         currentDistricts = newDistricts;
+		_setLocalStorageDistricts(newDistricts);
         $rootScope.$broadcast(ConstEvents.UPDATE_DISTRICTS, currentDistricts);
         return currentDistricts;
     }

@@ -64,6 +64,18 @@ function APIService($q, $http) {
                 $http.get(url).success(function(data) {
                     if (data) {
                         data = tagData(data);
+
+						data.sort(function(a, b){
+							if (!a.date) {
+								a.date = {'modified':''}
+							}
+							if (!b.date) {
+								b.date = {'modified':''}
+							}
+							if (a.date.modified == b.date.modified) return 0;
+							if (a.date.modified > b.date.modified) return -1;
+							return 1;
+						});
                         def.resolve({
                             success: true,
                             content: data
@@ -79,6 +91,19 @@ function APIService($q, $http) {
             } else {
                 var data = JSON.parse(localStorage.getItem("kahacodata"));
                 data = tagData(data)
+
+				data.sort(function(a, b){
+					if (!a.date) {
+						a.date = {'modified':''}
+					}
+					if (!b.date) {
+						b.date = {'modified':''}
+					}
+					if (a.date.modified == b.date.modified) return 0;
+					if (a.date.modified > b.date.modified) return -1;
+					return 1;
+				});
+
                 def.resolve({
                     success: true,
                     content: data

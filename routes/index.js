@@ -46,7 +46,6 @@ router.put('/api', function(req, res, next) {
         res.send('ok');
       }
     });
-
   });
 });
 router.post('/api', utils.rootPost);
@@ -133,6 +132,7 @@ router.get('/api/decrflag/:id', utils.flagcounter(function(req, res, obj) {
 
 //Get Flags
 router.get('/api/flags/:id', function(req, res, next) {
+
   var uuid = req.params.id;
   var multi = utils.db.multi();
   multi.get(uuid + ':yes', utils.stdCb);

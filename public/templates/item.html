@@ -10,7 +10,7 @@
     <div class="item item-divider  item-text-wrap {{selectedItem.channel}}-channel">
         <span class="item-note" ng-class="selectedItem.active?'active':''">
             <small>{{selectedItem.activeText}}</small><br>
-        </span> 
+        </span>
         <h3>
             [<span class="selectedItem.verified?'verified':'non-verified'">{{selectedItem.verified?'Verified':'Not Verified'}}]
             {{selectedItem.description.title}}  </span>
@@ -23,68 +23,62 @@
         <p><strong>Contact :</strong> {{selectedItem.description.contactname}}</p>
         <p><strong>Number :</strong> {{selectedItem.description.contactnumber}}</p>
         <p><strong>Description :</strong> <pre>{{selectedItem.description.detail}}</pre>
-        </p>	    
+        </p>
     </div>
-    
-    <div ng-if="selectedItem.channel !== 'need'">
-        <div class="item" style="color:green;">
-            <button class="button button-small button-stable" ng-click="incrStat('yes')"> 
-                +
-            </button>
-            <button class="button button-small button-stable" ng-click="decrStat('yes')">
-                -
-            </button>
-            <div style="float:right;vertical-align:middle;margin-top:7px;">
-                I got help from here [{{stat.yes ?stat.yes:0}}]
-            </div>
-        </div>
 
-        <div class="item" style="color:red">
-            <button class="button button-small button-stable" ng-click="incrStat('no')"> 
-                +
+    <div class="item" ng-if="selectedItem.channel !== 'need'">
+        <div style="color:green;">
+            <button class="button button-small button-stable" ng-click="incrStat('yes')" ng-show="!isButtonDisabled('yes')">
+                Report
             </button>
-            <button class="button button-small button-stable" ng-click="decrStat('no')">
-                -
-            </button>
-            <div style="float:right;vertical-align:middle;margin-top:7px;">
-                No longer available [{{stat.no ?stat.no :0}}]
+                <button class="button button-small button-stable" ng-click="decrStat('yes')" ng-show="isButtonDisabled('yes')">
+                    Undo
+                </button>
+                <span style="color:green">{{stat.yes ? stat.yes : 0}} reported receiving help from here</span>
+            </div>
+
+            <div  style="color:red">
+                <button class="button button-small button-stable" ng-click="incrStat('no')" ng-show="!isButtonDisabled('no')">
+                    Report
+                </button>
+                <button class="button button-small button-stable" ng-click="decrStat('no')" ng-show="isButtonDisabled('no')">
+                    Undo
+                </button>
+                <span style="color:red">{{stat.no ? stat.no : 0}} reported supply no longer available</span>
             </div>
         </div>
-    </div>
-    <div ng-if="selectedItem.channel == 'need'">
-        <div class="item" style="color:red;">
-            <button class="button button-small button-stable" ng-click="incrStat('no_connection')"> 
-                +
+    <div class="item" ng-if="selectedItem.channel == 'need'">
+        <div style="color:red;">
+            <button class="button button-small button-stable" ng-click="incrStat('no_connection')" ng-show="!isButtonDisabled('no_connection')">
+                Report
             </button>
-            <button class="button button-small button-stable" ng-click="decrStat('no_connection')">
-                -
-            </button>
-            <div style="float:right;vertical-align:middle;margin-top:7px;">
-                Could not Contact [{{stat.no_connection?stat.no_connection:0}}]
+                <button class="button button-small button-stable" ng-click="decrStat('no_connection')" ng-show="isButtonDisabled('no_connection')">
+                    Undo
+                </button>
+                <span style="color:green">{{stat.no_connection ? stat.no_connection : 0}} reported no-contact</span>
             </div>
-        </div>
-        <div class="item" style="color:green;">
-            <button class="button button-small button-stable" ng-click="incrStat('yes')"> 
-                +
-            </button>
-            <button class="button button-small button-stable" ng-click="decrStat('yes')">
-                -
-            </button>
-            <div style="float:right;vertical-align:middle;margin-top:7px;">
-                Need is fullfilled [{{stat.yes ?stat.yes:0}}]
+
+            <div  style="color:green">
+                <button class="button button-small button-stable" ng-click="incrStat('yes')" ng-show="!isButtonDisabled('yes')">
+                    Report
+                </button>
+                <button class="button button-small button-stable" ng-click="decrStat('yes')" ng-show="isButtonDisabled('yes')">
+                    Undo
+                </button>
+                <span style="color:red">{{stat.yes ? stat.yes : 0}} reported need full-filled</span>
             </div>
         </div>
     </div>
     <div class="item" ng-show="isloggedin">
         <div class="item text-center" style="background-color:#ddd;">
             <fieldset><legend>Verification</legend>
-            <p>Status: {{selectedItem.verified?'Verified':'Not Verified'}} 
+            <p>Status: {{selectedItem.verified?'Verified':'Not Verified'}}
             <span ng-show="selectedItem.verified"><br/>
                 Verified By : {{selectedItem.verified_by}} <br/>
                 Verified On : {{itemdata.verification_date}}</span>
             </p>
             <div class="item item-input">
-                <textarea rows="5" style="width:30" type="text" name="verification-comments" ng-model="itemdata.verification_comments" placeholder="Add comments"></textarea> 
+                <textarea rows="5" style="width:30" type="text" name="verification-comments" ng-model="itemdata.verification_comments" placeholder="Add comments"></textarea>
             </div>
             <br/>
             <button ng-click="verifyItem(true)" class="button button-small button-balanced">Mark as Verified</button>

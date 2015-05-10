@@ -15,6 +15,8 @@ angular.module('starter.controllers')
 								$scope.submitdata = {
 										verified: $scope.selectedItem.verified ? $scope.selectedItem.verified : false,
 										verified_by: $scope.selectedItem.verified_by ? $scope.selectedItem.verified_by : '',
+										verification_comments: $scope.selectedItem.verification_comments? $scope.selectedItem.verification_comments: '',
+										verification_date: $scope.selectedItem.verification_date? $scope.selectedItem.verification_date: '',
 										channel: $scope.selectedItem.channel ? $scope.selectedItem.channel : $scope.submitdata.channel,
 										datasource: $scope.selectedItem.datasource ? $scope.selectedItem.datasource: $scope.submitdata.datasource,
 										uuid: $scope.selectedItem.uuid,
@@ -78,6 +80,13 @@ angular.module('starter.controllers')
 				if ($scope.submitdata.verified_by) {
 						data.verified_by = $scope.submitdata.verified_by;
 				}
+				if ($scope.submitdata.verification_comments) {
+						data.verification_comments = $scope.submitdata.verification_comments;
+				}
+				if ($scope.submitdata.verification_date) {
+					data.verification_date = $scope.submitdata.verification_date;
+				}
+
 
 				if ($rootScope.coordinates) {
 						data.coordinates = {

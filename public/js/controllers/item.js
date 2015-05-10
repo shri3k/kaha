@@ -2,9 +2,15 @@ angular.module('starter.controllers')
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory) {
 
 		$rootScope.selectedItem = api.selected.get();
-
 		$rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
 
+		$scope.itemdata = {
+			verification_comments: $rootScope.selectedItem.verification_comments ? $rootScope.selectedItem.verification_comments : '',
+			verification_date : $rootScope.selectedItem.verification_date ? $rootScope.selectedItem.verification_date : ''
+		};
+
+		console.log($rootScope.selectedItem);
+		console.log($scope.itemdata);
 		if ($rootScope.selectedItem.channel == 'supply') {
 				$rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'available' : 'not available';
 		} else {
@@ -66,7 +72,7 @@ angular.module('starter.controllers')
 		};
 
 		$scope.verifyItem = function(state) {
-			 api.verifyItem($rootScope.selectedItem, state, $rootScope.adminname).then(function(data) {
+			 api.verifyItem($rootScope.selectedItem, state, $rootScope.adminname, $scope.itemdata.verification_comments).then(function(data) {
 					 if (data) {
 							 alert('Item has been marked as Verified. Thank you');
 					 }

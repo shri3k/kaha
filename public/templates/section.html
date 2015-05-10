@@ -61,7 +61,7 @@
                     {{item.active?"needed":"not needed"}}
                 </span>
                 <h2>
-                    [<span class="item.verified?'verified':'non-verified'">{{item.verified?'Verified':'Not Verified'}}]
+                    <span ng-show="{{item.verified}}">[ Verified ]</span>
                     {{item.description.title}} </h2>
                 <p>
                     Contact Number : {{item.description.contactnumber}}

@@ -10,13 +10,13 @@ angular.module('starter.controllers')
 		];
 
 		$scope.searchMenu = function(){
-				$scope.search.value = "";
+				this.search.value = "";
 				$scope.showHide = (!$scope.showHide);
 				return $scope.showHide;
 		};
 
 		$scope.selecionar = function(item){
-				$scope.search.value = item.search;
+				this.search.value = item.search;
 				$scope.showHide = false;
 		};
 

@@ -20,6 +20,14 @@
     </ion-header-bar>
     <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''" >
       <ion-list>
+      <ion-item menu-close>
+          <a class="item need-channel button button-block " href="#/app/submit?type={{sectionName}}&channel=need">
+              <i class="icon ion-plus-circled" style="color:red"></i>  Add Need Request
+          </a>
+          <a class="item need-supply button button-block " href="#/app/submit?type={{sectionName}}&channel=supply">
+              <i class="icon ion-plus-circled" style="color:green"></i>  Add Supply Info 
+          </a>
+      </ion-item>
 
         <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/volunteer">
         <i class="icon ion-person-stalker"></i>

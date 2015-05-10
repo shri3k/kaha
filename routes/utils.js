@@ -4,11 +4,14 @@ var uuid = require('node-uuid');
 var _ = require('underscore');
 _.mixin(require('underscore.deep'));
 var url = require('url');
-var env = exports.env = conf.name;
-var db = require('./db')();
 
+var env = exports.env = conf.name;
 var similarFilter = ['type', 'location', 'description.contactnumber'];
 var readonly = exports.readonly = Number(process.env.KAHA_READONLY) || 0;
+
+exports.init = function(db){
+  db = db;
+};
 
 /**
  * Description: mixin for increment

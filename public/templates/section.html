@@ -25,13 +25,13 @@
                 <li class="item item-icon-left item-location-select" ng-click="showDistrictSelector()">
                   <i class="icon ion-location"></i>
                   <span>Districts</span>
-                  <small ng-show="currentDistricts.length" class="muted-text">
+                  <small ng-if="currentDistricts.length" class="muted-text">
                     (
                     <span>{{ currentDistricts[0].name }}</span>
-                    <span ng-show="currentDistricts.length > 1"> + {{ currentDistricts.length - 1}} more</span>
+                    <span ng-if="currentDistricts.length > 1"> + {{ currentDistricts.length - 1}} more</span>
                     )
                   </small>
-                  <small ng-show="!currentDistricts.length" class="muted-text">
+                  <small ng-if="!currentDistricts.length" class="muted-text">
                     ( All Districts )
                   </small>
                 </li>
@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-        <div ng-show="isContentReady" class="list">
+        <div class="list">
             <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value track by item.uuid" ng-click="loadItem(item)">
                 <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'need'">
                     {{item.active?"available":"not available"}}
@@ -71,7 +71,7 @@
                     <p><small>Updated: {{item.date.modified | date:'Y-m-d'}}</small></p>
                 </p>
             </div>
-            <div class="padding" ng-show="! angular.isUndefined(items) && items.length === 0">
+            <div class="padding" ng-if="! angular.isUndefined(items) && items.length === 0">
               There are no results for current filters. Try changing some filters.
             </div>
         </div>

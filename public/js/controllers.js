@@ -102,11 +102,6 @@ angular.module('starter.controllers', [])
     }
 
     $scope.getData = function(refresh){
-        $scope.isContentReady = false;
-        $ionicLoading.show({
-          template: 'Loading ...',
-        });
-
         api.data(refresh).then(function(data){
             $scope.dataset = api.filter.type(data.content, $scope.name);
             $scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
@@ -124,10 +119,6 @@ angular.module('starter.controllers', [])
                     $rootScope.updateTole();
                 }
             }
-        })
-        .finally(function() {
-          $scope.isContentReady = true;
-          $ionicLoading.hide();
         });
     }
 

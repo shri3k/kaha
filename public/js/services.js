@@ -160,7 +160,7 @@ function APIService($q, $http) {
           district: function(data, type, name) {
             var filtered = [];
             angular.forEach(data, function(item) {
-              if (item.location.district.toUpperCase() == name.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
+              if (item.location.district.toUpperCase() == name.toUpperCase()) { // && item.type.toUpperCase() == type.toUpperCase()) {
                 filtered.push(item);
               }
             });
@@ -178,6 +178,18 @@ function APIService($q, $http) {
         }
       },
       location: {
+		districtsOnly: function(data) {
+			var filtered = [];
+			angular.forEach(data, function(item) {
+				if (item.location) {
+					if (filtered.indexOf(item.location.district) == -1) {
+						filtered.push(item.location.district);
+					}
+				}
+			});
+			return filtered;
+		},
+
         districts: function(data, type) {
           var filtered = [];
           angular.forEach(data, function(item) {
@@ -419,7 +431,7 @@ function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
     }
 
     function filterResourcesByDistricts(dataset, resourceName, districts) {
-        var filteredResources = districts.reduce(function(result, selectedDistrict) {
+		var filteredResources = districts.reduce(function(result, selectedDistrict) {
             var filteredItems = api.filter.location.district(dataset, resourceName, selectedDistrict.name);
             return result.concat(filteredItems);
         }, []);

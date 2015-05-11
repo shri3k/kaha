@@ -21,7 +21,7 @@ angular.module('starter.controllers')
 		};
 
 		$scope.$on('$ionicView.beforeEnter', function() {
-				$scope.name = 'Open Need Requests' 
+				$scope.name = 'Kaha Helpline' 
 				$rootScope.toles = [];
 				$rootScope.districts = [];
 				$rootScope.sectionName = $scope.name;
@@ -82,20 +82,8 @@ angular.module('starter.controllers')
 				$scope.dataset = api.filter.channel(data.content, 'need');
 				$scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
 				$rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, $scope.currentDistricts);
-				$rootScope.districts = api.location.districts(data.content, $scope.name);
-
+				$rootScope.districts = api.location.districtsOnly($scope.items);
 				$scope.$broadcast('scroll.refreshComplete');
-				if ($rootScope.coordinates) {
-					// Guess the district based on coordinates above and set it
-					//$rootScope.selected.district = 'kathmandu';
-
-					if($rootScope.selected.district){
-						$rootScope.updateDistrict();
-					}
-					if($rootScope.selected.tole){
-						$rootScope.updateTole();
-					}
-				}
 			}).finally(function() {
 				$scope.isContentReady = true;
 				$ionicLoading.hide();

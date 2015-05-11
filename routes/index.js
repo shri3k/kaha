@@ -2,10 +2,9 @@ var express = require('express');
 var router = express.Router();
 var sha = require('object-hash');
 var _ = require('underscore');
+var db = require('./db')();
 var utils = require('./utils');
-utils.init();
-
-console.log('Server in read-only mode ? ' + Boolean(utils.readonly));
+utils.init(db);
 
 //Get core home data
 router.get('/api', function(req, res, next) {
@@ -17,13 +16,28 @@ router.get('/api', function(req, res, next) {
     res.end();
   });
 });
+
+//Get everything from db
+//diff between this and /api is
+//it gets the counter flags too
+router.get('/api/all', function(req, res, next) {
+  utils.getEverything(function(err, results) {
+    if (err) {
+      return err;
+    }
+    res.send(results);
+    res.end();
+  });
+});
+
+//Insert or edit post
 router.put('/api', function(req, res, next) {
   if (utils.enforceReadonly(res)) {
     return;
   }
   var data = req.body;
   var data_uuid = data.uuid;
-  utils.db.get(data_uuid, function(err, reply) {
+  db.get(data_uuid, function(err, reply) {
     if (err) {
       return err;
     }
@@ -39,16 +53,34 @@ router.put('/api', function(req, res, next) {
 
     var yesHelp, noHelp, remove;
 
-    utils.db.set(data_uuid, JSON.stringify(data), function(err, reply) {
+    db.set(data_uuid, JSON.stringify(data), function(err, reply) {
       if (err) {
         res.send('fail');
       } else {
         res.send('ok');
       }
     });
+
   });
 });
+
 router.post('/api', utils.rootPost);
+
+//Add everything to db
+router.post('/api/all', function(req, res, next) {
+  var body = req.body;
+  var multi = db.multi();
+  _.each(body, function(obj, key) {
+    multi.set(key, JSON.stringify(obj), function(err, reply) {
+      if (err) {
+        return err;
+      }
+    });
+  });
+  multi.exec(function(err, replies) {
+    res.send(replies);
+  });
+});
 
 //Get checksum of dupe items
 router.get('/api/dupe', function(req, res, next) {
@@ -86,7 +118,7 @@ router.get('/', function(req, res, next) {
 
 //Get single item
 router.get('/api/:id', function(req, res, next) {
-  utils.db.get(req.params.id, function(err, reply) {
+  db.get(req.params.id, function(err, reply) {
     if (err) {
       return err;
     }
@@ -99,7 +131,7 @@ router.delete('/api/:id', function(req, res, next) {
   }
 
   var uuid = req.params.id;
-  var multi = utils.db.multi();
+  var multi = db.multi();
   if (uuid) {
     multi.del(uuid, utils.stdCb);
     multi.del(uuid + ':yes', utils.stdCb);
@@ -117,14 +149,14 @@ router.delete('/api/:id', function(req, res, next) {
 
 //Edit Flags
 router.get('/api/incrflag/:id', utils.flagcounter(function(req, res, obj) {
-  utils.db.incr(obj.uuid + ":" + obj.flag, function(err, reply) {
+  db.incr(obj.uuid + ":" + obj.flag, function(err, reply) {
     res.sendStatus(200);
     res.end();
   });
 }));
 
 router.get('/api/decrflag/:id', utils.flagcounter(function(req, res, obj) {
-  utils.db.decr(obj.uuid + ":" + obj.flag, function(err, reply) {
+  db.decr(obj.uuid + ":" + obj.flag, function(err, reply) {
     res.sendStatus(200);
     res.end();
   });
@@ -134,7 +166,7 @@ router.get('/api/decrflag/:id', utils.flagcounter(function(req, res, obj) {
 router.get('/api/flags/:id', function(req, res, next) {
 
   var uuid = req.params.id;
-  var multi = utils.db.multi();
+  var multi = db.multi();
   multi.get(uuid + ':yes', utils.stdCb);
   multi.get(uuid + ':no', utils.stdCb);
   multi.get(uuid + ':removal', utils.stdCb);

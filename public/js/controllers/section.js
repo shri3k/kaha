@@ -78,27 +78,28 @@ angular.module('starter.controllers')
 				template: 'Loading ...',
 			});
 
-				api.data(refresh).then(function(data){
-						$scope.dataset = api.filter.type(data.content, $scope.name);
-						$scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
-						$rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, $scope.currentDistricts);
-						$rootScope.districts = api.location.districts(data.content, $scope.name);
-						$scope.$broadcast('scroll.refreshComplete');
-						if ($rootScope.coordinates) {
-								// Guess the district based on coordinates above and set it
-								//$rootScope.selected.district = 'kathmandu';
+			api.data(refresh).then(function(data){
+				$scope.dataset = api.filter.type(data.content, $scope.name);
+				$scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
+				$rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, $scope.currentDistricts);
+				$rootScope.districts = api.location.districts(data.content, $scope.name);
 
-								if($rootScope.selected.district){
-										$rootScope.updateDistrict();
-								}
-								if($rootScope.selected.tole){
-										$rootScope.updateTole();
-								}
-						}
-				}).finally(function() {
-					$scope.isContentReady = true;
-					$ionicLoading.hide();
-				});
+				$scope.$broadcast('scroll.refreshComplete');
+				if ($rootScope.coordinates) {
+					// Guess the district based on coordinates above and set it
+					//$rootScope.selected.district = 'kathmandu';
+
+					if($rootScope.selected.district){
+						$rootScope.updateDistrict();
+					}
+					if($rootScope.selected.tole){
+						$rootScope.updateTole();
+					}
+				}
+			}).finally(function() {
+				$scope.isContentReady = true;
+				$ionicLoading.hide();
+			});
 		};
 
 		$scope.print = function(){

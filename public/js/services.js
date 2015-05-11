@@ -55,6 +55,12 @@ function APIService($q, $http) {
                     return row;
                 });
 
+				data.sort(function(a, b){
+					date_a = a.date ? (new Date(a.date.modified).getTime()) : 0;
+					date_b = b.date ? (new Date(b.date.modified).getTime()) : 0;
+					return date_b - date_a;
+				});
+
                 return data;
             };
 
@@ -65,18 +71,7 @@ function APIService($q, $http) {
                     if (data) {
                         data = tagData(data);
 
-						data.sort(function(a, b){
-							if (!a.date) {
-								a.date = {'modified':''}
-							}
-							if (!b.date) {
-								b.date = {'modified':''}
-							}
-							if (a.date.modified == b.date.modified) return 0;
-							if (a.date.modified > b.date.modified) return -1;
-							return 1;
-						});
-                        def.resolve({
+						def.resolve({
                             success: true,
                             content: data
                         });
@@ -91,18 +86,6 @@ function APIService($q, $http) {
             } else {
                 var data = JSON.parse(localStorage.getItem("kahacodata"));
                 data = tagData(data)
-
-				data.sort(function(a, b){
-					if (!a.date) {
-						a.date = {'modified':''}
-					}
-					if (!b.date) {
-						b.date = {'modified':''}
-					}
-					if (a.date.modified == b.date.modified) return 0;
-					if (a.date.modified > b.date.modified) return -1;
-					return 1;
-				});
 
                 def.resolve({
                     success: true,

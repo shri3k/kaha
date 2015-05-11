@@ -105,10 +105,13 @@ angular.module('starter.controllers')
 		$scope.print = function(){
 				var p = $window.open();
 				var pbody = p.document.body;
-				var table = "<table style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'><thead style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'><th>Type</th><th>District</th><th>Tole Name</th><th>Title</th><th>Contact Name</th><th>Contact Number</th><th>Detail</th></thead>";
+				var table = "<table style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'><thead style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'><th>Updated</th><th>Type</th><th>District</th><th>Tole Name</th><th>Title</th><th>Contact Name</th><th>Contact Number</th><th>Detail</th><th>Verified</th><th>Verified_by</th><th>Verification Comments</th></thead>";
 				for(var i in $rootScope.items){
 						var d = $rootScope.items[i];
-						table = table+"<tr style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'><td>"+d.type+"</td><td>"+d.location.district+"</td><td>"+d.location.tole+"</td><td>"+d.description.title+"</td><td>"+d.description.contactname+"</td><td>"+d.description.contactnumber+"</td><td>"+d.description.detail+"</td></tr>";
+						table = table+"<tr style='width:100%; text-align:left; border:1px solid #ccc; border-collapse:collapse'>" +
+							"<td>"+(d.date ? d.date.modified : '')+"</td><td>"+d.type+"</td><td>"+d.location.district+"</td><td>"+d.location.tole+"</td><td>"+d.description.title+"</td><td>"+d.description.contactname+"</td><td>"+d.description.contactnumber+"</td><td>"+d.description.detail+"</td>" +
+							"<td>"+(d.verified?d.verified:0) + "</td><td>" + (d.verified_by ? d.verified_by : '') + "</td><td>" + (d.verification_comments ? d.verification_comments : '')+ "</td>" +
+							"</tr>";
 				}
 				table = table+"</table>";
 				pbody.innerHTML = table;

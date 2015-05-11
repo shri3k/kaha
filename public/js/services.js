@@ -130,7 +130,7 @@ function APIService($q, $http) {
 			  angular.forEach(data, function(item) {
 				  if ((sourceItem.type == item.type) && 
 					  (sourceItem.channel != item.channel) &&
-					  (sourceItem.district == item.district)) {
+					  (sourceItem.location.district == item.location.district)) {
 					  filtered.push(item);
 				  }
 			  });

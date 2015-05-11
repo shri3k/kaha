@@ -69,6 +69,14 @@
             </div>
         </div>
     </div>
+    <div class="item">
+        <h1>{{selectedItem.channel == 'need' ? 'Supply' : 'Need'}} Matches ({{matches.length}})</h1>
+        <ul class="list">
+            <li class="item item-text-wrap item-{{selectedItem.channel}}-match" ng-repeat="item in matches track by item.uuid"  ng-click="loadItem(item)">
+                <b>{{item.description.title}}</b>, Contact : {{item.description.contactname}} [ {{item.description.contactnumber}} ]
+            </li>
+        </ul>
+    </div>
     <div class="item" ng-show="isloggedin">
         <div class="item text-center" style="background-color:#ddd;">
             <fieldset><legend>Verification</legend>

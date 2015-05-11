@@ -124,6 +124,19 @@ function APIService($q, $http) {
           localStorage.setItem("kahaselected", JSON.stringify(data));
         }
       },
+	  matches: {
+		  forItem: function(data, sourceItem) {
+			  var filtered = [];
+			  angular.forEach(data, function(item) {
+				  if ((sourceItem.type == item.type) && 
+					  (sourceItem.channel != item.channel) &&
+					  (sourceItem.district == item.district)) {
+					  filtered.push(item);
+				  }
+			  });
+			  return filtered;
+		  }
+	  },
       filter: {
         type: function(data, type) {
           var filtered = [];
@@ -134,6 +147,15 @@ function APIService($q, $http) {
           });
           return filtered;
         },
+		channel: function(data, channel) {
+			var filtered = [];
+			angular.forEach(data, function(item) {
+				if (channel== item.channel) {
+					filtered.push(item);
+				}
+			});
+			return filtered;
+		},
         location: {
           district: function(data, type, name) {
             var filtered = [];

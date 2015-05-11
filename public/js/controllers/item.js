@@ -1,20 +1,31 @@
 angular.module('starter.controllers')
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory) {
 
-		$rootScope.selectedItem = api.selected.get();
-		$rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
+	$scope.$on('$ionicView.beforeEnter', function() {
+		var selectedItem = api.selected.get();
 
-		$scope.itemdata = {
-			verification_comments: $rootScope.selectedItem.verification_comments ? $rootScope.selectedItem.verification_comments : '',
-			verification_date : $rootScope.selectedItem.verification_date ? $rootScope.selectedItem.verification_date : ''
-		};
+		api.data(false).then(function(data) {
+			$scope.matches = api.matches.forItem(data.content, selectedItem);
+		});
+	});
 
-		if ($rootScope.selectedItem.channel == 'supply') {
-				$rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'available' : 'not available';
-		} else {
-				$rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'needed' : 'not needed';
-		}
+	$rootScope.selectedItem = api.selected.get();
+	$rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
 
+	$scope.itemdata = {
+		verification_comments: $rootScope.selectedItem.verification_comments ? $rootScope.selectedItem.verification_comments : '',
+		verification_date : $rootScope.selectedItem.verification_date ? $rootScope.selectedItem.verification_date : ''
+	};
+
+	$scope.matches = {};
+	other_channel = '';
+	if ($rootScope.selectedItem.channel == 'supply') {
+		$rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'available' : 'not available';
+		other_channel = 'need';
+	} else {
+		$rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'needed' : 'not needed';
+		other_channel = 'supply';
+	}
 		if (!$rootScope.selectedItem) {
 				api.getItem($stateParams.uuid).then(function(data){
 						if(data.success){
@@ -85,5 +96,11 @@ angular.module('starter.controllers')
 								alert("Couldn't delete");
 						}
 				});
+		};
+
+		$scope.loadItem = function(item){
+				$rootScope.selectedItem = item;
+				api.selected.set(item);
+				window.location = "#/app/item/"+item.uuid;
 		};
 });

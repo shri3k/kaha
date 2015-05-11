@@ -1,85 +1,90 @@
 <ion-side-menus enable-menu-with-back-views="false">
-  <ion-side-menu-content ng-class="$exposeAside.active?'active':''">
-    <ion-nav-bar class="bar-energized">
-      <ion-nav-back-button ng-hide="$exposeAside.active">
-      </ion-nav-back-button>
+    <ion-side-menu-content ng-class="$exposeAside.active?'active':''">
+        <ion-nav-bar class="bar-energized">
+            <ion-nav-back-button ng-hide="$exposeAside.active">
+            </ion-nav-back-button>
 
-      <ion-nav-buttons side="left">
-        <button class="button button-clear" menu-toggle="left" ng-hide="$exposeAside.active" ng-click="menuClicked()">
-        <i class="icon ion-ios-arrow-left"></i>
-        MENU
-        </button>
-      </ion-nav-buttons>
-    </ion-nav-bar>
-    <ion-nav-view name="menuContent"></ion-nav-view>
-  </ion-side-menu-content>
+            <ion-nav-buttons side="left">
+                <button class="button button-clear" menu-toggle="left" ng-hide="$exposeAside.active" ng-click="menuClicked()">
+                    <i class="icon ion-ios-arrow-left"></i>
+                    MENU
+                </button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="menuContent"></ion-nav-view>
+    </ion-side-menu-content>
 
-  <ion-side-menu side="left" expose-aside-when="large">
-    <ion-header-bar class="bar-energized">
-      <h1 class="title">Resources</h1>
-    </ion-header-bar>
-    <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''" >
-      <ion-list>
-      <ion-item nav-clear menu-close>
-          <a class="item need-channel button button-block " href="#/app/submit?type={{sectionName}}&channel=need">
-              <i class="icon ion-plus-circled" style="color:red"></i>  Add Need Request
-          </a>
-          <a class="item supply-channel button button-block " href="#/app/submit?type={{sectionName}}&channel=supply">
-              <i class="icon ion-plus-circled" style="color:green"></i>  Add Supply Info 
-          </a>
-      </ion-item>
+    <ion-side-menu side="left" expose-aside-when="large">
+        <ion-header-bar class="bar-energized">
+            <h1 class="title">Resources</h1>
+        </ion-header-bar>
+        <ion-content ng-class="$exposeAside.active?'menu-item-wrapper':''" >
+            <ion-list>
+                <ion-item nav-clear menu-close>
+                    <a class="item need-channel button button-block " href="#/app/submit?type={{sectionName}}&channel=need">
+                        <i class="icon ion-plus-circled" style="color:red"></i>  Add Need Request
+                    </a>
+                    <a class="item supply-channel button button-block " href="#/app/submit?type={{sectionName}}&channel=supply">
+                        <i class="icon ion-plus-circled" style="color:green"></i>  Add Supply Info 
+                    </a>
+                </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/volunteer">
-        <i class="icon ion-person-stalker"></i>
-        Volunteers
-        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#/app/helpdesk">
+                    <i class="icon ion-help-buoy"></i>
+                    New Need Request 
+                </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/food">
-        <i class="icon ion-spoon"></i>
-          Food
-        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/volunteer">
+                    <i class="icon ion-person-stalker"></i>
+                    Volunteers
+                </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/water">
-        <i class="icon ion-waterdrop" style="color:blue;"></i>
-        Water
-        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/food">
+                    <i class="icon ion-spoon"></i>
+                    Food
+                </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/blood">
-        <i class="icon ion-waterdrop" style="color:red;"></i>
-        Blood
-        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/water">
+                    <i class="icon ion-waterdrop" style="color:blue;"></i>
+                    Water
+                </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/shelter">
-        <i class="icon ion-home"></i>
-          Tent/Shelter
-        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/blood">
+                    <i class="icon ion-waterdrop" style="color:red;"></i>
+                    Blood
+                </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/transportation">
-        <i class="icon ion-model-s"></i>
-        Transportation
-        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/shelter">
+                    <i class="icon ion-home"></i>
+                    Tent/Shelter
+                </ion-item>
 
-        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/medical supplies">
-        <i class="icon ion-medkit"></i>
-          Medical Kits/Supplies
-        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/transportation">
+                    <i class="icon ion-model-s"></i>
+                    Transportation
+                </ion-item>
 
-        <ion-item nav-clear menu-close href="#/app/section/medical services">
-          Medical Services
-        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#/app/section/medical supplies">
+                    <i class="icon ion-medkit"></i>
+                    Medical Kits/Supplies
+                </ion-item>
 
-        <ion-item nav-clear menu-close href="#/app/section/other contacts">
-          Helpful & Gov Contacts
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/app/duplicatelist" ng-show="isloggedin">
-          Duplicate Data
-        </ion-item>
-        <ion-item nav-clear menu-close class="item-icon-left" href="#/app/about">
-        <i class="icon ion-ios-information-outline"></i>
-          About
-        </ion-item>
+                <ion-item nav-clear menu-close href="#/app/section/medical services">
+                    Medical Services
+                </ion-item>
 
-      </ion-list>
-    </ion-content>
-  </ion-side-menu>
+                <ion-item nav-clear menu-close href="#/app/section/other contacts">
+                    Helpful & Gov Contacts
+                </ion-item>
+                <ion-item nav-clear menu-close href="#/app/duplicatelist" ng-show="isloggedin">
+                    Duplicate Data
+                </ion-item>
+                <ion-item nav-clear menu-close class="item-icon-left" href="#/app/about">
+                    <i class="icon ion-ios-information-outline"></i>
+                    About
+                </ion-item>
+
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
 </ion-side-menus>

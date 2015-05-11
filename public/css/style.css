@@ -25,7 +25,12 @@
 .need-channel .item-note.active{
     color:red;
 }
-
+.item-supply-match {
+    border-left: 4px solid red;
+}
+.item-need-match {
+    border-left: 4px solid green;
+}
 .popup-container .popup{
     width: 300px;
 }

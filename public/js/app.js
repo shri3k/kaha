@@ -22,86 +22,97 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 })
 
 .config(function($compileProvider, $stateProvider, $urlRouterProvider) {
-  
-  //Disable debug data for PROD
-  if (ENV === 'prod') {
-    $compileProvider.debugInfoEnabled(false);
-  }
-  
-  $stateProvider
 
-  .state('app', {
-    url: "/app",
-    abstract: true,
-    template: require('../templates/menu.html'),
-    controller: 'AppCtrl'
-  })
-    .state('app.section', {
-      url: "/section/:sectionid",
-      views: {
-        'menuContent': {
-          template: require('../templates/section.html'),
-          controller: 'SectionCtrl'
-        }
-      }
-    })
+	//Disable debug data for PROD
+	if (ENV === 'prod') {
+		$compileProvider.debugInfoEnabled(false);
+	}
 
-  .state('app.item', {
-    url: "/item/:uuid",
-    views: {
-      'menuContent': {
-        template: require('../templates/item.html'),
-        controller: 'ItemCtrl'
-      }
-    }
-  })
-  .state('app.submit', {
-    url: "/submit?edit&type&district&channel&datasource",
-    views: {
-      'menuContent': {
-        template: require('../templates/submit.html'),
-        controller: 'SubmitCtrl'
-      }
-    }
-  })
-  .state('app.about', {
-    url: "/about",
-    views: {
-      'menuContent': {
-        template: require('../templates/about.html'),
-        controller: 'AboutCtrl'
-      }
-    }
-  })
-  .state('app.duplicatelist',{
-    url: "/duplicatelist",
-    views: {
-      'menuContent': {
-        template: require('../templates/admin/duplicatelist.html'),
-        controller: 'DuplicateListCtrl'
-      }
-    }
-  })
-  .state('app.duplicateitem',{
-    url: "/duplicateitem/:itemid",
-    views: {
-      'menuContent': {
-        template: require('../templates/admin/duplicateitem.html'),
-        controller: 'DuplicateItemCtrl'
-      }
-    }
-  })
-  .state('app.edit', {
-    url: "/edit",
-    views: {
-      'menuContent': {
-        template: require('../templates/submit.html'),
-        controller: 'EditCtrl'
-      }
-    }
-  });
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/section/volunteer');
+	$stateProvider
+
+	.state('app', {
+		url: "/app",
+		abstract: true,
+		template: require('../templates/menu.html'),
+		controller: 'AppCtrl'
+	})
+	.state('app.helpdesk', {
+		url: "/helpdesk",
+		views: {
+			'menuContent': {
+				template: require('../templates/helpdesk.html'),
+				controller: 'HelpdeskCtrl'
+			}
+		}
+
+	})
+
+	.state('app.section', {
+		url: "/section/:sectionid",
+		views: {
+			'menuContent': {
+				template: require('../templates/section.html'),
+				controller: 'SectionCtrl'
+			}
+		}
+	})
+
+	.state('app.item', {
+		url: "/item/:uuid",
+		views: {
+			'menuContent': {
+				template: require('../templates/item.html'),
+				controller: 'ItemCtrl'
+			}
+		}
+	})
+	.state('app.submit', {
+		url: "/submit?edit&type&district&channel&datasource",
+		views: {
+			'menuContent': {
+				template: require('../templates/submit.html'),
+				controller: 'SubmitCtrl'
+			}
+		}
+	})
+	.state('app.about', {
+		url: "/about",
+		views: {
+			'menuContent': {
+				template: require('../templates/about.html'),
+				controller: 'AboutCtrl'
+			}
+		}
+	})
+	.state('app.duplicatelist',{
+		url: "/duplicatelist",
+		views: {
+			'menuContent': {
+				template: require('../templates/admin/duplicatelist.html'),
+				controller: 'DuplicateListCtrl'
+			}
+		}
+	})
+	.state('app.duplicateitem',{
+		url: "/duplicateitem/:itemid",
+		views: {
+			'menuContent': {
+				template: require('../templates/admin/duplicateitem.html'),
+				controller: 'DuplicateItemCtrl'
+			}
+		}
+	})
+	.state('app.edit', {
+		url: "/edit",
+		views: {
+			'menuContent': {
+				template: require('../templates/submit.html'),
+				controller: 'EditCtrl'
+			}
+		}
+	});
+	// if none of the above states are matched, use this as the fallback
+	$urlRouterProvider.otherwise('/app/helpdesk');
 })
 .directive('ionSearch', function() {
         return {

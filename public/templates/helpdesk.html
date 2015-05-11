@@ -1,0 +1,80 @@
+<ion-view>
+    <ion-nav-buttons side="right">
+    <button class="button button-light" ng-click="print()">
+        <i class="icon ion-ios-printer-outline"></i>
+    </button>
+    </ion-nav-buttons>
+
+    <div class="searchbar" style="text-align:center; position:fixed; top:44px; z-index:9999; width:100%">
+        <div class="bar item-input-inset">
+            <ion-search placeholder="Type to search {{name}}" filter="search"></ion-search>
+            <button class="button button-small button-clear" ng-click="searchMenu()">
+                <i class="icon ion-chevron-down"></i>
+            </button>
+        </div>
+        <div class="optionList padding-left padding-right" ng-show="showHide">
+            <ion-scroll>
+            <ul class="list">
+                <li class="item" ng-click="selecionar(item)" ng-repeat="item in search_options | filter:ngModel">{{item['label']}}</li>
+                <li class="item item-icon-left item-location-select" ng-click="showDistrictSelector()">
+                  <i class="icon ion-location"></i>
+                  <span>Districts</span>
+                  <small ng-show="currentDistricts.length" class="muted-text">
+                    (
+                    <span>{{ currentDistricts[0].name }}</span>
+                    <span ng-show="currentDistricts.length > 1"> + {{ currentDistricts.length - 1}} more</span>
+                    )
+                  </small>
+                  <small ng-show="!currentDistricts.length" class="muted-text">
+                    ( All Districts )
+                  </small>
+                </li>
+            </ul>
+            </ion-scroll>
+        </div>
+    </div>
+    <ion-nav-title>
+        <div class="h1 title">{{name | ucfirst }}</div>
+    </ion-nav-title>
+    <ion-content style="margin-top:38px;">
+
+        <ion-refresher pulling-text="Pull to refresh..."on-refresh="doRefresh()"></ion-refresher>
+
+        <div class="item item-text-wrap">
+            You can help by verifying need request, and trying to match up voluteers and suppliers with need.
+            Contact us at <a href="https://www.facebook.com/kahaco?notif_t=fbpage_fan_invite">Kaha.co FB Page</a> to join volunteer groups.
+        </div>
+
+        <div class="padding" ng-show="currentDistricts.length">
+          <div class="item">
+            <div class="current-districts-container">
+              <button class="button button-small button-outline icon-left ion-close" ng-repeat="district in currentDistricts" ng-click="removeOneDistrictFilter(district.name)">{{ district.name }}</button>
+              <button class="button button-small button-assertive" ng-click="clearDistrictFilters()">Clear All</button>
+            </div>
+          </div>
+        </div>
+        <div class="list" ng-show="isContentReady">
+            <div class="item {{item.channel?item.channel:'supply'}}-channel" ng-repeat="item in items | search:search.value track by item.uuid" ng-click="loadItem(item)">
+                <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel != 'need'">
+                    {{item.active?"available":"not available"}}
+                </span>
+                <span class="item-note"  ng-class="item.active?'active':''" ng-show="item.channel == 'need'">
+                    {{item.active?"needed":"not needed"}}
+                </span>
+                <h2>
+                    <span ng-show="{{item.verified}}">[ Verified ]</span>
+                    {{item.description.title}} </h2>
+                <p>
+                    Contact Number : {{item.description.contactnumber}}
+                    <br/>
+                    {{item.location.district}} , {{item.location.tole}}
+
+                    <p><small>Updated: {{item.date.modified | date:'Y-m-d'}}</small></p>
+                </p>
+            </div>
+            <div class="padding" ng-show="! angular.isUndefined(items) && items.length === 0">
+              There are no results for current filters. Try changing some filters.
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

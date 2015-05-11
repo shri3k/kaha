@@ -1,36 +1,35 @@
 angular.module('starter.controllers')
 .controller('ItemCtrl', function($scope, $stateParams, $rootScope, api, $ionicHistory) {
+	$scope.selectedItem = api.selected.get($stateParams.uuid);
+	$scope.selectedItem.channel = $scope.selectedItem.channel ? $scope.selectedItem.channel : 'supply';
+	$scope.matches = {};
 
 	$scope.$on('$ionicView.beforeEnter', function() {
-		var selectedItem = api.selected.get();
-
 		api.data(false).then(function(data) {
-			$scope.matches = api.matches.forItem(data.content, selectedItem);
+			$scope.matches = api.matches.forItem(data.content, $scope.selectedItem);
 		});
 	});
 
-	$rootScope.selectedItem = api.selected.get();
-	$rootScope.selectedItem.channel = $rootScope.selectedItem.channel ? $rootScope.selectedItem.channel : 'supply';
+	//$scope.selectedItem = api.selected.get();
 
 	$scope.itemdata = {
-		verification_comments: $rootScope.selectedItem.verification_comments ? $rootScope.selectedItem.verification_comments : '',
-		verification_date : $rootScope.selectedItem.verification_date ? $rootScope.selectedItem.verification_date : ''
+		verification_comments: $scope.selectedItem.verification_comments ? $scope.selectedItem.verification_comments : '',
+		verification_date : $scope.selectedItem.verification_date ? $scope.selectedItem.verification_date : ''
 	};
 
-	$scope.matches = {};
 	other_channel = '';
-	if ($rootScope.selectedItem.channel == 'supply') {
-		$rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'available' : 'not available';
+	if ($scope.selectedItem.channel == 'supply') {
+		$scope.selectedItem.activeText = $scope.selectedItem.active ? 'available' : 'not available';
 		other_channel = 'need';
 	} else {
-		$rootScope.selectedItem.activeText = $rootScope.selectedItem.active ? 'needed' : 'not needed';
+		$scope.selectedItem.activeText = $scope.selectedItem.active ? 'needed' : 'not needed';
 		other_channel = 'supply';
 	}
-		if (!$rootScope.selectedItem) {
+		if (!$scope.selectedItem) {
 				api.getItem($stateParams.uuid).then(function(data){
 						if(data.success){
-								$rootScope.selectedItem = data.content;
-								api.stat($rootScope.selectedItem).then(function(data){
+								$scope.selectedItem = data.content;
+								api.stat($scope.selectedItem).then(function(data){
 										$scope.stat = data;
 								});
 						}else{
@@ -39,19 +38,19 @@ angular.module('starter.controllers')
 						}
 				});
 		} else {
-				api.stat($rootScope.selectedItem).then(function(data){
+				api.stat($scope.selectedItem).then(function(data){
 						$scope.stat = data;
 				});
 		}
 
 		$scope.incrStat = function(statKey) {
-				api.incrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
+				api.incrStat($scope.selectedItem.uuid, statKey).then(function(data) {
 						if (typeof($scope.stat[statKey]) == 'undefined') {
 								$scope.stat.$$statKey = 0;
 						}
 						var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
 						$scope.stat[statKey] = startAt+1;
-						api.cookie.set(statKey, $rootScope.selectedItem.uuid);
+						api.cookie.set(statKey, $scope.selectedItem.uuid);
 				},
 				function(error) {
 						alert('Error updating stat');
@@ -59,13 +58,13 @@ angular.module('starter.controllers')
 		};
 
 		$scope.decrStat =function(statKey){
-				api.decrStat($rootScope.selectedItem.uuid, statKey).then(function(data) {
+				api.decrStat($scope.selectedItem.uuid, statKey).then(function(data) {
 						if (typeof($scope.stat[statKey]) == 'undefined') {
 								$scope.stat.$$statKey = 0;
 						}
 						var startAt = $scope.stat[statKey] ? parseInt($scope.stat[statKey]) : 0;
 						$scope.stat[statKey] = startAt-1;
-						api.cookie.remove(statKey, $rootScope.selectedItem.uuid);
+						api.cookie.remove(statKey, $scope.selectedItem.uuid);
 				},
 				function(error) {
 						alert('Error updating stat');
@@ -73,7 +72,7 @@ angular.module('starter.controllers')
 		};
 
 		$scope.isButtonDisabled = function(key){
-				return api.cookie.get(key, $rootScope.selectedItem.uuid)?true:false;
+				return api.cookie.get(key, $scope.selectedItem.uuid)?true:false;
 		};
 
 		$scope.editItem = function(){
@@ -81,7 +80,7 @@ angular.module('starter.controllers')
 		};
 
 		$scope.verifyItem = function(state) {
-			 api.verifyItem($rootScope.selectedItem, state, $rootScope.adminname, $scope.itemdata.verification_comments).then(function(data) {
+			 api.verifyItem($scope.selectedItem, state, $rootScope.adminname, $scope.itemdata.verification_comments).then(function(data) {
 					 if (data) {
 							 alert('Item has been marked as Verified. Thank you');
 					 }
@@ -89,7 +88,7 @@ angular.module('starter.controllers')
 		};
 
 		$scope.requestDelete = function(){
-				api.requestDelete($rootScope.selectedItem).then(function(data){
+				api.requestDelete($scope.selectedItem).then(function(data){
 						if(data){
 								$ionicHistory.goBack();
 						}else{
@@ -99,7 +98,7 @@ angular.module('starter.controllers')
 		};
 
 		$scope.loadItem = function(item){
-				$rootScope.selectedItem = item;
+				$scope.selectedItem = item;
 				api.selected.set(item);
 				window.location = "#/app/item/"+item.uuid;
 		};

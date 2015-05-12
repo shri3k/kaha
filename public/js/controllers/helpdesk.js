@@ -1,5 +1,5 @@
 angular.module('starter.controllers')
-.controller('SectionCtrl', function($scope, $rootScope, api, $stateParams, $ionicLoading, $window, DistrictSelectService, ConstEvents) {
+.controller('HelpdeskCtrl', function($scope, $rootScope, api, $stateParams, $ionicLoading, $window, DistrictSelectService, ConstEvents) {
 		$rootScope.selected = {};
 
 		$scope.search_options = [
@@ -21,10 +21,10 @@ angular.module('starter.controllers')
 		};
 
 		$scope.$on('$ionicView.beforeEnter', function() {
-				$scope.name = $stateParams.sectionid;
+				$scope.name = 'Kaha Helpline' 
 				$rootScope.toles = [];
 				$rootScope.districts = [];
-				$rootScope.sectionName = $stateParams.sectionid;
+				$rootScope.sectionName = $scope.name;
 				var refresh = $scope.dataset?false:true;
 				$scope.getData(refresh);
 		});
@@ -79,23 +79,11 @@ angular.module('starter.controllers')
 			});
 
 			api.data(refresh).then(function(data){
-				$scope.dataset = api.filter.type(data.content, $scope.name);
+				$scope.dataset = api.filter.channel(data.content, 'need');
 				$scope.currentDistricts = DistrictSelectService.getCurrentDistricts();
 				$rootScope.items = DistrictSelectService.filterResourcesByDistricts($scope.dataset, $scope.name, $scope.currentDistricts);
-				$rootScope.districts = api.location.districts(data.content, $scope.name);
-
+				$rootScope.districts = api.location.districtsOnly($scope.items);
 				$scope.$broadcast('scroll.refreshComplete');
-				if ($rootScope.coordinates) {
-					// Guess the district based on coordinates above and set it
-					//$rootScope.selected.district = 'kathmandu';
-
-					if($rootScope.selected.district){
-						$rootScope.updateDistrict();
-					}
-					if($rootScope.selected.tole){
-						$rootScope.updateTole();
-					}
-				}
 			}).finally(function() {
 				$scope.isContentReady = true;
 				$ionicLoading.hide();

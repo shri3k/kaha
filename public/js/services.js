@@ -55,6 +55,12 @@ function APIService($q, $http) {
                     return row;
                 });
 
+				data.sort(function(a, b){
+					date_a = a.date ? (new Date(a.date.modified).getTime()) : 0;
+					date_b = b.date ? (new Date(b.date.modified).getTime()) : 0;
+					return date_b - date_a;
+				});
+
                 return data;
             };
 
@@ -65,18 +71,7 @@ function APIService($q, $http) {
                     if (data) {
                         data = tagData(data);
 
-						data.sort(function(a, b){
-							if (!a.date) {
-								a.date = {'modified':''}
-							}
-							if (!b.date) {
-								b.date = {'modified':''}
-							}
-							if (a.date.modified == b.date.modified) return 0;
-							if (a.date.modified > b.date.modified) return -1;
-							return 1;
-						});
-                        def.resolve({
+						def.resolve({
                             success: true,
                             content: data
                         });
@@ -91,18 +86,6 @@ function APIService($q, $http) {
             } else {
                 var data = JSON.parse(localStorage.getItem("kahacodata"));
                 data = tagData(data)
-
-				data.sort(function(a, b){
-					if (!a.date) {
-						a.date = {'modified':''}
-					}
-					if (!b.date) {
-						b.date = {'modified':''}
-					}
-					if (a.date.modified == b.date.modified) return 0;
-					if (a.date.modified > b.date.modified) return -1;
-					return 1;
-				});
 
                 def.resolve({
                     success: true,
@@ -141,6 +124,19 @@ function APIService($q, $http) {
           localStorage.setItem("kahaselected", JSON.stringify(data));
         }
       },
+	  matches: {
+		  forItem: function(data, sourceItem) {
+			  var filtered = [];
+			  angular.forEach(data, function(item) {
+				  if ((sourceItem.type == item.type) && 
+					  (sourceItem.channel != item.channel) &&
+					  (sourceItem.location.district == item.location.district)) {
+					  filtered.push(item);
+				  }
+			  });
+			  return filtered;
+		  }
+	  },
       filter: {
         type: function(data, type) {
           var filtered = [];
@@ -151,11 +147,20 @@ function APIService($q, $http) {
           });
           return filtered;
         },
+		channel: function(data, channel) {
+			var filtered = [];
+			angular.forEach(data, function(item) {
+				if (channel== item.channel) {
+					filtered.push(item);
+				}
+			});
+			return filtered;
+		},
         location: {
           district: function(data, type, name) {
             var filtered = [];
             angular.forEach(data, function(item) {
-              if (item.location.district.toUpperCase() == name.toUpperCase() && item.type.toUpperCase() == type.toUpperCase()) {
+              if (item.location.district.toUpperCase() == name.toUpperCase()) { // && item.type.toUpperCase() == type.toUpperCase()) {
                 filtered.push(item);
               }
             });
@@ -173,6 +178,18 @@ function APIService($q, $http) {
         }
       },
       location: {
+		districtsOnly: function(data) {
+			var filtered = [];
+			angular.forEach(data, function(item) {
+				if (item.location) {
+					if (filtered.indexOf(item.location.district) == -1) {
+						filtered.push(item.location.district);
+					}
+				}
+			});
+			return filtered;
+		},
+
         districts: function(data, type) {
           var filtered = [];
           angular.forEach(data, function(item) {
@@ -314,7 +331,7 @@ function APIService($q, $http) {
           });
         }else{
           $http.get(url+"/"+id).success(function(data) {
-                console.log(data);
+                //console.log(data);
                 def.resolve(data);
           });
         }
@@ -414,7 +431,7 @@ function DistrictSelectService(api, ConstEvents, $rootScope, $ionicModal) {
     }
 
     function filterResourcesByDistricts(dataset, resourceName, districts) {
-        var filteredResources = districts.reduce(function(result, selectedDistrict) {
+		var filteredResources = districts.reduce(function(result, selectedDistrict) {
             var filteredItems = api.filter.location.district(dataset, resourceName, selectedDistrict.name);
             return result.concat(filteredItems);
         }, []);

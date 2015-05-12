@@ -48,8 +48,6 @@ angular.module('plexusSelect', [])
                        /* Get field name and evaluate */
                        $scope.getItemName = function(field, item) {
                            if (field && item) {
-                               console.log('sss');
-                               console.log(field + ' , ' + item);
                                return $scope.$eval(field, item);
                            }
                        };

@@ -265,13 +265,9 @@ var rootPost = exports.rootPost = function(req, res, next) {
   //TODO probably need to fix this for prod docker
   if (ref) {
     var u = url.parse(ref);
-    var hostname = u && u.hostname.toLowerCase();
+    var hostname = u && u.hostname;
     var environment = env.toLowerCase();
-    if (hostname === "kaha.co" ||
-      hostname === "demokaha.herokuapp.com" ||
-      environment === "stage" ||
-      environment === "dev"
-    ) {
+    if (hasPostAccess(hostname, environment)) {
       var okResult = [];
       var multi = db.multi();
 
@@ -300,3 +296,33 @@ var rootPost = exports.rootPost = function(req, res, next) {
     res.status(403).send('Invalid Origin');
   }
 };
+
+function hasPostAccess(currDomain, currEnv){
+  var allowedDomains= ["kaha.co", "demokaha.herokuapp.com"];
+  var allowedEnvs = ["dev", "stage"];
+  return checkDomain(allowedDomains, currDomain) || checkEnvs(allowedEnvs, currEnv);
+}
+/**
+ * Description: Checks if it's the right domains
+ *
+ * @method checkDomain
+ * @param {Array}, {String}
+ * @return  {Boolean}
+*/
+function checkDomain(allowedDomains, currDomain){
+  //check sub-domains and prefixes like `www` too
+  return allowedDomains.some(function(domain){
+      return ~currDomain.indexOf(domain);
+  });
+}
+
+/**
+ * Description: Checks the right environment
+ *              for right access
+ * @method checkEnvs
+ * @param  {Array}, {String}
+ * @return  {Boolean}
+ */
+function checkEnvs(allowedEnvs, currEnv){
+  return ~allowedEnvs.indexOf(currEnv);
+}
